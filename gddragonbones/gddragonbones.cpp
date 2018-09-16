@@ -4,7 +4,7 @@
 #include "core/os/file_access.h"
 #include "core/os/os.h"
 
-#include "method_bind_ext.gen.inc"
+#include "core/method_bind_ext.gen.inc"
 
 #if (VERSION_MAJOR == 3)
     #define CLASS_BIND_GODO  ClassDB
