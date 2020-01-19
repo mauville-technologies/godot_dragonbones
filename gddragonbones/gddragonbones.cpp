@@ -124,10 +124,7 @@ void GDDragonBones::_cleanup()
     if(p_factory)
         p_factory->clear();
 
-    if(p_armature)
-    {
-        if (p_armature->is_inside_tree())
-            remove_child(p_armature);
+    if(p_armature) {
         p_armature = nullptr;
     }
 
