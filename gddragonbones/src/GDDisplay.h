@@ -10,7 +10,7 @@ DRAGONBONES_USING_NAME_SPACE;
 
 class GDOwnerNode : public Node2D
 {
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     GDCLASS(GDOwnerNode, Node2D);
 #else
     OBJ_TYPE(GDOwnerNode, Node2D);
@@ -35,7 +35,7 @@ public:
 class GDDisplay : public Node2D
 {
 
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     GDCLASS(GDDisplay, Node2D);
 #else
     OBJ_TYPE(GDDisplay, Node2D);
@@ -46,7 +46,7 @@ private:
 
 public:
     Ref<Texture>    texture;
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     CanvasItemMaterial* p_canvas_mat;
 #endif
 
@@ -59,7 +59,7 @@ public:
                    modulate = Color(1,1,1,1);
                    p_owner = nullptr;
                    b_debug = false;
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
                    p_canvas_mat = memnew(CanvasItemMaterial);
 #endif
                  }
@@ -71,7 +71,7 @@ public:
 	}
 
 
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     void    set_blend_mode(CanvasItem::BlendMode _blend)
     {
         p_canvas_mat->set_blend_mode((CanvasItemMaterial::BlendMode)_blend);

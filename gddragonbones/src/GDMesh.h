@@ -5,7 +5,7 @@
 
 class GDMesh : public GDDisplay
 { 
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     GDCLASS(GDMesh, GDDisplay);
 #else
     OBJ_TYPE(GDMesh, GDDisplay);
@@ -44,7 +44,7 @@ public:
                 verticesPos,
                 verticesColor,
                 verticesUV,
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1)
+#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
 		Vector<int>(),
 		Vector<float>(),
 #endif
@@ -70,7 +70,7 @@ public:
         col_debug.a = modulate.a;
         for(unsigned long i = 0; i < verticesColor.size(); ++i)
         {
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1)
+#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
             verticesColor.write[i] = modulate;
 #else
 			verticesColor[i] = modulate;

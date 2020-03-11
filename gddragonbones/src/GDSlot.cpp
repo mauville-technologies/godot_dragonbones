@@ -7,7 +7,7 @@
 
 DRAGONBONES_NAMESPACE_BEGIN
 
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     #define MATRIX_TRANSFORM  Transform2D
 #else
     #define MATRIX_TRANSFORM  Matrix32
@@ -15,7 +15,7 @@ DRAGONBONES_NAMESPACE_BEGIN
 
 void GDSlot::_updateZOrder()
 {
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     _renderDisplay->set_z_index(_zOrder);
 #else
     _renderDisplay->set_z(_zOrder);
@@ -35,7 +35,7 @@ void GDSlot::_updateBlendMode()
 	if (_renderDisplay)
 	{
         CanvasItem::BlendMode __blend = CanvasItem::BLEND_MODE_MIX;
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
 #else
          GDOwnerNode* __p_owner = _renderDisplay->p_owner;
         if(__p_owner)
@@ -90,7 +90,7 @@ void GDSlot::_updateColor()
    GDOwnerNode* __p_owner = _renderDisplay->p_owner;
    if(__p_owner)
    {
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
         __color.a *= __p_owner->modulate.a;
 #else
        __color.a *= __p_owner->modulate.a * __p_owner->get_opacity();
@@ -190,7 +190,7 @@ void GDSlot::_updateFrame()
                         u = floatArray[uvOffset + i];
                         v = floatArray[uvOffset + i + 1];
                         __get_uv_pt(__uv, currentTextureData->rotated, u, v, region, atlas);
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1)
+#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
                         frameDisplay->verticesColor.write[iH] = Color(1,1,1,1);
                         frameDisplay->verticesUV.write[iH] = __uv;
                         frameDisplay->verticesPos.write[iH] = Point2(floatArray[vertexOffset + i],
@@ -206,7 +206,7 @@ void GDSlot::_updateFrame()
                     // setup indicies
                     for (std::size_t i = 0; i < triangleCount * 3; ++i)
                     {
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1)
+#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
                         frameDisplay->indices.write[i] = intArray[currentVerticesData ->offset + (unsigned)BinaryOffset::MeshVertexIndices + i];
 #else
                         frameDisplay->indices[i] = intArray[currentVerticesData ->offset + (unsigned)BinaryOffset::MeshVertexIndices + i];		
@@ -218,7 +218,7 @@ void GDSlot::_updateFrame()
                 }  else // Normal texture
                 {
                     frameDisplay->indices.resize(6);
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1)
+#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
                     frameDisplay->indices.write[0] = 0;
                     frameDisplay->indices.write[1] = 1;
                     frameDisplay->indices.write[2] = 2;
@@ -240,7 +240,7 @@ void GDSlot::_updateFrame()
                     const auto scale = currentTextureData->parent->scale * _armature->_armatureData->scale;
                     const auto height = (currentTextureData->rotated ? region.width : region.height) * scale/2.f;
                     const auto width = (currentTextureData->rotated ? region.height : region.width) * scale/2.f;
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1)
+#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
                     frameDisplay->verticesColor.write[0] = Color(1,1,1,1);
                     frameDisplay->verticesColor.write[1] = Color(1,1,1,1);
                     frameDisplay->verticesColor.write[2] = Color(1,1,1,1);
@@ -350,7 +350,7 @@ void GDSlot::_updateMesh()
 					yG += (matrix.b * xL + matrix.d * yL + matrix.ty) * weight;
 				}
 			}
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1)
+#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
             meshDisplay->verticesPos.write[i] = Vector2(xG, yG);
 #else
 			meshDisplay->verticesPos[i] = Vector2(xG, yG);
@@ -374,7 +374,7 @@ void GDSlot::_updateMesh()
 			const auto iH = (i >> 1);
             const auto xG = floatArray[vertexOffset + i] * scale + deformVertices[i];
             const auto yG = floatArray[vertexOffset + i + 1] * scale + deformVertices[i + 1];
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1)
+#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
             meshDisplay->verticesPos.write[iH] = Vector2(xG, -yG);
 #else
 			meshDisplay->verticesPos[iH] = Vector2(xG, -yG);

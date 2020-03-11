@@ -6,7 +6,7 @@
 #include "scene/resources/texture.h"
 #include "core/version.h"
 
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1)
+#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
 #include <core/math/transform_2d.h>
 #include <core/math/vector2.h>
 #include <core/math/rect2.h>

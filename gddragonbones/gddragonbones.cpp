@@ -6,7 +6,7 @@
 
 #include "core/method_bind_ext.gen.inc"
 
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     #define CLASS_BIND_GODO  ClassDB
     #define METH             D_METHOD
     #define _SCS(val)        val
@@ -133,7 +133,7 @@ void GDDragonBones::_cleanup()
 
 void GDDragonBones::dispatch_snd_event(const String& _str_type, const EventObject* _p_value)
 {
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     if(Engine::get_singleton()->is_editor_hint())
 #else
     if(get_tree()->is_editor_hint())
@@ -146,7 +146,7 @@ void GDDragonBones::dispatch_snd_event(const String& _str_type, const EventObjec
 
 void GDDragonBones::dispatch_event(const String& _str_type, const EventObject* _p_value)
 {
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     if(Engine::get_singleton()->is_editor_hint())
 #else
     if(get_tree()->is_editor_hint())
@@ -259,7 +259,7 @@ bool GDDragonBones::is_material_inherited() const
     return b_inherit_child_material;
 }
 
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
 #else
 void GDDragonBones::set_opacity(float _f_opacity)
 {
@@ -430,7 +430,7 @@ void GDDragonBones::_notification(int _what)
             if (!b_processing)
             {
                 set_process(false);
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
                 set_physics_process(false);
 #else
                 set_fixed_process(false);
@@ -457,7 +457,7 @@ void GDDragonBones::_notification(int _what)
         }
         break;
 
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
         case NOTIFICATION_PHYSICS_PROCESS:
         {
 
@@ -600,7 +600,7 @@ void GDDragonBones::_set_process(bool _b_process, bool _b_force)
     switch (m_anim_mode)
     {
 
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
         case ANIMATION_PROCESS_FIXED: set_physics_process(_b_process && b_active); break;
 #else
         case ANIMATION_PROCESS_FIXED: set_fixed_process(_b_process && b_active); break;
@@ -698,7 +698,7 @@ bool GDDragonBones::_get(const StringName& _str_name, Variant &_r_ret) const
 
 void GDDragonBones::_bind_methods()
 {    
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     CLASS_BIND_GODO::bind_method(METH("set_texture", "texture"), &GDDragonBones::set_texture);
     CLASS_BIND_GODO::bind_method(METH("get_texture"), &GDDragonBones::get_texture);
 #else
@@ -712,7 +712,7 @@ void GDDragonBones::_bind_methods()
     CLASS_BIND_GODO::bind_method(METH("set_inherit_material"), &GDDragonBones::set_inherit_material);
     CLASS_BIND_GODO::bind_method(METH("is_material_inherited"), &GDDragonBones::is_material_inherited);
 
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
 #else
     CLASS_BIND_GODO::bind_method(METH("set_modulate", "modulate"), &GDDragonBones::set_modulate);
     CLASS_BIND_GODO::bind_method(METH("get_modulate"), &GDDragonBones::get_modulate);
@@ -766,7 +766,7 @@ void GDDragonBones::_bind_methods()
     ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flipX"), _SCS("flip_x"), _SCS("is_fliped_x"));
     ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flipY"), _SCS("flip_y"), _SCS("is_fliped_y"));
 
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
 #else
     ADD_PROPERTY(PropertyInfo(Variant::COLOR, "modulate"), _SCS("set_modulate"), _SCS("get_modulate"));
 #endif

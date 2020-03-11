@@ -1,6 +1,6 @@
 #include "core/version_generated.gen.h"
 
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
 #include <core/class_db.h>
 #include <core/project_settings.h>
 #else
@@ -17,7 +17,7 @@
 
 #include "gddragonbones.h"
 
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     #define REG_CLASS_BIND_GODO  ClassDB::register_class
 #else
     #define REG_CLASS_BIND_GODO  ObjectTypeDB::register_type
@@ -34,7 +34,7 @@ public:
 		GDDragonBones::GDDragonBonesResource* __p_res = memnew(GDDragonBones::GDDragonBonesResource);
 		Ref<GDDragonBones::GDDragonBonesResource> __p_ref(__p_res);
 		
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
         String __str_path_base = p_path.get_basename();
 #else
         String __str_path_base = p_path.basename();
@@ -76,7 +76,7 @@ public:
 		return p_type=="GDDragonBonesResource";
 	}
 
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     virtual String get_resource_type(const String &p_path) const
     {
         String el = p_path.get_extension().to_lower();

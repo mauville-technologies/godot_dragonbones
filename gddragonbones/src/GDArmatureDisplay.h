@@ -8,7 +8,7 @@ DRAGONBONES_NAMESPACE_BEGIN
 
 class GDArmatureDisplay : public GDDisplay, virtual public IArmatureProxy
 {
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     GDCLASS(GDArmatureDisplay, GDDisplay);
 #else
     OBJ_TYPE(GDArmatureDisplay, GDDisplay);

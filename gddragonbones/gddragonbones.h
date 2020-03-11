@@ -9,7 +9,7 @@ DRAGONBONES_USING_NAME_SPACE;
 
 class GDDragonBones : public GDOwnerNode
 {
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     GDCLASS(GDDragonBones, GDOwnerNode);
 #else
     OBJ_TYPE(GDDragonBones, GDOwnerNode);
@@ -34,7 +34,7 @@ public:
 	// Resource class
     class GDDragonBonesResource : public Resource
     {
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
     GDCLASS(GDDragonBonesResource, Resource);
 #else
     OBJ_TYPE(GDDragonBonesResource, Resource);
@@ -101,7 +101,7 @@ public:
     void set_inherit_material(bool _b_enable);
     bool is_material_inherited() const;
 
-#if (VERSION_MAJOR == 3)
+#if (VERSION_MAJOR >= 3)
 #else
     void set_opacity(float _f_opacity);
     float get_opacity() const;
