@@ -18,6 +18,7 @@
     #define METH             _MD
 
 #endif
+#include "../../../gddragonbones/gddragonbones/src/dragonBones/event/EventObject.h"
 
 //////////////////////////////////////////////////////////////////
 //// Resource
@@ -610,7 +611,7 @@ void GDDragonBones::_set_process(bool _b_process, bool _b_force)
     b_processing = _b_process;
 }
 
-void GDDragonBones::set_texture(const Ref<Texture>& _p_texture) {
+void GDDragonBones::set_texture(const Ref<Texture2D>& _p_texture) {
 
     if (_p_texture.is_valid()
             && m_texture_atlas.is_valid()
@@ -623,7 +624,7 @@ void GDDragonBones::set_texture(const Ref<Texture>& _p_texture) {
 
 #ifdef DEBUG_ENABLED
     if (m_texture_atlas.is_valid()) {
-        m_texture_atlas->set_flags(m_texture_atlas->get_flags()); //remove repeat from texture, it looks bad in sprites
+       // m_texture_atlas->set_flags(m_texture_atlas->get_flags()); //remove repeat from texture, it looks bad in sprites
 //        m_texture_atlas->connect(CoreStringNames::get_singleton()->changed, this, SceneStringNames::get_singleton()->update);
     }
 #endif
@@ -774,8 +775,8 @@ void GDDragonBones::_bind_methods()
     ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "resource", PROPERTY_HINT_RESOURCE_TYPE, "GDDragonBonesResource"), _SCS("set_resource"), _SCS("get_resource"));
 
     ADD_PROPERTY(PropertyInfo(Variant::INT, "playback/process_mode", PROPERTY_HINT_ENUM, "Fixed,Idle"), _SCS("set_animation_process_mode"), _SCS("get_animation_process_mode"));
-    ADD_PROPERTY(PropertyInfo(Variant::REAL, "playback/speed", PROPERTY_HINT_RANGE, "0,10,0.01"), _SCS("set_speed"), _SCS("get_speed"));
-    ADD_PROPERTY(PropertyInfo(Variant::REAL, "playback/progress", PROPERTY_HINT_RANGE, "-100,100,0.010"), _SCS("seek"), _SCS("get_progress"));
+    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "playback/speed", PROPERTY_HINT_RANGE, "0,10,0.01"), _SCS("set_speed"), _SCS("get_speed"));
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "playback/progress", PROPERTY_HINT_RANGE, "-100,100,0.010"), _SCS("seek"), _SCS("get_progress"));
     ADD_PROPERTY(PropertyInfo(Variant::BOOL, "playback/play"), _SCS("play"), _SCS("is_playing"));
 
     ADD_PROPERTY(PropertyInfo(Variant::BOOL, "childs use this material"), _SCS("set_inherit_material"), _SCS("is_material_inherited"));

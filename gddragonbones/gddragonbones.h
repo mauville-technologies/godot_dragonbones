@@ -4,6 +4,7 @@
 #include "scene/2d/node_2d.h"
 #include "src/GDFactory.h"
 #include "scene/resources/texture.h"
+#include "servers/rendering_server.h"
 
 DRAGONBONES_USING_NAME_SPACE;
 
@@ -55,7 +56,7 @@ public:
 
 private:
     GDFactory*                  p_factory;
-    Ref<Texture>                m_texture_atlas;
+    Ref<Texture2D>                m_texture_atlas;
     Ref<GDDragonBonesResource>  m_res;
     String                      str_curr_anim;
     GDArmatureDisplay*          p_armature;
@@ -125,7 +126,7 @@ public:
     void set_speed(float _f_speed);
     float get_speed() const;
 
-    void set_texture(const Ref<Texture> &_p_texture);
+    void set_texture(const Ref<Texture2D> &_p_texture);
     Ref<Texture> get_texture() const;
 
     String get_current_animation() const;

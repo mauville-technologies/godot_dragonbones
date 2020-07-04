@@ -28,14 +28,13 @@ class ResourceFormatLoaderGDDragonBones : public ResourceFormatLoader
 {
 
 public:
-	virtual RES load(const String& p_path, const String& p_original_path = "", Error *p_err=NULL) {
-
+	virtual RES load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads, float *r_progress, bool p_no_cache) {
 		float __tm_start = OS::get_singleton()->get_ticks_msec();
 		GDDragonBones::GDDragonBonesResource* __p_res = memnew(GDDragonBones::GDDragonBonesResource);
 		Ref<GDDragonBones::GDDragonBonesResource> __p_ref(__p_res);
 		
 #if (VERSION_MAJOR >= 3)
-        String __str_path_base = p_path.get_basename();
+		String __str_path_base = p_path.get_basename();
 #else
         String __str_path_base = p_path.basename();
 #endif
@@ -79,7 +78,8 @@ public:
 #if (VERSION_MAJOR >= 3)
     virtual String get_resource_type(const String &p_path) const
     {
-        String el = p_path.get_extension().to_lower();
+		String el = p_path.get_extension().to_lower();
+
         if ((el == "json" || el == "dbbin") && p_path.get_basename().to_lower().ends_with("_ske"))
             return "GDDragonBonesResource";
         return "";
