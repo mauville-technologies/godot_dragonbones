@@ -2,7 +2,6 @@
 #define     GDISPLAY_H
 
 #include "scene/resources/texture.h"
-#include "servers/visual_server.h"
 #include "scene/2d/node_2d.h"
 #include "core/version_generated.gen.h"
 
@@ -10,6 +9,15 @@ DRAGONBONES_USING_NAME_SPACE;
 
 class GDOwnerNode : public Node2D
 {
+
+#if (VERSION_MAJOR) >= 4
+	#define BLENDMODE_CLASS CanvasItemMaterial
+	#define VISUAL_SERVER_NAMESPACE RS
+#else
+	#define VISUAL_SERVER_NAMESPACE VS
+	#define BLENDMODE_CLASS CanvasItem
+#endif
+
 #if (VERSION_MAJOR >= 3)
     GDCLASS(GDOwnerNode, Node2D);
 #else
@@ -72,7 +80,7 @@ public:
 
 
 #if (VERSION_MAJOR >= 3)
-    void    set_blend_mode(CanvasItem::BlendMode _blend)
+	void set_blend_mode(BLENDMODE_CLASS ::BlendMode _blend)
     {
         p_canvas_mat->set_blend_mode((CanvasItemMaterial::BlendMode)_blend);
         Ref<CanvasItemMaterial> __mat = Ref<CanvasItemMaterial>(p_canvas_mat);

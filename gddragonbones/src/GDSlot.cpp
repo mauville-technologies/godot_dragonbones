@@ -34,7 +34,7 @@ void GDSlot::_updateBlendMode()
 {
 	if (_renderDisplay)
 	{
-        CanvasItem::BlendMode __blend = CanvasItem::BLEND_MODE_MIX;
+		BLENDMODE_CLASS::BlendMode __blend = BLENDMODE_CLASS::BLEND_MODE_MIX;
 #if (VERSION_MAJOR >= 3)
 #else
          GDOwnerNode* __p_owner = _renderDisplay->p_owner;
@@ -46,19 +46,19 @@ void GDSlot::_updateBlendMode()
             switch (_blendMode)
             {
                 case BlendMode::Normal:
-                    __blend = CanvasItem::BLEND_MODE_MIX;
+					__blend = BLENDMODE_CLASS::BLEND_MODE_MIX;
                     break;
 
                 case BlendMode::Add:
-                    __blend = CanvasItem::BLEND_MODE_ADD;
+					__blend = BLENDMODE_CLASS::BLEND_MODE_ADD;
                     break;
 
                 case BlendMode::Multiply:
-                    __blend = CanvasItem::BLEND_MODE_MUL;
+					__blend = BLENDMODE_CLASS::BLEND_MODE_MUL;
                     break;
 
                 case BlendMode::Subtract:
-                    __blend = CanvasItem::BLEND_MODE_SUB;
+					__blend = BLENDMODE_CLASS::BLEND_MODE_SUB;
                     break;
 
                 default:

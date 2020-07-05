@@ -1,13 +1,17 @@
-# GDDragonBones Plugin
-Plugin module for Godot Game Engine to use DragonBones
+# Godot Dragonbones
+
+  `godot-dragonbones` is an effort to provide binaries and support for using the Dragonbones 2D skeletal animation format within Godot.
+
+  For feature roadmap, binaries and export templates: http://godotdragonbones.com
 
 ## Links
 * Homepage Godot: https://godotengine.org
 * Homepage DragonBones: http://dragonbones.com
 
 #### Support Versions
-* Godot 2.1 & Godot 3
+* Tested versions: Godot 3.2 + Godot 4.0
 * DragonBones Pro 5.6
+* Unconfirmed: Blender Cutout Animation Tools
 
 #### Support Platforms
 * Windows

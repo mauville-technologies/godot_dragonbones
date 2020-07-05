@@ -3,7 +3,7 @@
 
 #include <memory>
 #include "scene/2d/node_2d.h"
-#include <dragonBones/DragonBonesHeaders.h>
+#include "dragonBones/DragonBonesHeaders.h"
 #include "GDDisplay.h"
 
 DRAGONBONES_NAMESPACE_BEGIN
