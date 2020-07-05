@@ -6,6 +6,17 @@
 #include "scene/resources/texture.h"
 #include "servers/rendering_server.h"
 
+
+#if (VERSION_MAJOR) >= 4
+	#include "servers/rendering_server.h"
+	#define TEXTURE_CLASS Texture2D
+	#define REAL_VARIANT Variant::FLOAT
+#else
+	#include "servers/visual_server.h"
+	#define TEXTURE_CLASS Texture
+	#define REAL_VARIANT Variant::REAL
+#endif
+
 DRAGONBONES_USING_NAME_SPACE;
 
 class GDDragonBones : public GDOwnerNode
@@ -56,7 +67,7 @@ public:
 
 private:
     GDFactory*                  p_factory;
-    Ref<Texture2D>                m_texture_atlas;
+	Ref<TEXTURE_CLASS> m_texture_atlas;
     Ref<GDDragonBonesResource>  m_res;
     String                      str_curr_anim;
     GDArmatureDisplay*          p_armature;
@@ -126,7 +137,7 @@ public:
     void set_speed(float _f_speed);
     float get_speed() const;
 
-    void set_texture(const Ref<Texture2D> &_p_texture);
+    void set_texture(const Ref<TEXTURE_CLASS> &_p_texture);
     Ref<Texture> get_texture() const;
 
     String get_current_animation() const;

@@ -38,7 +38,7 @@ public:
 
         if(texture.is_valid())
         {
-            RS::get_singleton()->canvas_item_add_triangle_array(
+			VISUAL_SERVER_NAMESPACE::get_singleton()->canvas_item_add_triangle_array(
                 get_canvas_item(),
                 indices,
                 verticesPos,
@@ -57,9 +57,9 @@ public:
         {
             for (int idx = 0; idx < indices.size(); idx += 3)
             {
-                RS::get_singleton()->canvas_item_add_line(get_canvas_item(), verticesPos[indices[idx]], verticesPos[indices[idx+1]], col_debug, 1.0);
-				RS::get_singleton()->canvas_item_add_line(get_canvas_item(), verticesPos[indices[idx + 1]], verticesPos[indices[idx + 2]], col_debug, 1.0);
-				RS::get_singleton()->canvas_item_add_line(get_canvas_item(), verticesPos[indices[idx + 2]], verticesPos[indices[idx]], col_debug, 1.0);
+				VISUAL_SERVER_NAMESPACE::get_singleton()->canvas_item_add_line(get_canvas_item(), verticesPos[indices[idx]], verticesPos[indices[idx + 1]], col_debug, 1.0);
+				VISUAL_SERVER_NAMESPACE::get_singleton()->canvas_item_add_line(get_canvas_item(), verticesPos[indices[idx + 1]], verticesPos[indices[idx + 2]], col_debug, 1.0);
+				VISUAL_SERVER_NAMESPACE::get_singleton()->canvas_item_add_line(get_canvas_item(), verticesPos[indices[idx + 2]], verticesPos[indices[idx]], col_debug, 1.0);
             }
         }
 	}

@@ -1,7 +1,7 @@
 #ifndef GDTEXTUREATLAS_H
 #define GDTEXTUREATLAS_H
 
-#include <dragonBones/DragonBonesHeaders.h>
+#include "dragonBones/DragonBonesHeaders.h"
 #include "scene/resources/texture.h"
 
 DRAGONBONES_NAMESPACE_BEGIN
