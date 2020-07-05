@@ -34,7 +34,7 @@ void GDSlot::_updateBlendMode()
 {
 	if (_renderDisplay)
 	{
-		BLENDMODE_CLASS::BlendMode __blend = CanvasItemMaterial::BLEND_MODE_MIX;
+		BLENDMODE_CLASS::BlendMode __blend = BLENDMODE_CLASS::BLEND_MODE_MIX;
 #if (VERSION_MAJOR >= 3)
 #else
          GDOwnerNode* __p_owner = _renderDisplay->p_owner;
