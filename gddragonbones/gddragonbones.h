@@ -4,8 +4,6 @@
 #include "scene/2d/node_2d.h"
 #include "src/GDFactory.h"
 #include "scene/resources/texture.h"
-#include "servers/rendering_server.h"
-
 
 #if (VERSION_MAJOR) >= 4
 	#include "servers/rendering_server.h"
