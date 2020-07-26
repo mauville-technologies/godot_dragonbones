@@ -1,2 +1,8 @@
 *.vs*
 *__pycache__*
+
+
+
+!/bin-build/osxcross
+/bin-build/osxcross/*
+!/bin-build/osxcross/.build-osxcross-to-this-dir
