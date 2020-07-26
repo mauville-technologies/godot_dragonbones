@@ -1,4 +1,4 @@
-FROM python:2.7.18
+FROM ubuntu:16.04
 
 # needed for mac builds
 ENV GODOT_VERSION="3.2"
@@ -6,6 +6,13 @@ ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"
 ENV GODOT_GD_LOCATION="/godot-dragonbones"
 
+# install python 3
+RUN apt-get update \
+  && apt-get install -y python3-pip python3-dev \
+  && cd /usr/local/bin \
+  && ln -s /usr/bin/python3 python \
+  && pip3 install --upgrade pip
+  
 # get dependencies
 RUN apt update \
     && apt -y install \
