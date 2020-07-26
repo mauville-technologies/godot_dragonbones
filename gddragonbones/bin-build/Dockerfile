@@ -28,7 +28,7 @@ RUN git clone https://github.com/godotengine/godot.git $GODOT_SOURCE_LOCATION
 
 # CHECKOUT CORRECT RELEASE BRANCH
 WORKDIR ${GODOT_SOURCE_LOCATION}
-
+RUN git checkout ${GODOT_VERSION}
 
 # GET GODOT-DRAGONBONES SOURCE
 RUN git clone https://github.com/mauville-technologies/godot-dragonbones.git $GODOT_GD_LOCATION
