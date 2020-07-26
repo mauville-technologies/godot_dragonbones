@@ -34,7 +34,7 @@ RUN git checkout ${GODOT_VERSION}
 RUN git clone https://github.com/mauville-technologies/godot-dragonbones.git $GODOT_GD_LOCATION
 
 # PUT THEM WHERE THEY BELONG
-RUN cp -avr ${GODOT_GD_LOCATION}/gddragonbones ${GODOT_SOURCE_LOCATION}/modules/
+RUN cp -ar ${GODOT_GD_LOCATION}/gddragonbones ${GODOT_SOURCE_LOCATION}/modules/
 
 
 # COPY BUILD SCRIPT

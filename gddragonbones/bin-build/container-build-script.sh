@@ -1,9 +1,4 @@
 #!/bin/bash
-CUR_DIR=$PWD
-cd ~/src/godot
-
-#MINGW32_PREFIX="/usr/bin/i686-w64-mingw32-"
-#MINGW64_PREFIX="/usr/bin/x86_64-w64-mingw32-"
 
 # windows
 scons -j8 platform=windows target=release_debug bits=32 use_lto=yes
