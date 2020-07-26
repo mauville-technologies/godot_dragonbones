@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
 # needed for mac builds
-ENV GODOT_VERSION="3.2.0"
+ENV GODOT_VERSION="3.2"
 ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"
 ENV GODOT_GD_LOCATION="/godot-dragonbones"
@@ -26,18 +26,21 @@ COPY osxcross/ $OSXCROSS_ROOT
 # GET GODOT 3.2 SOURCE
 RUN git clone https://github.com/godotengine/godot.git $GODOT_SOURCE_LOCATION
 
+# CHECKOUT CORRECT RELEASE BRANCH
+WORKDIR ${GODOT_SOURCE_LOCATION}
+
+
 # GET GODOT-DRAGONBONES SOURCE
 RUN git clone https://github.com/mauville-technologies/godot-dragonbones.git $GODOT_GD_LOCATION
 
 # PUT THEM WHERE THEY BELONG
 RUN cp -avr ${GODOT_GD_LOCATION}/gddragonbones ${GODOT_SOURCE_LOCATION}/modules/
 
-# BUILD THE THINGS
-WORKDIR ${GODOT_SOURCE_LOCATION}
 
 # COPY BUILD SCRIPT
 COPY ./container-build-script.sh .
 RUN chmod +x container-build-script.sh
 
+# BUILD THE THINGS
 # PROFIT
 CMD ["./container-build-script.sh"]
