@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM python:2.7.18
 
 # needed for mac builds
 ENV GODOT_VERSION="3.2"
@@ -14,7 +14,8 @@ RUN apt update \
     libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm \
     git \
 # windows deps
-    mingw-w64
+    mingw-w64 libstdc++6 
+    
 # android deps ?
 
 # iphone deps ?
