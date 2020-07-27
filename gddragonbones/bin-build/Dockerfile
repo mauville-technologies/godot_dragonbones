@@ -1,5 +1,5 @@
 FROM ubuntu:16.04
-
+SHELL ["/bin/bash", "-c"]
 RUN set +H
 
 # needed for mac builds
