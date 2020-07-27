@@ -19,4 +19,4 @@ else
 fi
 
 # Copy all builds to builds directory
-cp -avr ./bin/. /build
+cp -av bin/. /build/engine
