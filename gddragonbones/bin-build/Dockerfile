@@ -1,4 +1,7 @@
-FROM ubuntu:16.04
+ARG UBUNTU_VERSION=19.04
+FROM ubuntu:$UBUNTU_VERSION
+
+ARG UBUNTU_VERSION
 SHELL ["/bin/bash", "-c"]
 RUN set +H
 
@@ -63,4 +66,5 @@ RUN chmod +x container-build-script.sh
 
 # BUILD THE THINGS
 # PROFIT
-CMD ["./container-build-script.sh"]
+
+CMD ["./container-build-script.sh", "${UBUNTU_VERSION}"]

@@ -8,8 +8,9 @@
 rm -rf ./build
 mkdir -p ./build
 
-# Build docker image
-docker build . -t godot-dragonbones:local
+docker build --build-arg UBUNTU_VERSION="16.04". -t godot-dragonbones:x11
+docker build . -t godot-dragonbones:other
 
-# Run docker image
-docker run -v ./build:/build -it godot-dragonbones:local
+# Build clients
+docker run -v ./build:/build -it godot-dragonbones:x11
+docker run -v ./build:/build -it godot-dragonbones:other
