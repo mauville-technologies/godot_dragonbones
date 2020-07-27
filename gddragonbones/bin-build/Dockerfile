@@ -23,7 +23,7 @@ RUN apt update \
     libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm \
     git \
 # windows deps
-    mingw-w64 libstdc++6 && \
+    mingw-w64 libstdc++6 libc6-dev-i386 libc6-dev && \
     update-alternatives --set i686-w64-mingw32-gcc /usr/bin/i686-w64-mingw32-gcc-posix && \
     update-alternatives --set i686-w64-mingw32-g++ /usr/bin/i686-w64-mingw32-g++-posix && \
     update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix && \
