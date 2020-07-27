@@ -1,5 +1,7 @@
 FROM ubuntu:16.04
 
+RUN set +H
+
 # needed for mac builds
 ENV GODOT_VERSION="3.2"
 ENV OSXCROSS_ROOT="/osxcross"
@@ -28,7 +30,7 @@ RUN apt update \
     update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix && \
     python -m pip install scons && \
     # change first line of scons file to python 3
-    sed -i "1s/.*/$SCONS_TOP/" /usr/local/bin/scons
+    sed -i '1s/\#!\/usr\/local\/bin\/python/\#!\/usr\/local\/bin\/python3/' /usr/local/bin/scons
 
     
 # android deps ?
