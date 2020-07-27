@@ -29,7 +29,7 @@ RUN apt update \
 # windows deps
     mingw-w64 libstdc++6 libc6-dev-i386 libc6-dev \
 #osx deps
-    cmake patch libssl-devel lzma-devel libxml2-devel
+    cmake patch
 
     RUN update-alternatives --set i686-w64-mingw32-gcc /usr/bin/i686-w64-mingw32-gcc-posix && \
     update-alternatives --set i686-w64-mingw32-g++ /usr/bin/i686-w64-mingw32-g++-posix && \
