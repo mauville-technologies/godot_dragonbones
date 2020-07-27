@@ -10,3 +10,6 @@
 
 #osx
 /usr/local/bin/scons -j8 platform=osx target=release_debug use_lto=yes osxcross_sdk=darwin19
+
+# Copy all builds to builds directory
+cp -avr ./bin/. /build

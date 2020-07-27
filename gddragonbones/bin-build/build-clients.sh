@@ -4,8 +4,12 @@
 
 # Steps:
 
+# clean/create build dir
+rm -rf ./build
+mkdir -p ./build
+
 # Build docker image
+docker build . -t godot-dragonbones:local
 
 # Run docker image
-
-# extract all the clients to `/build`
+docker run -v ./build:/build -it godot-dragonbones:local
