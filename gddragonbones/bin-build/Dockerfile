@@ -5,7 +5,7 @@ ENV GODOT_VERSION="3.2"
 ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"
 ENV GODOT_GD_LOCATION="/godot-dragonbones"
-
+ENV SCONS_TOP="#!/usr/bin/python3"
 # install python 3
 RUN apt-get update \
   && apt-get install -y python3-pip python3-dev \
@@ -21,11 +21,14 @@ RUN apt update \
     libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm \
     git \
 # windows deps
-    mingw-w64 libstdc++6 \
+    mingw-w64 libstdc++6 && \
     update-alternatives --set i686-w64-mingw32-gcc /usr/bin/i686-w64-mingw32-gcc-posix && \
     update-alternatives --set i686-w64-mingw32-g++ /usr/bin/i686-w64-mingw32-g++-posix && \
     update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix && \
-    update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+    update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix && \
+    python -m pip install scons && \
+    # change first line of scons file to python 3
+    sed -i "1s/.*/$SCONS_TOP/" /usr/local/bin/scons
 
     
 # android deps ?
