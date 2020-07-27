@@ -11,7 +11,6 @@ ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"
 ENV GODOT_GD_LOCATION="/godot-dragonbones"
 
-RUN echo $UBUNTU_VERSION
 
 # install python 3
 RUN apt-get update \
@@ -69,4 +68,5 @@ COPY osxcross/ $OSXCROSS_ROOT
 # BUILD THE THINGS
 # PROFIT
 
+RUN echo $UBUNTU_VERSION
 CMD ["./container-build-script.sh", `${UBUNTU_VERSION}`]

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "BUILDING WITH UBUNTU VERSION ${1}"
-
 if [ "$1" = "16.04" ]
 then
     echo "BUILDING WITH UBUNTU VERSION ${1}"
