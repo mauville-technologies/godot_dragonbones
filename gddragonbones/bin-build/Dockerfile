@@ -27,8 +27,10 @@ RUN apt update \
     update-alternatives --set i686-w64-mingw32-gcc /usr/bin/i686-w64-mingw32-gcc-posix && \
     update-alternatives --set i686-w64-mingw32-g++ /usr/bin/i686-w64-mingw32-g++-posix && \
     update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix && \
-    update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix && \
-    python -m pip install scons && \
+    update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix && 
+
+# configure scons
+RUN python -m pip install scons && \
     # change first line of scons file to python 3
     sed -i '1s/\#!\/usr\/local\/bin\/python/\#!\/usr\/bin\/python3/' /usr/local/bin/scons
 
