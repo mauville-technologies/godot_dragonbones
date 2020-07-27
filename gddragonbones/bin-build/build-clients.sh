@@ -12,5 +12,5 @@ docker build --build-arg UBUNTU_VERSION="16.04" . -t godot-dragonbones:x11
 docker build . -t godot-dragonbones:other
 
 # Build clients
-docker run -v dragonbonesDir:/build -it godot-dragonbones:x11
-docker run -v dragonbonesDir:/build -it godot-dragonbones:other
+docker run -v dragonbonesDir:/build -v osxcross:/osxcross -it godot-dragonbones:x11
+docker run -v dragonbonesDir:/build -v osxcross:/osxcross -it godot-dragonbones:other

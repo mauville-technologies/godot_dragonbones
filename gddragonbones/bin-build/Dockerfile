@@ -27,8 +27,11 @@ RUN apt update \
     libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm \
     git gcc-multilib g++-multilib libxcursor-dev clang \
 # windows deps
-    mingw-w64 libstdc++6 libc6-dev-i386 libc6-dev && \
-    update-alternatives --set i686-w64-mingw32-gcc /usr/bin/i686-w64-mingw32-gcc-posix && \
+    mingw-w64 libstdc++6 libc6-dev-i386 libc6-dev \
+#osx deps
+    cmake patch libssl-devel lzma-devel libxml2-devel
+
+    RUN update-alternatives --set i686-w64-mingw32-gcc /usr/bin/i686-w64-mingw32-gcc-posix && \
     update-alternatives --set i686-w64-mingw32-g++ /usr/bin/i686-w64-mingw32-g++-posix && \
     update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix && \
     update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
@@ -38,7 +41,8 @@ RUN python -m pip install scons && \
     # change first line of scons file to python 3
     sed -i '1s/\#!\/usr\/local\/bin\/python/\#!\/usr\/bin\/python3/' /usr/local/bin/scons
 
-    
+WORKDIR ${OSXCROSS_ROOT}/tools
+RUN get_dependencies.sh
 # android deps ?
 
 # iphone deps ?
@@ -60,10 +64,6 @@ RUN cp -ar ${GODOT_GD_LOCATION}/gddragonbones ${GODOT_SOURCE_LOCATION}/modules/
 # COPY BUILD SCRIPT
 COPY ./container-build-script.sh .
 RUN chmod +x container-build-script.sh
-
-# set up osxcross
-# COPY TO CONTAINER
-COPY osxcross/ $OSXCROSS_ROOT
 
 # BUILD THE THINGS
 # PROFIT
