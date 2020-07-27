@@ -69,5 +69,5 @@ COPY osxcross/ $OSXCROSS_ROOT
 # PROFIT
 
 RUN echo $UBUNTU_VERSION
-
-CMD ./container-build-script.sh $UBUNTU_VERSION
+ENV UBUNTU_VERSIONS=$UBUNTU_VERSION
+CMD ./container-build-script.sh $UBUNTU_VERSIONS
