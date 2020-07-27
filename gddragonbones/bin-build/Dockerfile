@@ -1,7 +1,7 @@
 ARG UBUNTU_VERSION=19.10
 FROM ubuntu:$UBUNTU_VERSION
-
 ARG UBUNTU_VERSION
+
 SHELL ["/bin/bash", "-c"]
 RUN set +H
 
@@ -10,6 +10,8 @@ ENV GODOT_VERSION="3.2"
 ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"
 ENV GODOT_GD_LOCATION="/godot-dragonbones"
+
+RUN echo $UBUNTU_VERSION
 
 # install python 3
 RUN apt-get update \
@@ -24,7 +26,7 @@ RUN apt update \
 # linux deps
     build-essential scons pkg-config libx11-dev libxcursor-dev libxinerama-dev \
     libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm \
-    git \
+    git gcc-multilib g++-multilib \
 # windows deps
     mingw-w64 libstdc++6 libc6-dev-i386 libc6-dev && \
     update-alternatives --set i686-w64-mingw32-gcc /usr/bin/i686-w64-mingw32-gcc-posix && \
@@ -43,14 +45,14 @@ RUN python -m pip install scons && \
 # iphone deps ?
 
 # GET GODOT 3.2 SOURCE
-RUN git clone https://github.com/godotengine/godot.git $GODOT_SOURCE_LOCATION
+RUN git clone --progress --verbose https://github.com/godotengine/godot.git $GODOT_SOURCE_LOCATION
 
 # CHECKOUT CORRECT RELEASE BRANCH
 WORKDIR ${GODOT_SOURCE_LOCATION}
 RUN git checkout ${GODOT_VERSION}
 
 # GET GODOT-DRAGONBONES SOURCE
-RUN git clone https://github.com/mauville-technologies/godot-dragonbones.git $GODOT_GD_LOCATION
+RUN git clone --progress --verbose https://github.com/mauville-technologies/godot-dragonbones.git $GODOT_GD_LOCATION
 
 # PUT THEM WHERE THEY BELONG
 RUN cp -ar ${GODOT_GD_LOCATION}/gddragonbones ${GODOT_SOURCE_LOCATION}/modules/
@@ -67,4 +69,4 @@ COPY osxcross/ $OSXCROSS_ROOT
 # BUILD THE THINGS
 # PROFIT
 
-CMD ["./container-build-script.sh", "${UBUNTU_VERSION}"]
+CMD ["./container-build-script.sh", `${UBUNTU_VERSION}`]

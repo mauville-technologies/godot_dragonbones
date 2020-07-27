@@ -67,4 +67,4 @@ COPY osxcross/ $OSXCROSS_ROOT
 # BUILD THE THINGS
 # PROFIT
 
-CMD ["./container-build-script.sh", "${UBUNTU_VERSION}"]
+CMD ["./container-build-script.sh", ${UBUNTU_VERSION}]

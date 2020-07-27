@@ -1,15 +1,18 @@
 #!/bin/bash
 
-echo "BUILDING WITH UBUNTU VERSION ${1}"
 
 if [ "$1" = "16.04"]
 then
     # x11
+    echo "BUILDING WITH UBUNTU VERSION ${1}"
+
     /usr/local/bin/scons -j8 platform=x11 tools=no target=release bits=32 use_lto=yes
     /usr/local/bin/scons -j8 platform=x11 tools=no target=release_debug bits=32 use_lto=yes
     /usr/local/bin/scons -j8 platform=x11 tools=no target=release bits=64 use_lto=yes
     /usr/local/bin/scons -j8 platform=x11 tools=no target=release_debug bits=64 use_lto=yes
 else
+    echo "BUILDING WITH UBUNTU VERSION ${1}"
+
     # windows
     /usr/local/bin/scons -j8 platform=windows tools=no target=release_debug bits=32 use_lto=yes
     /usr/local/bin/scons -j8 platform=windows tools=no target=release bits=32 use_lto=yes
