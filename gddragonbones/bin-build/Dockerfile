@@ -42,10 +42,6 @@ RUN python -m pip install scons && \
 
 # iphone deps ?
 
-# set up osxcross
-# COPY TO CONTAINER
-COPY osxcross/ $OSXCROSS_ROOT
-
 # GET GODOT 3.2 SOURCE
 RUN git clone https://github.com/godotengine/godot.git $GODOT_SOURCE_LOCATION
 
@@ -63,6 +59,10 @@ RUN cp -ar ${GODOT_GD_LOCATION}/gddragonbones ${GODOT_SOURCE_LOCATION}/modules/
 # COPY BUILD SCRIPT
 COPY ./container-build-script.sh .
 RUN chmod +x container-build-script.sh
+
+# set up osxcross
+# COPY TO CONTAINER
+COPY osxcross/ $OSXCROSS_ROOT
 
 # BUILD THE THINGS
 # PROFIT
