@@ -13,13 +13,6 @@ ENV GODOT_GD_LOCATION="/godot-dragonbones"
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV UNATTENDED=true
 
-# x11 32bit deps
-RUN dpkg --add-architecture i386 && \
-    apt update && \
-    apt -y install \
-        gcc-multilib libx11-6:i386 libxrandr-dev:i386 libxinerama-dev:i386 libxxf86vm-dev:i386 libxcursor-dev:i386 \
-        libxi-dev:i386 libasound2-dev:i386 libpulse-dev:i386 libgl1-mesa-dev:i386
-
 # install python 3
 RUN apt-get update \
   && apt-get install -y python3-pip python3-dev \
@@ -60,6 +53,13 @@ RUN chmod +x get_dependencies.sh && ./get_dependencies.sh
 # GET GODOT 3.2 SOURCE
 RUN git clone --progress --verbose https://github.com/godotengine/godot.git $GODOT_SOURCE_LOCATION
 
+# x11 32bit deps
+RUN dpkg --add-architecture i386 && \
+    apt update && \
+    apt -y install \
+        gcc-multilib libx11-6:i386 libxrandr-dev:i386 libxinerama-dev:i386 libxxf86vm-dev:i386 libxcursor-dev:i386 \
+        libxi-dev:i386 libasound2-dev:i386 libpulse-dev:i386 libgl1-mesa-dev:i386
+        
 # CHECKOUT CORRECT RELEASE BRANCH
 WORKDIR ${GODOT_SOURCE_LOCATION}
 RUN git checkout ${GODOT_VERSION}
