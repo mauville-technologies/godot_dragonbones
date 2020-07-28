@@ -1,4 +1,4 @@
-ARG UBUNTU_VERSION=19.10
+ARG UBUNTU_VERSION=20.04
 FROM ubuntu:$UBUNTU_VERSION
 ARG UBUNTU_VERSION
 
@@ -11,6 +11,12 @@ ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"
 ENV GODOT_GD_LOCATION="/godot-dragonbones"
 
+# x11 32bit deps
+RUN dpkg --add-architecture i386 && \
+    apt update && \
+    apt -y install \
+        gcc-multilib libx11-6:i386 libxrandr-dev:i386 libxinerama-dev:i386 libxxf86vm-dev:i386 libxcursor-dev:i386 \
+        libxi-dev:i386 libasound2-dev:i386 libpulse-dev:i386 libgl1-mesa-dev:i386
 
 # install python 3
 RUN apt-get update \

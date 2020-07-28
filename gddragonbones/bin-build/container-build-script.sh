@@ -1,20 +1,22 @@
 #!/bin/bash
 
-cd $OSXCROSS_ROOT
-./build.sh
 
-cd $GODOT_SOURCE_LOCATION
 
 if [ "$1" = "16.04" ]
 then
     echo "BUILDING WITH UBUNTU VERSION ${1}"
-
+    cd $GODOT_SOURCE_LOCATION
+    
     # x11
     /usr/local/bin/scons -j8 platform=x11 target=release_debug bits=32 use_lto=yes
     /usr/local/bin/scons -j8 platform=x11 target=release_debug bits=64 use_lto=yes
 else
     echo "BUILDING WITH UBUNTU VERSION ${1}"
 
+    cd $OSXCROSS_ROOT
+    ./build.sh
+
+    cd $GODOT_SOURCE_LOCATION
     # windows
     /usr/local/bin/scons -j8 platform=windows target=release_debug bits=32 use_lto=yes
     /usr/local/bin/scons -j8 platform=windows target=release_debug bits=64 use_lto=yes
