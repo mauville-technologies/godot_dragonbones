@@ -2,7 +2,7 @@
 
 
 
-if [ "$1" = "16.04" ]
+if [ "$1" = "17.04" ]
 then
     echo "BUILDING WITH UBUNTU VERSION ${1}"
     cd $GODOT_SOURCE_LOCATION

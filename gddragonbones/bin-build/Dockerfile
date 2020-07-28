@@ -20,6 +20,13 @@ RUN apt-get update \
   && ln -s /usr/bin/python3 python \
   && pip3 install --upgrade pip
 
+# x11 32bit deps
+RUN dpkg --add-architecture i386 && \
+    apt update && \
+    apt -y install \
+        gcc-multilib libx11-6:i386 libxrandr-dev:i386 libxinerama-dev:i386 libxxf86vm-dev:i386 libxcursor-dev:i386 \
+        libxi-dev:i386 libasound2-dev:i386 libpulse-dev:i386 libgl1-mesa-dev:i386
+
 # get dependencies
 RUN apt update \
     && apt -y install \
@@ -53,13 +60,6 @@ RUN chmod +x get_dependencies.sh && ./get_dependencies.sh
 # GET GODOT 3.2 SOURCE
 RUN git clone --progress --verbose https://github.com/godotengine/godot.git $GODOT_SOURCE_LOCATION
 
-# x11 32bit deps
-RUN dpkg --add-architecture i386 && \
-    apt update && \
-    apt -y install \
-        gcc-multilib libx11-6:i386 libxrandr-dev:i386 libxinerama-dev:i386 libxxf86vm-dev:i386 libxcursor-dev:i386 \
-        libxi-dev:i386 libasound2-dev:i386 libpulse-dev:i386 libgl1-mesa-dev:i386
-        
 # CHECKOUT CORRECT RELEASE BRANCH
 WORKDIR ${GODOT_SOURCE_LOCATION}
 RUN git checkout ${GODOT_VERSION}
