@@ -1,5 +1,10 @@
 #!/bin/bash
 
+cd $OSXCROSS_ROOT
+./build.sh
+
+cd $GODOT_SOURCE_LOCATION
+
 if [ "$1" = "16.04" ]
 then
     echo "BUILDING WITH UBUNTU VERSION ${1}"

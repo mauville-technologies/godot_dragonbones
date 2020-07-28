@@ -42,8 +42,12 @@ RUN python -m pip install scons && \
     sed -i '1s/\#!\/usr\/local\/bin\/python/\#!\/usr\/bin\/python3/' /usr/local/bin/scons
 
 COPY ./get_dependencies.sh .
+<<<<<<< Updated upstream
 RUN chmod +x get_dependencies.sh
 RUN ./get_dependencies.sh
+=======
+RUN chmod +x get_dependencies.sh && ./get_dependencies.sh
+>>>>>>> Stashed changes
 
 # android deps ?
 
