@@ -9,7 +9,7 @@ then
     
     # x11
     /usr/local/bin/scons -j8 platform=x11 target=release_debug bits=32 use_lto=yes
-#    /usr/local/bin/scons -j8 platform=x11 target=release_debug bits=64 use_lto=yes
+    /usr/local/bin/scons -j8 platform=x11 target=release_debug bits=64 use_lto=yes
 else
     echo "BUILDING WITH UBUNTU VERSION ${1}"
 
