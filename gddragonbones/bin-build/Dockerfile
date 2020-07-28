@@ -1,4 +1,4 @@
-ARG UBUNTU_VERSION=20.04
+ARG UBUNTU_VERSION=18.04
 FROM ubuntu:$UBUNTU_VERSION
 ARG UBUNTU_VERSION
 
@@ -10,6 +10,8 @@ ENV GODOT_VERSION="3.2"
 ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"
 ENV GODOT_GD_LOCATION="/godot-dragonbones"
+ENV DEBIAN_FRONTEND="noninteractive"
+ENV UNATTENDED=true
 
 # x11 32bit deps
 RUN dpkg --add-architecture i386 && \
