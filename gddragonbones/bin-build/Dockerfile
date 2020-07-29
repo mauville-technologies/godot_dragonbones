@@ -13,6 +13,9 @@ ENV GODOT_GD_LOCATION="/godot-dragonbones"
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV UNATTENDED=true
 
+# install software propertoes
+RUN apt update && apt -y install software-properties-common
+
 # install python 3
 RUN apt-get update \
   && apt-get install -y python3-pip python3-dev \
@@ -27,9 +30,9 @@ RUN dpkg --add-architecture i386 && \
         gcc-multilib libx11-6:i386 libxrandr-dev:i386 libxinerama-dev:i386 libxxf86vm-dev:i386 libxcursor-dev:i386 \
         libxi-dev:i386 libasound2-dev:i386 libpulse-dev:i386 libgl1-mesa-dev:i386 wget
 
-RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - && \
-    add-apt-repository -u 'http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main' && \
-    apt install clang-9
+#RUN wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - 
+#RUN add-apt-repository -u 'http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main'
+RUN apt install -y clang-9
 
 # get dependencies
 RUN apt update \
