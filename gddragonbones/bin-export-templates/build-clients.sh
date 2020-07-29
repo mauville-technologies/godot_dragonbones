@@ -1,16 +1,8 @@
 #!/bin/bash
 
-# This is the top file called
-
 # Steps:
+docker build . -t godot-dragonbones:templates
 
-# clean/create build dir
-rm -rf ./build
-mkdir -p ./build
-
-docker build --build-arg UBUNTU_VERSION="16.04" . -t godot-dragonbones:x11
-docker build . -t godot-dragonbones:other
-
-# Build clients
-docker run -v ./build:/build -it godot-dragonbones:x11
-docker run -v ./build:/build -it godot-dragonbones:other
+# build templates
+# replace these volumes with 1 folder and the built and compiled osxcross (build.sh build_clang.sh)
+docker run -v /home/ozzadar/src/dragonbonesDir:/build -v /home/ozzadar/src/osxcross:/osxcross -it godot-dragonbones:templates
