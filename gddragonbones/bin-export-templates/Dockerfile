@@ -52,9 +52,9 @@ RUN python -m pip install scons && \
     # change first line of scons file to python 3
     sed -i '1s/\#!\/usr\/local\/bin\/python/\#!\/usr\/bin\/python3/' /usr/local/bin/scons
 
-COPY ./get_dependencies.sh .
+# COPY ./get_dependencies.sh .
 
-RUN chmod +x get_dependencies.sh && ./get_dependencies.sh
+# RUN chmod +x get_dependencies.sh && ./get_dependencies.sh
 
 # android deps ?
 
