@@ -28,7 +28,8 @@ cp -r misc/dist/osx_tools.app ./Godot-dragonbones-3.2.50.app
 mkdir -p Godot-dragonbones-3.2.50.app/Contents/MacOS
 mv bin/*osx.opt.tools* Godot-dragonbones-3.2.50.app/Contents/MacOS/Godot
 chmod +x Godot-dragonbones-3.2.50.app/Contents/MacOS/Godot
-zip -r -y /build/engine Godot-dragonbones-3.2.50.app
+rm -f /build/engine/Godot-dragonbones.osx.64.zip
+zip -r -y /build/engine/Godot-dragonbones.osx.64.zip Godot-dragonbones-3.2.50.app
 
 cp -av bin/. /build/engine
 
@@ -64,16 +65,15 @@ mkdir -p /build/templates
 mv bin/*server.* /build/templates
 
 # rename to expected format and move to expected folder
-mkdir -p bin/templates
-mv bin/*x11.opt.debug.32* bin/templates/linux_x11_32_debug
-mv bin/*x11.opt.debug.64* bin/templates/linux_x11_64_debug
-mv bin/*x11.opt.32* bin/templates/linux_x11_32_release
-mv bin/*x11.opt.64* bin/templates/linux_x11_32_release
+mv bin/*x11.opt.debug.32* bin/linux_x11_32_debug
+mv bin/*x11.opt.debug.64* bin/linux_x11_64_debug
+mv bin/*x11.opt.32* bin/linux_x11_32_release
+mv bin/*x11.opt.64* bin/linux_x11_32_release
 
-mv bin/*windows.opt.debug.32* bin/templates/windows_32_debug.exe
-mv bin/*windows.opt.debug.64* bin/templates/windows_64_debug.exe
-mv bin/*windows.opt.32* bin/templates/windows_32_release.exe
-mv bin/*windows.opt.64* bin/templates/windows_64_release.exe
+mv bin/*windows.opt.debug.32* bin/windows_32_debug.exe
+mv bin/*windows.opt.debug.64* bin/windows_64_debug.exe
+mv bin/*windows.opt.32* bin/windows_32_release.exe
+mv bin/*windows.opt.64* bin/windows_64_release.exe
 
 # Package .app
 cp -r misc/dist/osx_tools.app ./osx_template.app
@@ -96,6 +96,8 @@ echo "3.2.50.stable" > bin/version.txt
 
 # zip file
 mv bin templates
+
+rm -f godot-dragonbones-templates.zip
 zip -r godot-dragonbones-templates.zip templates
 
 # persist
