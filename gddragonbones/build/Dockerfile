@@ -36,7 +36,7 @@ RUN apt update \
 # linux deps
     build-essential scons pkg-config libx11-dev libxcursor-dev libxinerama-dev \
     libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm \
-    git gcc-multilib g++-multilib libxcursor-dev \
+    git gcc-multilib g++-multilib libxcursor-dev zip \
 # windows deps
     mingw-w64 libstdc++6 libc6-dev-i386 libc6-dev \
 #osx deps
@@ -73,6 +73,10 @@ RUN cp -ar ${GODOT_GD_LOCATION}/gddragonbones ${GODOT_SOURCE_LOCATION}/modules/
 # COPY BUILD SCRIPT
 COPY ./container-build-script.sh .
 RUN chmod +x container-build-script.sh
+
+RUN rm misc/dist/osx_tools.app/Contents/Info.plist
+COPY Info.plist misc/dist/osx_tools.app/Contents
+COPY Info-templates.plist misc/dist/osx_tools.app/Contents
 
 # COPY GODOT-DRAGONBONES VERSION
 RUN rm version.py

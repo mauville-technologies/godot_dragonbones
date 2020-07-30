@@ -1,3 +1,4 @@
+# GODOT DRAGON BONES VERSION FILE
 short_name = "godot-dragonbones"
 name = "Godot Dragonbones Engine"
 major = 1
