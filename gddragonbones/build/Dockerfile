@@ -36,7 +36,7 @@ RUN apt update \
 # linux deps
     build-essential scons pkg-config libx11-dev libxcursor-dev libxinerama-dev \
     libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm \
-    git gcc-multilib g++-multilib libxcursor-dev zip \
+    git gcc-multilib g++-multilib libxcursor-dev zip libxml2-dev libssl-dev \
 # windows deps
     mingw-w64 libstdc++6 libc6-dev-i386 libc6-dev \
 #osx deps
