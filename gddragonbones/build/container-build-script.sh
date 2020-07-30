@@ -24,11 +24,11 @@ cd $GODOT_SOURCE_LOCATION
 mkdir -p /build/engine
 
 # Package .app
-cp -r misc/dist/osx_tools.app ./Godot-dragonbones-1.0.app
-mkdir -p Godot-dragonbones-1.0.app/Contents/MacOS
-mv bin/*osx.opt.tools* Godot-dragonbones-1.0.app/Contents/MacOS/Godot
-chmod +x Godot-dragonbones-1.0.app/Contents/MacOS/Godot
-zip -r -y /build/engine Godot-dragonbones-1.0.app
+cp -r misc/dist/osx_tools.app ./Godot-dragonbones-3.2.50.app
+mkdir -p Godot-dragonbones-3.2.50.app/Contents/MacOS
+mv bin/*osx.opt.tools* Godot-dragonbones-3.2.50.app/Contents/MacOS/Godot
+chmod +x Godot-dragonbones-3.2.50.app/Contents/MacOS/Godot
+zip -r -y /build/engine Godot-dragonbones-3.2.50.app
 
 cp -av bin/. /build/engine
 
@@ -92,7 +92,7 @@ rm bin/*osx.opt*
 rm -rf bin/osx_template.app
 
 # Add version.txt
-echo "1.0.0.stable" > bin/version.txt
+echo "3.2.50.stable" > bin/version.txt
 
 # zip file
 mv bin templates
