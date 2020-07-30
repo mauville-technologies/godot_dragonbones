@@ -52,10 +52,6 @@ RUN python -m pip install scons && \
     # change first line of scons file to python 3
     sed -i '1s/\#!\/usr\/local\/bin\/python/\#!\/usr\/bin\/python3/' /usr/local/bin/scons
 
-# COPY ./get_dependencies.sh .
-
-# RUN chmod +x get_dependencies.sh && ./get_dependencies.sh
-
 # android deps ?
 
 # iphone deps ?
@@ -77,6 +73,10 @@ RUN cp -ar ${GODOT_GD_LOCATION}/gddragonbones ${GODOT_SOURCE_LOCATION}/modules/
 # COPY BUILD SCRIPT
 COPY ./container-build-script.sh .
 RUN chmod +x container-build-script.sh
+
+# COPY GODOT-DRAGONBONES VERSION
+RUN rm version.py
+COPY ./version.py .
 
 # BUILD THE THINGS
 # PROFIT
