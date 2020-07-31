@@ -155,23 +155,26 @@ void GDDragonBones::dispatch_event(const String& _str_type, const EventObject* _
 #endif
         return;
 
-    if(_str_type == EventObject::START)
-        emit_signal("dragon_anim_start", String(_p_value->animationState->name.c_str()));
-    else if(_str_type == EventObject::LOOP_COMPLETE)
-        emit_signal("dragon_anim_loop_complete", String(_p_value->animationState->name.c_str()));
-    else if(_str_type == EventObject::COMPLETE)
-        emit_signal("dragon_anim_complete", String(_p_value->animationState->name.c_str()));
-    else if(_str_type == EventObject::FRAME_EVENT)
-        emit_signal("dragon_anim_event", String(_p_value->animationState->name.c_str()), String(_p_value->name.c_str()));
-    else if(_str_type == EventObject::FADE_IN)
-        emit_signal("dragon_fade_in", String(_p_value->animationState->name.c_str()));
-    else if(_str_type == EventObject::FADE_IN_COMPLETE)
-        emit_signal("dragon_fade_in_complete", String(_p_value->animationState->name.c_str()));
-    else if(_str_type == EventObject::FADE_OUT)
-        emit_signal("dragon_fade_out", String(_p_value->animationState->name.c_str()));
-    else if(_str_type == EventObject::FADE_OUT_COMPLETE)
-        emit_signal("dragon_fade_out_complete", String(_p_value->animationState->name.c_str()));
-
+    if (_str_type == EventObject::START)
+		emit_signal("dragon_anim_start", String(_p_value->animationState->name.c_str()));
+	else if (_str_type == EventObject::LOOP_COMPLETE)
+		emit_signal("dragon_anim_loop_complete", String(_p_value->animationState->name.c_str()));
+	else if (_str_type == EventObject::COMPLETE)
+		emit_signal("dragon_anim_complete", String(_p_value->animationState->name.c_str()));
+	else if (_str_type == EventObject::FRAME_EVENT)
+		emit_signal("dragon_anim_event", String(_p_value->animationState->name.c_str()), String(_p_value->name.c_str()),
+				Variant(_p_value->getData()->getInt(0)),
+				Variant(_p_value->getData()->getFloat(0)),
+				String(_p_value->getData()->getString(0).c_str()));
+	else if (_str_type == EventObject::FADE_IN)
+		emit_signal("dragon_fade_in", String(_p_value->animationState->name.c_str()));
+	else if (_str_type == EventObject::FADE_IN_COMPLETE)
+		emit_signal("dragon_fade_in_complete", String(_p_value->animationState->name.c_str()));
+	else if (_str_type == EventObject::FADE_OUT)
+		emit_signal("dragon_fade_out", String(_p_value->animationState->name.c_str()));
+	else if (_str_type == EventObject::FADE_OUT_COMPLETE)
+		emit_signal("dragon_fade_out_complete", String(_p_value->animationState->name.c_str()));
+	
 }
 
 void GDDragonBones::set_resource(Ref<GDDragonBones::GDDragonBonesResource> _p_data)
@@ -786,13 +789,16 @@ void GDDragonBones::_bind_methods()
 
     ADD_SIGNAL(MethodInfo("dragon_anim_start", PropertyInfo(Variant::STRING, "anim")));
     ADD_SIGNAL(MethodInfo("dragon_anim_complete", PropertyInfo(Variant::STRING, "anim")));
-    ADD_SIGNAL(MethodInfo("dragon_anim_event", PropertyInfo(Variant::STRING, "anim"), PropertyInfo(Variant::STRING, "ev")));
+    ADD_SIGNAL(MethodInfo("dragon_anim_event", PropertyInfo(Variant::STRING, "anim"), PropertyInfo(Variant::STRING, "ev"),
+			PropertyInfo(Variant::INT, "int"),
+			PropertyInfo(Variant::REAL_VARIANT, "float"),
+			PropertyInfo(Variant::STRING, "string")));
     ADD_SIGNAL(MethodInfo("dragon_anim_loop_complete", PropertyInfo(Variant::STRING, "anim")));
     ADD_SIGNAL(MethodInfo("dragon_anim_snd_event", PropertyInfo(Variant::STRING, "anim"), PropertyInfo(Variant::STRING, "ev")));
     ADD_SIGNAL(MethodInfo("dragon_fade_in", PropertyInfo(Variant::STRING, "anim")));
     ADD_SIGNAL(MethodInfo("dragon_fade_in_complete", PropertyInfo(Variant::STRING, "anim")));
     ADD_SIGNAL(MethodInfo("dragon_fade_out", PropertyInfo(Variant::STRING, "anim")));
-    ADD_SIGNAL(MethodInfo("dragon_fade_out_complete", PropertyInfo(Variant::STRING, "anim")));
+	ADD_SIGNAL(MethodInfo("dragon_fade_out_complete", PropertyInfo(Variant::STRING, "anim")));
 
     BIND_CONSTANT(ANIMATION_PROCESS_FIXED);
     BIND_CONSTANT(ANIMATION_PROCESS_IDLE);
