@@ -74,10 +74,6 @@ RUN cp -ar ${GODOT_GD_LOCATION}/gddragonbones ${GODOT_SOURCE_LOCATION}/modules/
 COPY ./container-build-script.sh .
 RUN chmod +x container-build-script.sh
 
-RUN rm misc/dist/osx_tools.app/Contents/Info.plist
-COPY Info.plist misc/dist/osx_tools.app/Contents
-COPY Info-templates.plist misc/dist/osx_tools.app/Contents
-
 # COPY GODOT-DRAGONBONES VERSION
 RUN rm version.py
 COPY ./version.py .

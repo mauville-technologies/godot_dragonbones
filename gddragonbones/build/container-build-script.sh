@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "NEW SCRIPTY!"
 
 # install clang 
 cd $OSXCROSS_ROOT/build/llvm-9.0.0.src/build_stage2 && make install
@@ -55,8 +56,8 @@ rm -rf bin/
 /usr/local/bin/scons -j8 platform=windows target=release bits=64 use_lto=yes tools=no debug_symbols=no
 
 # osx
-/usr/local/bin/scons -j8 platform=osx target=release_debug osxcross_sdk=darwin19 debug_symbols=no
-/usr/local/bin/scons -j8 platform=osx target=release osxcross_sdk=darwin19 debug_symbols=no
+/usr/local/bin/scons -j8 platform=osx target=release_debug osxcross_sdk=darwin19 debug_symbols=no tools=no
+/usr/local/bin/scons -j8 platform=osx target=release osxcross_sdk=darwin19 debug_symbols=no tools=no
 
 # Copy all builds to builds directory
 mkdir -p /build/templates
@@ -68,7 +69,7 @@ mv bin/*server.* /build/templates
 mv bin/*x11.opt.debug.32* bin/linux_x11_32_debug
 mv bin/*x11.opt.debug.64* bin/linux_x11_64_debug
 mv bin/*x11.opt.32* bin/linux_x11_32_release
-mv bin/*x11.opt.64* bin/linux_x11_32_release
+mv bin/*x11.opt.64* bin/linux_x11_64_release
 
 mv bin/*windows.opt.debug.32* bin/windows_32_debug.exe
 mv bin/*windows.opt.debug.64* bin/windows_64_debug.exe
@@ -76,29 +77,30 @@ mv bin/*windows.opt.32* bin/windows_32_release.exe
 mv bin/*windows.opt.64* bin/windows_64_release.exe
 
 # Package .app
-cp -r misc/dist/osx_tools.app ./osx_template.app
-# put the proper plist in there
-rm misc/dist/osx_tools.app/Contents/Info.plist
-mv misc/dist/osx_tools.app/Contents/Info-templates.plist misc/dist/osx_tools.app/Contents/Info.plist
+
+# copy the directory over
+cp -r misc/dist/osx_template.app bin/osx_template.app
 
 mkdir -p bin/osx_template.app/Contents/MacOS
-mv bin/*osx.opt.debug.64* ./bin/osx_template.app/Contents/MacOS/godot_osx_debug.64
-mv bin/*osx.opt.64* ./bin/osx_template.app/Contents/MacOS/godot_osx_release.64
-chmod +x ./bin/osx_template.app/Contents/MacOS/godot_osx_debug.64
-chmod +x ./bin/osx_template.app/Contents/MacOS/godot_osx_release.64
-zip -r -y bin/osx.zip ./bin/osx_template.app
+mv bin/*osx.opt.debug.64* bin/osx_template.app/Contents/MacOS/godot_osx_debug.64
+mv bin/*osx.opt.64* bin/osx_template.app/Contents/MacOS/godot_osx_release.64
+chmod +x bin/osx_template.app/Contents/MacOS/godot_osx_debug.64
+chmod +x bin/osx_template.app/Contents/MacOS/godot_osx_release.64
+cd bin
+zip -r osx.zip osx_template.app
+cd ..
 
-rm bin/*osx.opt*
 rm -rf bin/osx_template.app
 
 # Add version.txt
 echo "3.2.50.stable" > bin/version.txt
 
 # zip file
-mv bin templates
+mv ./bin ./templates
 
 rm -f godot-dragonbones-templates.zip
-zip -r godot-dragonbones-templates.zip templates
+zip -r godot-dragonbones-templates.zip.tpz templates
 
 # persist
-cp -v godot-dragonbones-templates.zip /build/templates
+cp -v godot-dragonbones-templates.zip.tpz /build/templates
+
