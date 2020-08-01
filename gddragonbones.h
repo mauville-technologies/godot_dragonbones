@@ -54,9 +54,9 @@ public:
 		GDDragonBonesResource();
         ~GDDragonBonesResource();
 
-        void       set_def_texture_path(const String& _path);
-        bool       load_texture_atlas_data(const String& _path);
-        bool       load_bones_data(const String& _path);
+        void set_def_texture_path(const String& _path);
+        bool load_texture_atlas_data(const String& _path);
+        bool load_bones_data(const String& _path);
 
         String           str_default_tex_path;
         char*            p_data_texture_atlas;
@@ -95,11 +95,11 @@ public:
 	GDDragonBones();
     ~GDDragonBones();
 
-    void    _cleanup();
+    void _cleanup();
 
     // to initial pose current animation
-    void    _reset();
-    void    _set_process(bool _b_process, bool _b_force = false);
+    void _reset();
+    void _set_process(bool _b_process, bool _b_force = false);
 
     void dispatch_event(const String& _str_type, const EventObject* _p_value);
     void dispatch_snd_event(const String& _str_type, const EventObject* _p_value);
@@ -146,23 +146,24 @@ public:
 
     void set_animation_process_mode(GDDragonBones::AnimMode _mode);
     AnimMode get_animation_process_mode() const;
+	Color get_slot_display_color_multiplier(const String &_slot_name);
+	void set_slot_display_color_multiplier(const String &_slot_name, const Color &_color);
+	void set_slot_display_index(const String &_slot_name, int _index = 0);
+	void play(bool _b_play = true);
+    void play_from_time(float _f_time);
+    void play_from_progress(float _f_progress);
 
-    void set_slot_display_index(const String &_slot_name, int _index = 0);
-	void	play(bool _b_play = true);
-    void    play_from_time(float _f_time);
-    void    play_from_progress(float _f_progress);
+    void flip_x(bool _b_flip);
+    bool is_fliped_x() const;
 
-    void    flip_x(bool _b_flip);
-    bool    is_fliped_x() const;
+    void flip_y(bool _b_flip);
+    bool is_fliped_y() const;
 
-    void    flip_y(bool _b_flip);
-    bool    is_fliped_y() const;
+    bool is_playing() const;
 
-    bool    is_playing() const;
-
-    bool    has_anim(const String& _str_anim) const;
-    void    stop(bool _b_all = false);
-    inline void    stop_all() { stop(true); }
+    bool has_anim(const String& _str_anim) const;
+    void stop(bool _b_all = false);
+    inline void stop_all() { stop(true); }
 };
 
 VARIANT_ENUM_CAST(GDDragonBones::AnimMode);

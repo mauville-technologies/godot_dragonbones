@@ -513,12 +513,33 @@ void    GDDragonBones::_reset()
 {
     p_armature->getAnimation()->reset();
 }
+
 void GDDragonBones::set_slot_display_index(const String &_slot_name, int _index) {
 	p_armature->getSlot(_slot_name.ascii().get_data())->setDisplayIndex(_index);
 }
 
-void   GDDragonBones::play(bool _b_play)
-{
+Color GDDragonBones::get_slot_display_color_multiplier(const String &_slot_name) {
+	ColorTransform transform(p_armature->getSlot(_slot_name.ascii().get_data())->_colorTransform);
+
+	Color return_color;
+	return_color.r = transform.redMultiplier;
+	return_color.g = transform.greenMultiplier;
+	return_color.b = transform.blueMultiplier;
+	return_color.a = transform.alphaMultiplier;
+	return return_color;
+}
+
+void GDDragonBones::set_slot_display_color_multiplier(const String &_slot_name, const Color &_color) {
+	ColorTransform _new_color;
+	_new_color.redMultiplier = _color.r;
+	_new_color.greenMultiplier = _color.g;
+	_new_color.blueMultiplier = _color.b;
+	_new_color.alphaMultiplier = _color.a;
+
+	p_armature->getSlot(_slot_name.ascii().get_data())->_setColor(_new_color);
+}
+
+void GDDragonBones::play(bool _b_play) {
     b_playing = _b_play;
     if(!_b_play)
     {
@@ -757,6 +778,8 @@ void GDDragonBones::_bind_methods()
     CLASS_BIND_GODO::bind_method(METH("stop_all"), &GDDragonBones::stop_all);
     CLASS_BIND_GODO::bind_method(METH("reset"), &GDDragonBones::_reset);
 	CLASS_BIND_GODO::bind_method(METH("set_slot_display_index"), &GDDragonBones::set_slot_display_index);
+	CLASS_BIND_GODO::bind_method(METH("set_slot_display_color_multiplier"), &GDDragonBones::set_slot_display_color_multiplier);
+	CLASS_BIND_GODO::bind_method(METH("get_slot_display_color_multiplier"), &GDDragonBones::get_slot_display_color_multiplier);
     CLASS_BIND_GODO::bind_method(METH("play"), &GDDragonBones::play);
     CLASS_BIND_GODO::bind_method(METH("play_from_time"), &GDDragonBones::play_from_time);
     CLASS_BIND_GODO::bind_method(METH("play_from_progress"), &GDDragonBones::play_from_progress);
