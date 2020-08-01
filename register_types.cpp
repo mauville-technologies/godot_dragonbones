@@ -102,7 +102,7 @@ public:
 
 static ResourceFormatLoaderGDDragonBones *resource_loader_GDDragonBones = NULL;
 
-void register_gddragonbones_types()
+void register_godot_dragonbones_types()
 {
     REG_CLASS_BIND_GODO<GDDragonBones>();
     REG_CLASS_BIND_GODO<GDDragonBones::GDDragonBonesResource>();
@@ -110,7 +110,7 @@ void register_gddragonbones_types()
 	ResourceLoader::add_resource_format_loader(resource_loader_GDDragonBones);
 }
 
-void unregister_gddragonbones_types()
+void unregister_godot_dragonbones_types()
 {
 	if (resource_loader_GDDragonBones)
 		memdelete(resource_loader_GDDragonBones);

@@ -26,5 +26,5 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
-void register_gddragonbones_types();
-void unregister_gddragonbones_types();
+void register_godot_dragonbones_types();
+void unregister_godot_dragonbones_types();

@@ -161,11 +161,26 @@ void GDDragonBones::dispatch_event(const String& _str_type, const EventObject* _
 		emit_signal("dragon_anim_loop_complete", String(_p_value->animationState->name.c_str()));
 	else if (_str_type == EventObject::COMPLETE)
 		emit_signal("dragon_anim_complete", String(_p_value->animationState->name.c_str()));
-	else if (_str_type == EventObject::FRAME_EVENT)
+	else if (_str_type == EventObject::FRAME_EVENT) {
+		int int_val = 0;
+		int float_val = 0;
+		const char *string_val = std::string("").c_str();
+		UserData* data = _p_value->getData();
+
+		if (data != NULL) {
+				int_val = _p_value->getData()->getInt(0);
+				float_val = _p_value->getData()->getFloat(0);
+
+				if (!data->getStrings().empty()) {
+					string_val = _p_value->getData()->getString(0).c_str();
+				}
+		}
+
 		emit_signal("dragon_anim_event", String(_p_value->animationState->name.c_str()), String(_p_value->name.c_str()),
-				Variant(_p_value->getData()->getInt(0)),
-				Variant(_p_value->getData()->getFloat(0)),
-				String(_p_value->getData()->getString(0).c_str()));
+				Variant(int_val),
+				Variant(float_val),
+				String(string_val));
+	}
 	else if (_str_type == EventObject::FADE_IN)
 		emit_signal("dragon_fade_in", String(_p_value->animationState->name.c_str()));
 	else if (_str_type == EventObject::FADE_IN_COMPLETE)
