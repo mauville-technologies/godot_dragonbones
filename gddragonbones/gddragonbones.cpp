@@ -230,6 +230,7 @@ void GDDragonBones::set_resource(Ref<GDDragonBones::GDDragonBonesResource> _p_da
     // add main armature
     add_child(p_armature);
 
+	p_armature->force_parent_owned();
     b_inited = true;
 
     // update color and opacity and blending
