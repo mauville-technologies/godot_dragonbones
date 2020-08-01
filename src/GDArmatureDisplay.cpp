@@ -15,6 +15,10 @@ GDArmatureDisplay::~GDArmatureDisplay()
 	p_armature = nullptr;
 }
 
+Slot *GDArmatureDisplay::getSlot(const std::string &name) const {
+	return p_armature->getSlot(name);
+}
+
 void GDArmatureDisplay::dbInit(Armature* _p_armature)
 {
     p_armature = _p_armature;

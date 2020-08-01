@@ -29,6 +29,8 @@ public:
         return memnew(GDArmatureDisplay);
     }
 
+	Slot *getSlot(const std::string &name) const;
+
     void addEvent(const std::string& _type, const std::function<void(EventObject*)>& _callback);
     void removeEvent(const std::string& _type);
 

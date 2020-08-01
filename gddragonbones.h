@@ -147,7 +147,8 @@ public:
     void set_animation_process_mode(GDDragonBones::AnimMode _mode);
     AnimMode get_animation_process_mode() const;
 
-    void    play(bool _b_play = true);
+    void set_slot_display_index(const String &_slot_name, int _index = 0);
+	void	play(bool _b_play = true);
     void    play_from_time(float _f_time);
     void    play_from_progress(float _f_progress);
 

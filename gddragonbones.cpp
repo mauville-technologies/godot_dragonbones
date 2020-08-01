@@ -513,6 +513,9 @@ void    GDDragonBones::_reset()
 {
     p_armature->getAnimation()->reset();
 }
+void GDDragonBones::set_slot_display_index(const String &_slot_name, int _index) {
+	p_armature->getSlot(_slot_name.ascii().get_data())->setDisplayIndex(_index);
+}
 
 void   GDDragonBones::play(bool _b_play)
 {
@@ -753,6 +756,7 @@ void GDDragonBones::_bind_methods()
     CLASS_BIND_GODO::bind_method(METH("stop"), &GDDragonBones::stop);
     CLASS_BIND_GODO::bind_method(METH("stop_all"), &GDDragonBones::stop_all);
     CLASS_BIND_GODO::bind_method(METH("reset"), &GDDragonBones::_reset);
+	CLASS_BIND_GODO::bind_method(METH("set_slot_display_index"), &GDDragonBones::set_slot_display_index);
     CLASS_BIND_GODO::bind_method(METH("play"), &GDDragonBones::play);
     CLASS_BIND_GODO::bind_method(METH("play_from_time"), &GDDragonBones::play_from_time);
     CLASS_BIND_GODO::bind_method(METH("play_from_progress"), &GDDragonBones::play_from_progress);
