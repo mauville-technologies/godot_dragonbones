@@ -123,12 +123,13 @@ void GDDragonBones::_cleanup()
 {
     b_inited = false;
 
+	if (p_armature) {
+		p_armature->queue_delete();
+		p_armature = nullptr;
+	}
+
     if(p_factory)
         p_factory->clear();
-
-    if(p_armature) {
-        p_armature = nullptr;
-    }
 
     m_res = RES();
 }
@@ -228,6 +229,7 @@ void GDDragonBones::set_resource(Ref<GDDragonBones::GDDragonBonesResource> _p_da
     ERR_FAIL_COND(!__r_v_m_names.size());
 
     p_armature = static_cast<GDArmatureDisplay*>(p_factory->buildArmatureDisplay(__r_v_m_names[0].c_str()));
+
     // add children armature
     p_armature->p_owner = this;
 
