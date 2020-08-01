@@ -13,8 +13,8 @@ env_modules.add_source_files(env.modules_sources,"src/dragonBones/geom/*.cpp")
 env_modules.add_source_files(env.modules_sources,"src/dragonBones/model/*.cpp")
 env_modules.add_source_files(env.modules_sources,"src/dragonBones/parser/*.cpp")
 
-env_modules.Append(CPPFLAGS=["-Imodules/gddragonbones/src",
-	"-Imodules/gddragonbones/src/dragonBones",
+env_modules.Append(CPPFLAGS=["-Imodules/godot_dragonbones/src",
+	"-Imodules/godot_dragonbones/src/dragonBones",
 ])
 
 if (env['platform'] != 'windows'):
