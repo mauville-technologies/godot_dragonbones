@@ -138,32 +138,45 @@ public:
     void set_texture(const Ref<TEXTURE_CLASS> &_p_texture);
     Ref<Texture> get_texture() const;
 
-    String get_current_animation() const;
+	// Top level display
+	void flip_x(bool _b_flip);
+	bool is_fliped_x() const;
+	void flip_y(bool _b_flip);
+	bool is_fliped_y() const;
 
+	// animation state
+    String get_current_animation() const;
     float tell() const;
     void seek(float _f_p);
     float get_progress() const;
-
+    bool has_anim(const String &_str_anim) const;
     void set_animation_process_mode(GDDragonBones::AnimMode _mode);
     AnimMode get_animation_process_mode() const;
+
+	// Slots
+	bool has_slot(const String &_slot_name) const;
 	Color get_slot_display_color_multiplier(const String &_slot_name);
 	void set_slot_display_color_multiplier(const String &_slot_name, const Color &_color);
 	void set_slot_display_index(const String &_slot_name, int _index = 0);
+	int get_slot_display_index(const String &_slot_name);
+	int get_total_items_in_slot(const String &_slot_name);
+	void cycle_next_item_in_slot(const String &_slot_name);
+	void cycle_previous_item_in_slot(const String &_slot_name);
+	// Playback
+	bool is_playing() const;
+
 	void play(bool _b_play = true);
     void play_from_time(float _f_time);
     void play_from_progress(float _f_progress);
+	void play_new_animation(const String &_str_anim, int _num_times);
+	void play_new_animation_from_progress(const String &_str_anim, int _num_times, float _f_progress);
+	void play_new_animation_from_time(const String &_str_anim, int _num_times, float _f_time);
+	void stop(bool _b_all = false);
+	inline void stop_all() { stop(true); }
 
-    void flip_x(bool _b_flip);
-    bool is_fliped_x() const;
 
-    void flip_y(bool _b_flip);
-    bool is_fliped_y() const;
 
-    bool is_playing() const;
 
-    bool has_anim(const String& _str_anim) const;
-    void stop(bool _b_all = false);
-    inline void stop_all() { stop(true); }
 };
 
 VARIANT_ENUM_CAST(GDDragonBones::AnimMode);
