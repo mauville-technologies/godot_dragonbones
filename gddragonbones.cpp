@@ -233,6 +233,7 @@ void GDDragonBones::set_resource(Ref<GDDragonBones::GDDragonBonesResource> _p_da
     // add children armature
     p_armature->p_owner = this;
 
+	// To support non-texture atlas; I'd want to look around here
     if(!m_texture_atlas.is_valid() || __old_texture_path != m_res->str_default_tex_path)
         m_texture_atlas = ResourceLoader::load(m_res->str_default_tex_path);
 
@@ -762,6 +763,21 @@ String GDDragonBones::get_current_animation() const
     return String(p_armature->getAnimation()->getLastAnimationName().c_str());
 }
 
+String GDDragonBones::get_current_animation_on_layer(int _layer) const {
+
+	if (!b_inited || !p_armature->getAnimation())
+		return String("");
+	std::vector<AnimationState *> states = p_armature->getAnimation()->getStates();
+
+	for each(AnimationState* state in states) {
+		if (state->layer == _layer) {
+			return state->getName().c_str();
+		}
+	}
+
+	return String("");
+}
+
 void GDDragonBones::_set_process(bool _b_process, bool _b_force)
 {
     if (b_processing == _b_process && !_b_force)
@@ -922,6 +938,7 @@ void GDDragonBones::_bind_methods()
     CLASS_BIND_GODO::bind_method(METH("is_playing"), &GDDragonBones::is_playing);
 
     CLASS_BIND_GODO::bind_method(METH("get_current_animation"), &GDDragonBones::get_current_animation);
+	CLASS_BIND_GODO::bind_method(METH("get_current_animation_on_layer"), &GDDragonBones::get_current_animation_on_layer);
 
     CLASS_BIND_GODO::bind_method(METH("seek", "pos"), &GDDragonBones::seek);
     CLASS_BIND_GODO::bind_method(METH("tell"), &GDDragonBones::tell);

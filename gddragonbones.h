@@ -145,7 +145,8 @@ public:
 	bool is_fliped_y() const;
 
 	// animation state
-    String get_current_animation() const;
+	String get_current_animation() const;
+	String get_current_animation_on_layer(int _layer) const;
     float tell() const;
     void seek(float _f_p);
     float get_progress() const;
