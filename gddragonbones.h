@@ -158,10 +158,13 @@ public:
 	Color get_slot_display_color_multiplier(const String &_slot_name);
 	void set_slot_display_color_multiplier(const String &_slot_name, const Color &_color);
 	void set_slot_display_index(const String &_slot_name, int _index = 0);
+	void set_slot_by_item_name(const String &_slot_name, const String &_item_name);
+	void set_all_slots_by_item_name(const String &_item_name);
 	int get_slot_display_index(const String &_slot_name);
 	int get_total_items_in_slot(const String &_slot_name);
 	void cycle_next_item_in_slot(const String &_slot_name);
 	void cycle_previous_item_in_slot(const String &_slot_name);
+
 	// Playback
 	bool is_playing() const;
 

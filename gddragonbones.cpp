@@ -521,10 +521,51 @@ void GDDragonBones::set_slot_display_index(const String& _slot_name, int _index)
 		WARN_PRINT("Slot " + _slot_name + " doesn't exist");
 		return;
 	}
+
 	p_armature->getSlot(_slot_name.ascii().get_data())->setDisplayIndex(_index);
 }
 
-int GDDragonBones::get_slot_display_index(const String& _slot_name) {
+void GDDragonBones::set_slot_by_item_name(const String &_slot_name, const String &_item_name) {
+	if (!has_slot(_slot_name)) {
+		WARN_PRINT("Slot " + _slot_name + " doesn't exist");
+		return;
+	}
+
+	const std::vector<DisplayData *> *rawData = p_armature->getSlot(_slot_name.ascii().get_data())->getRawDisplayDatas();
+
+	// we only want to update the slot if there's a choice
+	if (rawData->size() > 1) {
+		const char *desired_item = _item_name.ascii().get_data();
+		std::string NONE_STRING("none");
+
+		if (NONE_STRING.compare(desired_item) == 0) {
+			p_armature->getSlot(_slot_name.ascii().get_data())->setDisplayIndex(-1);
+		}
+
+		for (int i = 0; i < rawData->size(); i++) {
+			DisplayData *display_data = rawData->at(i);
+
+			if (display_data->name.compare(desired_item) == 0) {
+				p_armature->getSlot(_slot_name.ascii().get_data())->setDisplayIndex(i);
+				return;
+			}
+		}
+	} else {
+		WARN_PRINT("Slot " + _slot_name + " has only 1 item; refusing to set slot");
+	}
+
+	WARN_PRINT("Slot " + _slot_name + " has no item called \"" + _item_name);
+}
+
+void GDDragonBones::set_all_slots_by_item_name(const String& _item_name) {
+	std::vector<Slot*> slots = p_armature->getArmature()->getSlots();
+
+	for each(Slot* slot in slots) {
+		set_slot_by_item_name(String(slot->getName().c_str()), _item_name);
+	}
+}
+
+int GDDragonBones::get_slot_display_index(const String &_slot_name) {
 	if (!has_slot(_slot_name)) {
 		WARN_PRINT("Slot " + _slot_name + " doesn't exist");
 		return -1;
@@ -860,6 +901,8 @@ void GDDragonBones::_bind_methods()
     CLASS_BIND_GODO::bind_method(METH("stop_all"), &GDDragonBones::stop_all);
     CLASS_BIND_GODO::bind_method(METH("reset"), &GDDragonBones::_reset);
 	CLASS_BIND_GODO::bind_method(METH("has_slot"), &GDDragonBones::has_slot);
+	CLASS_BIND_GODO::bind_method(METH("set_slot_by_item_name"), &GDDragonBones::set_slot_by_item_name);
+	CLASS_BIND_GODO::bind_method(METH("set_all_slots_by_item_name"), &GDDragonBones::set_all_slots_by_item_name);
 	CLASS_BIND_GODO::bind_method(METH("set_slot_display_index"), &GDDragonBones::set_slot_display_index);
 	CLASS_BIND_GODO::bind_method(METH("get_slot_display_index"), &GDDragonBones::get_slot_display_index);
 	CLASS_BIND_GODO::bind_method(METH("get_total_items_in_slot"), &GDDragonBones::get_total_items_in_slot);
