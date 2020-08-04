@@ -123,12 +123,13 @@ void GDDragonBones::_cleanup()
 {
     b_inited = false;
 
+	if (p_armature) {
+		p_armature->queue_delete();
+		p_armature = nullptr;
+	}
+
     if(p_factory)
         p_factory->clear();
-
-    if(p_armature) {
-        p_armature = nullptr;
-    }
 
     m_res = RES();
 }
@@ -228,9 +229,11 @@ void GDDragonBones::set_resource(Ref<GDDragonBones::GDDragonBonesResource> _p_da
     ERR_FAIL_COND(!__r_v_m_names.size());
 
     p_armature = static_cast<GDArmatureDisplay*>(p_factory->buildArmatureDisplay(__r_v_m_names[0].c_str()));
+
     // add children armature
     p_armature->p_owner = this;
 
+	// To support non-texture atlas; I'd want to look around here
     if(!m_texture_atlas.is_valid() || __old_texture_path != m_res->str_default_tex_path)
         m_texture_atlas = ResourceLoader::load(m_res->str_default_tex_path);
 
@@ -422,100 +425,222 @@ void GDDragonBones::set_speed(float _f_speed)
 
 float GDDragonBones::get_speed() const
 {
-    return f_speed;
+	return f_speed;
 }
 
 void GDDragonBones::set_animation_process_mode(GDDragonBones::AnimMode _mode)
 {
-    if (m_anim_mode == _mode)
-        return;
-    bool __pr = b_processing;
-    if (__pr)
-        _set_process(false);
-    m_anim_mode = _mode;
-    if (__pr)
-        _set_process(true);
+	if (m_anim_mode == _mode)
+		return;
+	bool __pr = b_processing;
+	if (__pr)
+		_set_process(false);
+	m_anim_mode = _mode;
+	if (__pr)
+		_set_process(true);
 }
 
 GDDragonBones::AnimMode GDDragonBones::get_animation_process_mode() const
 {
-    return m_anim_mode;
+	return m_anim_mode;
 }
 
 void GDDragonBones::_notification(int _what)
 {
-    switch (_what)
-    {
-        case NOTIFICATION_ENTER_TREE:
-        {
-            if (!b_processing)
-            {
-                set_process(false);
+	switch (_what)
+	{
+	case NOTIFICATION_ENTER_TREE:
+	{
+		if (!b_processing)
+		{
+			set_process(false);
 #if (VERSION_MAJOR >= 3)
-                set_physics_process(false);
+			set_physics_process(false);
 #else
-                set_fixed_process(false);
+			set_fixed_process(false);
 #endif
-            }
-        }
-        break;
+		}
+	}
+	break;
 
-        case NOTIFICATION_READY:
-        {
-            if (b_playing && b_inited)
-                play();
-        }
-        break;
+	case NOTIFICATION_READY:
+	{
+		if (b_playing && b_inited)
+			play();
+	}
+	break;
 
 
-        case NOTIFICATION_PROCESS:
-        {
-            if (m_anim_mode == ANIMATION_PROCESS_FIXED)
-                break;
+	case NOTIFICATION_PROCESS:
+	{
+		if (m_anim_mode == ANIMATION_PROCESS_FIXED)
+			break;
 
-            if (b_processing)
-                p_factory->update(get_process_delta_time());
-        }
-        break;
+		if (b_processing)
+			p_factory->update(get_process_delta_time());
+	}
+	break;
 
 #if (VERSION_MAJOR >= 3)
-        case NOTIFICATION_PHYSICS_PROCESS:
-        {
+	case NOTIFICATION_PHYSICS_PROCESS:
+	{
 
-                if (m_anim_mode == ANIMATION_PROCESS_IDLE)
-                    break;
+		if (m_anim_mode == ANIMATION_PROCESS_IDLE)
+			break;
 
-                if (b_processing)
-                    p_factory->update(get_physics_process_delta_time());
-        }
-         break;
+		if (b_processing)
+			p_factory->update(get_physics_process_delta_time());
+	}
+	break;
 #else
-        case NOTIFICATION_FIXED_PROCESS:
-        {
+	case NOTIFICATION_FIXED_PROCESS:
+	{
 
-            if (m_anim_mode == ANIMATION_PROCESS_IDLE)
-                break;
+		if (m_anim_mode == ANIMATION_PROCESS_IDLE)
+			break;
 
-            if (b_processing)
-                p_factory->update(get_fixed_process_delta_time());
-        }
-        break;
+		if (b_processing)
+			p_factory->update(get_fixed_process_delta_time());
+	}
+	break;
 #endif
-        case NOTIFICATION_EXIT_TREE:
-        {
+	case NOTIFICATION_EXIT_TREE:
+	{
 
-        }
-        break;
-    }
+	}
+	break;
+	}
 }
 
 void    GDDragonBones::_reset()
 {
-    p_armature->getAnimation()->reset();
+	p_armature->getAnimation()->reset();
 }
 
-void   GDDragonBones::play(bool _b_play)
-{
+void GDDragonBones::set_slot_display_index(const String& _slot_name, int _index) {
+	if (!has_slot(_slot_name)) {
+		WARN_PRINT("Slot " + _slot_name + " doesn't exist");
+		return;
+	}
+
+	p_armature->getSlot(_slot_name.ascii().get_data())->setDisplayIndex(_index);
+}
+
+void GDDragonBones::set_slot_by_item_name(const String &_slot_name, const String &_item_name) {
+	if (!has_slot(_slot_name)) {
+		WARN_PRINT("Slot " + _slot_name + " doesn't exist");
+		return;
+	}
+
+	const std::vector<DisplayData *> *rawData = p_armature->getSlot(_slot_name.ascii().get_data())->getRawDisplayDatas();
+
+	// we only want to update the slot if there's a choice
+	if (rawData->size() > 1) {
+		const char *desired_item = _item_name.ascii().get_data();
+		std::string NONE_STRING("none");
+
+		if (NONE_STRING.compare(desired_item) == 0) {
+			p_armature->getSlot(_slot_name.ascii().get_data())->setDisplayIndex(-1);
+		}
+
+		for (int i = 0; i < rawData->size(); i++) {
+			DisplayData *display_data = rawData->at(i);
+
+			if (display_data->name.compare(desired_item) == 0) {
+				p_armature->getSlot(_slot_name.ascii().get_data())->setDisplayIndex(i);
+				return;
+			}
+		}
+	} else {
+		WARN_PRINT("Slot " + _slot_name + " has only 1 item; refusing to set slot");
+	}
+
+	WARN_PRINT("Slot " + _slot_name + " has no item called \"" + _item_name);
+}
+
+void GDDragonBones::set_all_slots_by_item_name(const String& _item_name) {
+	std::vector<Slot*> slots = p_armature->getArmature()->getSlots();
+
+	for each(Slot* slot in slots) {
+		set_slot_by_item_name(String(slot->getName().c_str()), _item_name);
+	}
+}
+
+int GDDragonBones::get_slot_display_index(const String &_slot_name) {
+	if (!has_slot(_slot_name)) {
+		WARN_PRINT("Slot " + _slot_name + " doesn't exist");
+		return -1;
+	}
+	return p_armature->getSlot(_slot_name.ascii().get_data())->getDisplayIndex();
+}
+
+int GDDragonBones::get_total_items_in_slot(const String& _slot_name) {
+	if (!has_slot(_slot_name)) {
+		WARN_PRINT("Slot " + _slot_name + " doesn't exist");
+		return -1;
+	}
+	return p_armature->getSlot(_slot_name.ascii().get_data())->getDisplayList().size();
+}
+
+bool GDDragonBones::has_slot(const String &_slot_name) const {
+	return p_armature->getSlot(_slot_name.ascii().get_data()) != nullptr;
+}
+
+void GDDragonBones::cycle_next_item_in_slot(const String &_slot_name) {
+	if (!has_slot(_slot_name)) {
+		WARN_PRINT("Slot " + _slot_name + " doesn't exist");
+		return;
+	}
+
+	int current_slot = get_slot_display_index(_slot_name);
+	current_slot++;
+
+	set_slot_display_index(_slot_name, current_slot < get_total_items_in_slot(_slot_name) ? current_slot : -1);
+}
+
+void GDDragonBones::cycle_previous_item_in_slot(const String &_slot_name) {
+	if (!has_slot(_slot_name)) {
+		WARN_PRINT("Slot " + _slot_name + " doesn't exist");
+		return;
+	}
+
+	int current_slot = get_slot_display_index(_slot_name);
+	current_slot--;
+
+	set_slot_display_index(_slot_name, current_slot >= -1 ? current_slot : get_total_items_in_slot(_slot_name) - 1);
+}
+
+Color GDDragonBones::get_slot_display_color_multiplier(const String &_slot_name) {
+	if (!has_slot(_slot_name)) {
+		WARN_PRINT("Slot " + _slot_name + " doesn't exist");
+		return Color(-1,-1,-1,-1);
+	}
+	ColorTransform transform(p_armature->getSlot(_slot_name.ascii().get_data())->_colorTransform);
+
+	Color return_color;
+	return_color.r = transform.redMultiplier;
+	return_color.g = transform.greenMultiplier;
+	return_color.b = transform.blueMultiplier;
+	return_color.a = transform.alphaMultiplier;
+	return return_color;
+}
+
+void GDDragonBones::set_slot_display_color_multiplier(const String &_slot_name, const Color &_color) {
+	if (!has_slot(_slot_name)) {
+		WARN_PRINT("Slot " + _slot_name + " doesn't exist");
+		return;
+	}
+
+	ColorTransform _new_color;
+	_new_color.redMultiplier = _color.r;
+	_new_color.greenMultiplier = _color.g;
+	_new_color.blueMultiplier = _color.b;
+	_new_color.alphaMultiplier = _color.a;
+
+	p_armature->getSlot(_slot_name.ascii().get_data())->_setColor(_new_color);
+}
+
+void GDDragonBones::play(bool _b_play) {
     b_playing = _b_play;
     if(!_b_play)
     {
@@ -552,6 +677,31 @@ void   GDDragonBones::play_from_progress(float _f_progress)
     play();
     if(b_playing)
          p_armature->getAnimation()->gotoAndPlayByProgress(str_curr_anim.ascii().get_data(), CLAMP(_f_progress, 0, 1.f), c_loop);
+}
+
+void GDDragonBones::play_new_animation_from_progress(const String &_str_anim, int _num_times, float _f_progress) {
+	stop_all();
+	_set("playback/curr_animation", _str_anim);
+	_set("playback/loop", _num_times);
+	play(true);
+
+	play_from_progress(_f_progress);
+}
+
+void GDDragonBones::play_new_animation_from_time(const String &_str_anim, int _num_times, float _f_time) {
+	stop_all();
+	_set("playback/curr_animation", _str_anim);
+	_set("playback/loop", _num_times);
+	play(true);
+
+	play_from_time(_f_time);
+}
+
+void GDDragonBones::play_new_animation(const String &_str_anim, int _num_times) {
+	stop_all();
+	_set("playback/curr_animation", _str_anim);
+	_set("playback/loop", _num_times);
+	play(true);
 }
 
 bool GDDragonBones::has_anim(const String& _str_anim) const
@@ -613,6 +763,21 @@ String GDDragonBones::get_current_animation() const
     return String(p_armature->getAnimation()->getLastAnimationName().c_str());
 }
 
+String GDDragonBones::get_current_animation_on_layer(int _layer) const {
+
+	if (!b_inited || !p_armature->getAnimation())
+		return String("");
+	std::vector<AnimationState *> states = p_armature->getAnimation()->getStates();
+
+	for each(AnimationState* state in states) {
+		if (state->layer == _layer) {
+			return state->getName().c_str();
+		}
+	}
+
+	return String("");
+}
+
 void GDDragonBones::_set_process(bool _b_process, bool _b_force)
 {
     if (b_processing == _b_process && !_b_force)
@@ -669,40 +834,38 @@ bool GDDragonBones::_set(const StringName& _str_name, const Variant& _c_r_value)
 
     if (name == "playback/curr_animation")
     {
-        if(str_curr_anim == _c_r_value)
-            return false;
+		if(str_curr_anim == _c_r_value)
+			return false;
 
-        str_curr_anim = _c_r_value;
-        if (b_inited)
-        {
-            if (str_curr_anim == "[none]")
-                stop();
-            else if (has_anim(str_curr_anim))
-            {
-                if(b_playing || b_try_playing)
-                    play();
-                else
-                    p_armature->getAnimation()->gotoAndStopByProgress(str_curr_anim.ascii().get_data());
-            }
-        }
-    }
+		str_curr_anim = _c_r_value;
+		if (b_inited)
+		{
+			if (str_curr_anim == "[none]")
+				stop();
+			else if (has_anim(str_curr_anim))
+			{
+				if(b_playing || b_try_playing)
+					play();
+				else
+					p_armature->getAnimation()->gotoAndStopByProgress(str_curr_anim.ascii().get_data());
+			}
+		}
+	}
+	else if (name == "playback/loop")
+	{
+		c_loop = _c_r_value;
+		if (b_inited && b_playing)
+		{
+			_reset();
+			play();
+		}
+	}
+	else if (name == "playback/progress")
+	{
+		seek(_c_r_value);
+	}
 
-   else if (name == "playback/loop")
-   {
-        c_loop = _c_r_value;
-        if (b_inited && b_playing)
-        {
-            _reset();
-            play();
-        }
-    }
-
-    else if (name == "playback/progress")
-    {
-       seek(_c_r_value);
-    }
-
-    return true;
+	return true;
 }
 
 bool GDDragonBones::_get(const StringName& _str_name, Variant &_r_ret) const
@@ -753,14 +916,29 @@ void GDDragonBones::_bind_methods()
     CLASS_BIND_GODO::bind_method(METH("stop"), &GDDragonBones::stop);
     CLASS_BIND_GODO::bind_method(METH("stop_all"), &GDDragonBones::stop_all);
     CLASS_BIND_GODO::bind_method(METH("reset"), &GDDragonBones::_reset);
+	CLASS_BIND_GODO::bind_method(METH("has_slot"), &GDDragonBones::has_slot);
+	CLASS_BIND_GODO::bind_method(METH("set_slot_by_item_name"), &GDDragonBones::set_slot_by_item_name);
+	CLASS_BIND_GODO::bind_method(METH("set_all_slots_by_item_name"), &GDDragonBones::set_all_slots_by_item_name);
+	CLASS_BIND_GODO::bind_method(METH("set_slot_display_index"), &GDDragonBones::set_slot_display_index);
+	CLASS_BIND_GODO::bind_method(METH("get_slot_display_index"), &GDDragonBones::get_slot_display_index);
+	CLASS_BIND_GODO::bind_method(METH("get_total_items_in_slot"), &GDDragonBones::get_total_items_in_slot);
+	CLASS_BIND_GODO::bind_method(METH("set_slot_display_color_multiplier"), &GDDragonBones::set_slot_display_color_multiplier);
+	CLASS_BIND_GODO::bind_method(METH("get_slot_display_color_multiplier"), &GDDragonBones::get_slot_display_color_multiplier);
+	CLASS_BIND_GODO::bind_method(METH("cycle_next_item_in_slot"), &GDDragonBones::cycle_next_item_in_slot);
+	CLASS_BIND_GODO::bind_method(METH("cycle_previous_item_in_slot"), &GDDragonBones::cycle_previous_item_in_slot);
+
     CLASS_BIND_GODO::bind_method(METH("play"), &GDDragonBones::play);
     CLASS_BIND_GODO::bind_method(METH("play_from_time"), &GDDragonBones::play_from_time);
-    CLASS_BIND_GODO::bind_method(METH("play_from_progress"), &GDDragonBones::play_from_progress);
-
+	CLASS_BIND_GODO::bind_method(METH("play_from_progress"), &GDDragonBones::play_from_progress);
+	CLASS_BIND_GODO::bind_method(METH("play_new_animation"), &GDDragonBones::play_new_animation);
+	CLASS_BIND_GODO::bind_method(METH("play_new_animation_from_progress"), &GDDragonBones::play_new_animation_from_progress);
+	CLASS_BIND_GODO::bind_method(METH("play_new_animation_from_time"), &GDDragonBones::play_new_animation_from_time);
+	
     CLASS_BIND_GODO::bind_method(METH("has", "name"), &GDDragonBones::has_anim);
     CLASS_BIND_GODO::bind_method(METH("is_playing"), &GDDragonBones::is_playing);
 
     CLASS_BIND_GODO::bind_method(METH("get_current_animation"), &GDDragonBones::get_current_animation);
+	CLASS_BIND_GODO::bind_method(METH("get_current_animation_on_layer"), &GDDragonBones::get_current_animation_on_layer);
 
     CLASS_BIND_GODO::bind_method(METH("seek", "pos"), &GDDragonBones::seek);
     CLASS_BIND_GODO::bind_method(METH("tell"), &GDDragonBones::tell);
@@ -784,6 +962,7 @@ void GDDragonBones::_bind_methods()
     CLASS_BIND_GODO::bind_method(METH("set_animation_process_mode","mode"),&GDDragonBones::set_animation_process_mode);
     CLASS_BIND_GODO::bind_method(METH("get_animation_process_mode"),&GDDragonBones::get_animation_process_mode);
 
+	// This is how we set top level properties
     ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture"), _SCS("set_texture"), _SCS("get_texture"));
     ADD_PROPERTY(PropertyInfo(Variant::BOOL, "debug"), _SCS("set_debug"), _SCS("is_debug"));
     ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flipX"), _SCS("flip_x"), _SCS("is_fliped_x"));
