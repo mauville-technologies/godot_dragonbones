@@ -1,41 +1,40 @@
 # Godot Dragonbones
 
-  `godot-dragonbones` is an effort to provide binaries and support for using the Dragonbones 2D skeletal animation format within Godot.
+  `godot-dragonbones` is an effort to provide a full featured, free 2D Skeletal animation solution for Godot. In addition to improvements to the product itself; we also provide full engine builds and export templates.
 
   For feature roadmap, binaries and export templates: http://godotdragonbones.com
 
-## Links
-* Homepage Godot: https://godotengine.org
-* Homepage DragonBones: http://dragonbones.com
+  I look forward to seeing you on our discord! Please consider supporting the project, all donations go into server costs and development time.
 
-#### Support Versions
+  [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://donatebot.io/checkout/615328856299274241?buyer=430539824479338497)
+  <a href="https://discord.gg/bXMkFsg"><img src="discord.svg" height="48"></a>
+___
+
+## Getting Started
+https://www.godotdragonbones.com/gettingstarted
+
+Use this resource as the main entry point into using Godot Dragonbones. From there, it should be easy enough to find additional resources.
+
+If you have a more specialized question, our Discord server is the best place for you to reach the people using it the most. :)
+___
+### Supported Versions
 * Tested versions: Godot 3.2 + Godot 4.0
 * DragonBones Pro 5.6
 * Unconfirmed: Blender Cutout Animation Tools
 
-#### Support Platforms
+### Supported Platforms
 * Windows
-* Android
-* iOS
+* Android (no pre-built export templates yet)
+* iOS (no pre-built export templates yet)
 * x11 (Linux)
+* Mac OSX Intel
 
-#### Compiling
-1. Drop the "GDDragonBones" directory inside the "modules" directory on the Godot source.
+### Compiling
+1. Clone repository into `godot/modules` folder
 
 2. [See the official docs](http://docs.godotengine.org/en/latest/development/compiling/)
 for compilation instructions for every supported platform.
-
-* Compiling Godot Engine with flag for Android: 
-
-```python
-android_stl=yes
-```
-
-* For iOS no additional flags.
-
-* [Godot Engine Src](https://github.com/godotengine/godot)
-* [DragonBones common library](https://github.com/DragonBones/DragonBonesCPP)
-
+___
 ##
 [![Sample](./sample.gif)]()
 
