@@ -7,6 +7,7 @@ RUN set +H
 
 # needed for mac builds
 ENV GODOT_VERSION="3.2"
+ENV GODOT_DRAGONBONES_BRANCH="3.2.51"
 ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"
 ENV DEBIAN_FRONTEND="noninteractive"
@@ -66,6 +67,8 @@ WORKDIR ${GODOT_SOURCE_LOCATION}/modules
 
 # GET GODOT-DRAGONBONES SOURCE
 RUN git clone --progress --verbose https://github.com/mauville-technologies/godot_dragonbones.git
+WORKDIR ${GODOT_SOURCE_LOCATION}/modules/godot_dragonbones
+RUN git checkout ${GODOT_DRAGONBONES_BRANCH}
 
 WORKDIR ${GODOT_SOURCE_LOCATION}
 
