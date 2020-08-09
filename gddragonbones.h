@@ -84,6 +84,7 @@ private:
     bool                        b_inherit_child_material;
 
 protected:
+	GDArmatureDisplay *_build_armature_from_resource(const String &_armature_name, Ref<GDDragonBones::GDDragonBonesResource> _p_data, const String &_texture_path);
     void _notification(int _what);
 	static void _bind_methods();
 
@@ -165,6 +166,8 @@ public:
 	int get_total_items_in_slot(const String &_slot_name);
 	void cycle_next_item_in_slot(const String &_slot_name);
 	void cycle_previous_item_in_slot(const String &_slot_name);
+
+	void nest_armature_in_slot(const String &_armature_name, const String &_slot_name, Ref<GDDragonBonesResource> resource);
 
 	// Playback
 	bool is_playing() const;

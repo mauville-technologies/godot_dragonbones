@@ -193,8 +193,65 @@ void GDDragonBones::dispatch_event(const String& _str_type, const EventObject* _
 	
 }
 
-void GDDragonBones::set_resource(Ref<GDDragonBones::GDDragonBonesResource> _p_data)
-{
+GDArmatureDisplay *GDDragonBones::_build_armature_from_resource(const String &_armature_name, Ref<GDDragonBones::GDDragonBonesResource> _p_data, const String &_texture_path) {
+
+	TextureAtlasData *__p_tad = p_factory->loadTextureAtlasData(_p_data->p_data_texture_atlas, nullptr);
+	if (unlikely(!__p_tad)) {
+		return nullptr;
+	}        
+	DragonBonesData *__p_dbd = p_factory->loadDragonBonesData(_p_data->p_data_bones, _armature_name.ascii().get_data());
+	if (unlikely(!__p_dbd)) {
+		return nullptr;
+	}      
+
+	// build Armature display
+	const std::vector<std::string> &__r_v_m_names = __p_dbd->getArmatureNames();
+	if (unlikely(!__r_v_m_names.size())) {
+		return nullptr;
+	} 
+
+	GDArmatureDisplay *new_armature = static_cast<GDArmatureDisplay *>(p_factory->buildArmatureDisplay(__r_v_m_names[0].c_str()));
+
+	// add children armature
+	new_armature->p_owner = this;
+	Ref<TEXTURE_CLASS> texture;
+
+	// To support non-texture atlas; I'd want to look around here
+	if (!texture.is_valid() || _texture_path != _p_data->str_default_tex_path)
+		texture = ResourceLoader::load(_p_data->str_default_tex_path);
+
+	// correction for old version of DB tad files (Zero width, height)
+	if (texture.is_valid()) {
+		__p_tad->height = texture->get_height();
+		__p_tad->width = texture->get_width();
+	}
+
+	new_armature->add_parent_class(b_debug, texture);
+
+	if (_armature_name == "") {
+		add_child(new_armature);
+	} else {
+		p_armature->add_child(new_armature);
+	}
+
+	new_armature->force_parent_owned();
+	b_inited = true;
+
+	// update color and opacity and blending
+	new_armature->update_childs(true, true);
+
+	// update material inheritance
+	new_armature->update_material_inheritance(b_inherit_child_material);
+
+	// update flip
+	new_armature->getArmature()->setFlipX(b_flip_x);
+	new_armature->getArmature()->setFlipY(b_flip_y);
+	new_armature->getArmature()->advanceTime(0);
+
+	return new_armature;
+}
+
+void GDDragonBones::set_resource(Ref<GDDragonBones::GDDragonBonesResource> _p_data) {
     String __old_texture_path = "";
     if(m_res.is_valid())
         __old_texture_path = m_res->str_default_tex_path;
@@ -207,60 +264,22 @@ void GDDragonBones::set_resource(Ref<GDDragonBones::GDDragonBonesResource> _p_da
     stop();
     _cleanup();
 
-    m_res = _p_data;
-    if (m_res.is_null())
-    {
-        m_texture_atlas = Ref<Texture>();
-        ERR_PRINT("Null resources");
-        _change_notify();
+	
+	if (_p_data.is_null()) {
+		m_texture_atlas = Ref<Texture>();
+		ERR_PRINT("Null resources");
+		_change_notify();
 		return;
-    }
+	}
 
-    ERR_FAIL_COND(!m_res->p_data_texture_atlas);
-    ERR_FAIL_COND(!m_res->p_data_bones);
+	ERR_FAIL_COND(!_p_data->p_data_texture_atlas);
+	ERR_FAIL_COND(!_p_data->p_data_bones);
 
-    TextureAtlasData* __p_tad = p_factory->loadTextureAtlasData(m_res->p_data_texture_atlas, nullptr);
-    ERR_FAIL_COND(!__p_tad);
-    DragonBonesData* __p_dbd = p_factory->loadDragonBonesData(m_res->p_data_bones);
-    ERR_FAIL_COND(!__p_dbd);
+	p_armature = _build_armature_from_resource("", _p_data, __old_texture_path);
+	ERR_FAIL_COND(!p_armature);
 
-    // build Armature display
-    const std::vector<std::string>& __r_v_m_names = __p_dbd->getArmatureNames();
-    ERR_FAIL_COND(!__r_v_m_names.size());
-
-    p_armature = static_cast<GDArmatureDisplay*>(p_factory->buildArmatureDisplay(__r_v_m_names[0].c_str()));
-
-    // add children armature
-    p_armature->p_owner = this;
-
-	// To support non-texture atlas; I'd want to look around here
-    if(!m_texture_atlas.is_valid() || __old_texture_path != m_res->str_default_tex_path)
-        m_texture_atlas = ResourceLoader::load(m_res->str_default_tex_path);
-
-    // correction for old version of DB tad files (Zero width, height)
-    if(m_texture_atlas.is_valid())
-    {
-        __p_tad->height = m_texture_atlas->get_height();
-        __p_tad->width = m_texture_atlas->get_width();
-    }
-
-    p_armature->add_parent_class(b_debug, m_texture_atlas);
-    // add main armature
-    add_child(p_armature);
-
-	p_armature->force_parent_owned();
-    b_inited = true;
-
-    // update color and opacity and blending
-    p_armature->update_childs(true, true);
-
-    // update material inheritance
-    p_armature->update_material_inheritance(b_inherit_child_material);
-
-    // update flip
-    p_armature->getArmature()->setFlipX(b_flip_x);
-    p_armature->getArmature()->setFlipY(b_flip_y);
-    p_armature->getArmature()->advanceTime(0);
+    m_res = _p_data;
+    
 
     _change_notify();
     update();
@@ -610,6 +629,13 @@ void GDDragonBones::cycle_previous_item_in_slot(const String &_slot_name) {
 	set_slot_display_index(_slot_name, current_slot >= -1 ? current_slot : get_total_items_in_slot(_slot_name) - 1);
 }
 
+void GDDragonBones::nest_armature_in_slot(const String &_armature_name, const String &_slot_name, Ref<GDDragonBonesResource> resource) {
+	if (resource.is_valid()) {
+		GDArmatureDisplay *a_thing = _build_armature_from_resource(_armature_name, resource, resource->str_default_tex_path);
+		p_armature->getSlot(_slot_name.ascii().get_data())->setChildArmature(a_thing->getArmature());
+	}
+}
+
 Color GDDragonBones::get_slot_display_color_multiplier(const String &_slot_name) {
 	if (!has_slot(_slot_name)) {
 		WARN_PRINT("Slot " + _slot_name + " doesn't exist");
@@ -926,6 +952,7 @@ void GDDragonBones::_bind_methods()
 	CLASS_BIND_GODO::bind_method(METH("get_slot_display_color_multiplier"), &GDDragonBones::get_slot_display_color_multiplier);
 	CLASS_BIND_GODO::bind_method(METH("cycle_next_item_in_slot"), &GDDragonBones::cycle_next_item_in_slot);
 	CLASS_BIND_GODO::bind_method(METH("cycle_previous_item_in_slot"), &GDDragonBones::cycle_previous_item_in_slot);
+	CLASS_BIND_GODO::bind_method(METH("nest_armature_in_slot"), &GDDragonBones::nest_armature_in_slot);
 
     CLASS_BIND_GODO::bind_method(METH("play"), &GDDragonBones::play);
     CLASS_BIND_GODO::bind_method(METH("play_from_time"), &GDDragonBones::play_from_time);
