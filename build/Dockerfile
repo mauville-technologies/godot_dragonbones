@@ -65,7 +65,7 @@ RUN git checkout ${GODOT_VERSION}
 WORKDIR ${GODOT_SOURCE_LOCATION}/modules
 
 # GET GODOT-DRAGONBONES SOURCE
-RUN git clone --progress --verbose https://github.com/mauville-technologies/godot-dragonbones.git
+RUN git clone --progress --verbose https://github.com/mauville-technologies/godot_dragonbones.git
 
 WORKDIR ${GODOT_SOURCE_LOCATION}
 
