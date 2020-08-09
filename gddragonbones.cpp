@@ -553,6 +553,7 @@ void GDDragonBones::set_slot_by_item_name(const String &_slot_name, const String
 		}
 	} else {
 		WARN_PRINT("Slot " + _slot_name + " has only 1 item; refusing to set slot");
+		return;
 	}
 
 	WARN_PRINT("Slot " + _slot_name + " has no item called \"" + _item_name);
