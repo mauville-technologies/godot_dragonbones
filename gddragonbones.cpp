@@ -561,7 +561,7 @@ void GDDragonBones::set_slot_by_item_name(const String &_slot_name, const String
 void GDDragonBones::set_all_slots_by_item_name(const String& _item_name) {
 	std::vector<Slot*> slots = p_armature->getArmature()->getSlots();
 
-	for each(Slot* slot in slots) {
+	for (Slot* slot : slots) {
 		set_slot_by_item_name(String(slot->getName().c_str()), _item_name);
 	}
 }
@@ -769,7 +769,7 @@ String GDDragonBones::get_current_animation_on_layer(int _layer) const {
 		return String("");
 	std::vector<AnimationState *> states = p_armature->getAnimation()->getStates();
 
-	for each(AnimationState* state in states) {
+	for (AnimationState* state : states) {
 		if (state->layer == _layer) {
 			return state->getName().c_str();
 		}
