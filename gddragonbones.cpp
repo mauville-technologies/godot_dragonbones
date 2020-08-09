@@ -435,6 +435,14 @@ bool GDDragonBones::is_fliped_y() const
     return b_flip_y;
 }
 
+void GDDragonBones::set_child_animations(Dictionary child_animations) {
+	this->child_animations = child_animations.duplicate();
+}
+
+Dictionary GDDragonBones::get_child_animations() {
+	return this->child_animations;
+}
+
 void GDDragonBones::set_speed(float _f_speed)
 {
     f_speed = _f_speed;
@@ -629,10 +637,35 @@ void GDDragonBones::cycle_previous_item_in_slot(const String &_slot_name) {
 	set_slot_display_index(_slot_name, current_slot >= -1 ? current_slot : get_total_items_in_slot(_slot_name) - 1);
 }
 
-void GDDragonBones::nest_armature_in_slot(const String &_armature_name, const String &_slot_name, Ref<GDDragonBonesResource> resource) {
+void GDDragonBones::display_child_animation_on_slot(const String &_child_animation_name, const String &_slot_name) {
+
+	bool is_playing_something = this->_active_child_animations[_slot_name];
+
+	if (is_playing_something) {
+		if (this->_active_child_animations[_slot_name]->get_name() == _child_animation_name) {
+			print_line(_child_animation_name);
+			print_line(this->_active_child_animations[_slot_name]->get_name());
+			return;
+		}
+		GDArmatureDisplay *armature = this->_active_child_animations[_slot_name];
+		p_armature->remove_child(armature);
+		armature->queue_delete();
+		this->_active_child_animations[_slot_name] = nullptr;
+	}
+
+	Ref<GDDragonBonesResource> resource = this->child_animations.get(_child_animation_name, Ref<GDDragonBonesResource>(nullptr));
+
 	if (resource.is_valid()) {
-		GDArmatureDisplay *a_thing = _build_armature_from_resource(_armature_name, resource, resource->str_default_tex_path);
-		p_armature->getSlot(_slot_name.ascii().get_data())->setChildArmature(a_thing->getArmature());
+		Slot *slot = p_armature->getSlot(_slot_name.ascii().get_data());
+
+
+		GDArmatureDisplay *a_thing = _build_armature_from_resource(_child_animation_name, resource, resource->str_default_tex_path);
+		a_thing->set_name(_child_animation_name);
+		slot->setDisplay(a_thing->getArmature(), DisplayType::Armature);
+
+		this->_active_child_animations[_slot_name] = a_thing;
+	} else {
+		print_error("Resource " + _child_animation_name + " not valid.");
 	}
 }
 
@@ -952,7 +985,7 @@ void GDDragonBones::_bind_methods()
 	CLASS_BIND_GODO::bind_method(METH("get_slot_display_color_multiplier"), &GDDragonBones::get_slot_display_color_multiplier);
 	CLASS_BIND_GODO::bind_method(METH("cycle_next_item_in_slot"), &GDDragonBones::cycle_next_item_in_slot);
 	CLASS_BIND_GODO::bind_method(METH("cycle_previous_item_in_slot"), &GDDragonBones::cycle_previous_item_in_slot);
-	CLASS_BIND_GODO::bind_method(METH("nest_armature_in_slot"), &GDDragonBones::nest_armature_in_slot);
+	CLASS_BIND_GODO::bind_method(METH("display_child_animation_on_slot"), &GDDragonBones::display_child_animation_on_slot);
 
     CLASS_BIND_GODO::bind_method(METH("play"), &GDDragonBones::play);
     CLASS_BIND_GODO::bind_method(METH("play_from_time"), &GDDragonBones::play_from_time);
@@ -981,7 +1014,9 @@ void GDDragonBones::_bind_methods()
     CLASS_BIND_GODO::bind_method(METH("flip_x", "enable_flip"), &GDDragonBones::flip_x);
     CLASS_BIND_GODO::bind_method(METH("is_fliped_x"), &GDDragonBones::is_fliped_x);
     CLASS_BIND_GODO::bind_method(METH("flip_y", "enable_flip"), &GDDragonBones::flip_y);
-    CLASS_BIND_GODO::bind_method(METH("is_fliped_y"), &GDDragonBones::is_fliped_y);
+	CLASS_BIND_GODO::bind_method(METH("is_fliped_y"), &GDDragonBones::is_fliped_y);
+	CLASS_BIND_GODO::bind_method(METH("set_child_animations"), &GDDragonBones::set_child_animations);
+	CLASS_BIND_GODO::bind_method(METH("get_child_animations"), &GDDragonBones::get_child_animations);
 
     CLASS_BIND_GODO::bind_method(METH("set_speed", "speed"), &GDDragonBones::set_speed);
     CLASS_BIND_GODO::bind_method(METH("get_speed"), &GDDragonBones::get_speed);
@@ -993,7 +1028,8 @@ void GDDragonBones::_bind_methods()
     ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture"), _SCS("set_texture"), _SCS("get_texture"));
     ADD_PROPERTY(PropertyInfo(Variant::BOOL, "debug"), _SCS("set_debug"), _SCS("is_debug"));
     ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flipX"), _SCS("flip_x"), _SCS("is_fliped_x"));
-    ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flipY"), _SCS("flip_y"), _SCS("is_fliped_y"));
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flipY"), _SCS("flip_y"), _SCS("is_fliped_y"));
+	ADD_PROPERTY(PropertyInfo(Variant::DICTIONARY, "child_animations"), _SCS("set_child_animations"), _SCS("get_child_animations"));
 
 #if (VERSION_MAJOR >= 3)
 #else

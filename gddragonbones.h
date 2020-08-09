@@ -66,7 +66,10 @@ public:
 private:
     GDFactory*                  p_factory;
 	Ref<TEXTURE_CLASS> m_texture_atlas;
-    Ref<GDDragonBonesResource>  m_res;
+	Ref<GDDragonBonesResource> m_res;
+	Dictionary					child_animations;
+
+	std::map<String, GDArmatureDisplay*>					_active_child_animations;
     String                      str_curr_anim;
     GDArmatureDisplay*          p_armature;
     AnimMode                    m_anim_mode;
@@ -144,6 +147,8 @@ public:
 	bool is_fliped_x() const;
 	void flip_y(bool _b_flip);
 	bool is_fliped_y() const;
+	void set_child_animations(Dictionary child_animations);
+	Dictionary get_child_animations();
 
 	// animation state
 	String get_current_animation() const;
@@ -167,7 +172,7 @@ public:
 	void cycle_next_item_in_slot(const String &_slot_name);
 	void cycle_previous_item_in_slot(const String &_slot_name);
 
-	void nest_armature_in_slot(const String &_armature_name, const String &_slot_name, Ref<GDDragonBonesResource> resource);
+	void display_child_animation_on_slot(const String &_child_animation_name, const String &_slot_name);
 
 	// Playback
 	bool is_playing() const;
