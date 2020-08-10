@@ -7,9 +7,9 @@ RUN set +H
 
 # needed for mac builds
 ENV GODOT_VERSION="3.2"
+ENV GODOT_DRAGONBONES_BRANCH="3.2.51"
 ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"
-ENV GODOT_GD_LOCATION="/godot-dragonbones"
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV UNATTENDED=true
 
@@ -63,12 +63,14 @@ RUN git clone --progress --verbose https://github.com/godotengine/godot.git $GOD
 WORKDIR ${GODOT_SOURCE_LOCATION}
 RUN git checkout ${GODOT_VERSION}
 
+WORKDIR ${GODOT_SOURCE_LOCATION}/modules
+
 # GET GODOT-DRAGONBONES SOURCE
-RUN git clone --progress --verbose https://github.com/mauville-technologies/godot-dragonbones.git $GODOT_GD_LOCATION
+RUN git clone --progress --verbose https://github.com/mauville-technologies/godot_dragonbones.git
+WORKDIR ${GODOT_SOURCE_LOCATION}/modules/godot_dragonbones
+RUN git checkout ${GODOT_DRAGONBONES_BRANCH}
 
-# PUT THEM WHERE THEY BELONG
-RUN cp -ar ${GODOT_GD_LOCATION}/gddragonbones ${GODOT_SOURCE_LOCATION}/modules/
-
+WORKDIR ${GODOT_SOURCE_LOCATION}
 
 # COPY BUILD SCRIPT
 COPY ./container-build-script.sh .
