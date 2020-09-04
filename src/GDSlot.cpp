@@ -115,6 +115,7 @@ void GDSlot::_disposeDisplay(void* value, bool isRelease)
 
 void GDSlot::_onUpdateDisplay()
 {
+	
     _renderDisplay = static_cast<GDDisplay*>(_display != nullptr ? _display : _rawDisplay);
 }
 

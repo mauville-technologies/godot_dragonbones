@@ -53,16 +53,26 @@ void GDArmatureDisplay::add_parent_class(bool _b_debug, const Ref<Texture>& _m_t
     if(!p_armature)
         return;
     auto arr = p_armature->getSlots();
+
     for (auto item : arr)
     {
         if (!item) continue;
 
         auto display = item->getRawDisplay();
         if (!display) continue;
+
+		// propagate texture to child armature slots?
+		if (item->_displayData->type == DisplayType::Armature) {
+			static_cast<GDArmatureDisplay *>(item->getChildArmature()->getDisplay())->add_parent_class(b_debug, _m_texture_atlas);
+			continue;
+		}
+
         add_child(static_cast<GDDisplay*>(display));
         static_cast<GDDisplay*>(display)->p_owner = p_owner;
         static_cast<GDDisplay*>(display)->b_debug = _b_debug;
         static_cast<GDDisplay*>(display)->texture = _m_texture_atlas;
+
+
     }
 }
 

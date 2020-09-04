@@ -92,6 +92,7 @@ Armature* GDFactory::_buildArmature(const BuildArmaturePackage& dataPackage) con
 Slot* GDFactory::_buildSlot(const BuildArmaturePackage& dataPackage, const SlotData* slotData, Armature* armature) const
 {
 	auto slot = BaseObject::borrowObject<GDSlot>();
+
     auto wrapperDisplay = GDMesh::create();
 	_wrapperSlots.push_back(std::unique_ptr<GDSlot>(slot));
 	slot->init(slotData, armature, wrapperDisplay, wrapperDisplay);
@@ -105,6 +106,35 @@ void GDFactory::removeDBEventListener(const std::string& type, const Func_t& lis
 void GDFactory::dispatchDBEvent(const std::string& type, EventObject *value)
 {
     p_owner->dispatch_snd_event(String(type.c_str()), value);
+}
+
+
+Armature *GDFactory::_buildChildArmature(const BuildArmaturePackage *dataPackage, Slot *slot, DisplayData *displayData) const {
+	auto childDisplayName = slot->_slotData->name;
+
+	const auto proxy = static_cast<GDArmatureDisplay *>(slot->getArmature()->getDisplay());
+
+	GDArmatureDisplay *childArmature = nullptr;
+
+	if (dataPackage != nullptr) {
+		childArmature = buildArmatureDisplay(displayData->path, dataPackage->dataName);
+	} else {
+		childArmature = buildArmatureDisplay(displayData->path, displayData->getParent()->parent->parent->name);
+	}
+
+	if (childArmature == nullptr) {
+		print_error("Child armature is null");
+		return nullptr;
+	}
+
+
+	if (childArmature->get_parent() != proxy) {
+		childArmature->set_z_index(slot->_zOrder);
+		childArmature->getArmature()->setFlipY(true);
+		proxy->add_child(childArmature);
+	}
+
+	return childArmature->getArmature();
 }
 
 bool GDFactory::hasDBEventListener(const std::string& type) const

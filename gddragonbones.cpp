@@ -243,6 +243,9 @@ void GDDragonBones::set_resource(Ref<GDDragonBones::GDDragonBonesResource> _p_da
         __p_tad->height = m_texture_atlas->get_height();
         __p_tad->width = m_texture_atlas->get_width();
     }
+	// update flip
+	p_armature->getArmature()->setFlipX(b_flip_x);
+	p_armature->getArmature()->setFlipY(b_flip_y);
 
     p_armature->add_parent_class(b_debug, m_texture_atlas);
     // add main armature
@@ -257,9 +260,7 @@ void GDDragonBones::set_resource(Ref<GDDragonBones::GDDragonBonesResource> _p_da
     // update material inheritance
     p_armature->update_material_inheritance(b_inherit_child_material);
 
-    // update flip
-    p_armature->getArmature()->setFlipX(b_flip_x);
-    p_armature->getArmature()->setFlipY(b_flip_y);
+
     p_armature->getArmature()->advanceTime(0);
 
     _change_notify();
@@ -977,7 +978,7 @@ void GDDragonBones::_bind_methods()
     ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "resource", PROPERTY_HINT_RESOURCE_TYPE, "GDDragonBonesResource"), _SCS("set_resource"), _SCS("get_resource"));
 
     ADD_PROPERTY(PropertyInfo(Variant::INT, "playback/process_mode", PROPERTY_HINT_ENUM, "Fixed,Idle"), _SCS("set_animation_process_mode"), _SCS("get_animation_process_mode"));
-	ADD_PROPERTY(PropertyInfo(REAL_VARIANT, "playback/speed", PROPERTY_HINT_RANGE, "0,10,0.01"), _SCS("set_speed"), _SCS("get_speed"));
+	ADD_PROPERTY(PropertyInfo(REAL_VARIANT, "playback/speed", PROPERTY_HINT_RANGE, "-10,10,0.01"), _SCS("set_speed"), _SCS("get_speed"));
 	ADD_PROPERTY(PropertyInfo(REAL_VARIANT, "playback/progress", PROPERTY_HINT_RANGE, "-100,100,0.010"), _SCS("seek"), _SCS("get_progress"));
     ADD_PROPERTY(PropertyInfo(Variant::BOOL, "playback/play"), _SCS("play"), _SCS("is_playing"));
 

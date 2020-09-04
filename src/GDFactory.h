@@ -47,6 +47,7 @@ protected:
 	TextureAtlasData* _buildTextureAtlasData(TextureAtlasData* textureAtlasData, void* textureAtlas) const override;
 	Armature* _buildArmature(const BuildArmaturePackage& dataPackage) const override;
 	Slot* _buildSlot(const BuildArmaturePackage& dataPackage, const SlotData* slotData, Armature* armature) const override;
+	Armature *_buildChildArmature(const BuildArmaturePackage *dataPackage, Slot *slot, DisplayData *displayData) const override;
 };
 
 DRAGONBONES_NAMESPACE_END

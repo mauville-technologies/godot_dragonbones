@@ -48,7 +48,7 @@ public:
 	Armature* getArmature() const override { return p_armature; }
 	Animation* getAnimation() const override { return p_armature->getAnimation(); }
 
-    void    add_parent_class(bool _b_debug, const Ref<Texture>& _m_texture_atla);
+    void    add_parent_class(bool _b_debug, const Ref<Texture>& _m_texture_atlas);
     void    update_childs(bool _b_color, bool _b_blending = false);
     void    update_texture_atlas(const Ref<Texture> &_m_texture_atlas);
     void    update_material_inheritance(bool _b_inherit_material);
