@@ -167,6 +167,7 @@ void GDDragonBones::dispatch_event(const String& _str_type, const EventObject* _
 		int float_val = 0;
 		const char *string_val = std::string("").c_str();
 		UserData* data = _p_value->getData();
+		Armature* armature = _p_value->getArmature();
 
 		if (data != NULL) {
 				int_val = _p_value->getData()->getInt(0);
@@ -177,10 +178,16 @@ void GDDragonBones::dispatch_event(const String& _str_type, const EventObject* _
 				}
 		}
 
-		emit_signal("dragon_anim_event", String(_p_value->animationState->name.c_str()), String(_p_value->name.c_str()),
-				Variant(int_val),
-				Variant(float_val),
-				String(string_val));
+		Dictionary dict = Dictionary();
+
+		dict[String("armature")] = String(armature->getName().c_str());
+		dict[String("animation")] = String(_p_value->animationState->name.c_str());
+		dict[String("event_name")] = String(_p_value->name.c_str());
+		dict[String("int")] = int_val;
+		dict[String("float")] = float_val;
+		dict[String("string")] = string_val;
+
+		emit_signal("dragon_anim_event", dict);
 	}
 	else if (_str_type == EventObject::FADE_IN)
 		emit_signal("dragon_fade_in", String(_p_value->animationState->name.c_str()));
@@ -900,24 +907,30 @@ void GDDragonBones::_bind_methods()
     CLASS_BIND_GODO::bind_method(METH("set_inherit_material"), &GDDragonBones::set_inherit_material);
     CLASS_BIND_GODO::bind_method(METH("is_material_inherited"), &GDDragonBones::is_material_inherited);
 
+
+
+
+	/*
+		All these functions act upon the base armature / display; a structure is being formed to make them available for all displays and armatures
+	*/
 #if (VERSION_MAJOR >= 3)
 #else
-    CLASS_BIND_GODO::bind_method(METH("set_modulate", "modulate"), &GDDragonBones::set_modulate);
-    CLASS_BIND_GODO::bind_method(METH("get_modulate"), &GDDragonBones::get_modulate);
+	CLASS_BIND_GODO::bind_method(METH("set_modulate", "modulate"), &GDDragonBones::set_modulate);
+	CLASS_BIND_GODO::bind_method(METH("get_modulate"), &GDDragonBones::get_modulate);
 
-    CLASS_BIND_GODO::bind_method(METH("set_opacity", "opacity"), &GDDragonBones::set_opacity);
-    CLASS_BIND_GODO::bind_method(METH("get_opacity"), &GDDragonBones::get_opacity);
+	CLASS_BIND_GODO::bind_method(METH("set_opacity", "opacity"), &GDDragonBones::set_opacity);
+	CLASS_BIND_GODO::bind_method(METH("get_opacity"), &GDDragonBones::get_opacity);
 
-    CLASS_BIND_GODO::bind_method(METH("set_blend_mode", "blend_mode"), &GDDragonBones::set_blend_mode);
-    CLASS_BIND_GODO::bind_method(METH("get_blend_mode"), &GDDragonBones::get_blend_mode);
+	CLASS_BIND_GODO::bind_method(METH("set_blend_mode", "blend_mode"), &GDDragonBones::set_blend_mode);
+	CLASS_BIND_GODO::bind_method(METH("get_blend_mode"), &GDDragonBones::get_blend_mode);
 #endif
 
-    CLASS_BIND_GODO::bind_method(METH("fade_in", "anim_name", "time", "loop", "layer", "group", "fade_out_mode"), &GDDragonBones::fade_in);
-    CLASS_BIND_GODO::bind_method(METH("fade_out", "anim_name"), &GDDragonBones::fade_out);
+	CLASS_BIND_GODO::bind_method(METH("fade_in", "anim_name", "time", "loop", "layer", "group", "fade_out_mode"), &GDDragonBones::fade_in);
+	CLASS_BIND_GODO::bind_method(METH("fade_out", "anim_name"), &GDDragonBones::fade_out);
 
-    CLASS_BIND_GODO::bind_method(METH("stop"), &GDDragonBones::stop);
-    CLASS_BIND_GODO::bind_method(METH("stop_all"), &GDDragonBones::stop_all);
-    CLASS_BIND_GODO::bind_method(METH("reset"), &GDDragonBones::_reset);
+	CLASS_BIND_GODO::bind_method(METH("stop"), &GDDragonBones::stop);
+	CLASS_BIND_GODO::bind_method(METH("stop_all"), &GDDragonBones::stop_all);
+	CLASS_BIND_GODO::bind_method(METH("reset"), &GDDragonBones::_reset);
 	CLASS_BIND_GODO::bind_method(METH("has_slot"), &GDDragonBones::has_slot);
 	CLASS_BIND_GODO::bind_method(METH("set_slot_by_item_name"), &GDDragonBones::set_slot_by_item_name);
 	CLASS_BIND_GODO::bind_method(METH("set_all_slots_by_item_name"), &GDDragonBones::set_all_slots_by_item_name);
@@ -935,16 +948,34 @@ void GDDragonBones::_bind_methods()
 	CLASS_BIND_GODO::bind_method(METH("play_new_animation"), &GDDragonBones::play_new_animation);
 	CLASS_BIND_GODO::bind_method(METH("play_new_animation_from_progress"), &GDDragonBones::play_new_animation_from_progress);
 	CLASS_BIND_GODO::bind_method(METH("play_new_animation_from_time"), &GDDragonBones::play_new_animation_from_time);
+
 	
-    CLASS_BIND_GODO::bind_method(METH("has", "name"), &GDDragonBones::has_anim);
-    CLASS_BIND_GODO::bind_method(METH("is_playing"), &GDDragonBones::is_playing);
+    CLASS_BIND_GODO::bind_method(METH("flip_x", "enable_flip"), &GDDragonBones::flip_x);
+	CLASS_BIND_GODO::bind_method(METH("is_fliped_x"), &GDDragonBones::is_fliped_x);
+	CLASS_BIND_GODO::bind_method(METH("flip_y", "enable_flip"), &GDDragonBones::flip_y);
+	CLASS_BIND_GODO::bind_method(METH("is_fliped_y"), &GDDragonBones::is_fliped_y);
 
-    CLASS_BIND_GODO::bind_method(METH("get_current_animation"), &GDDragonBones::get_current_animation);
-	CLASS_BIND_GODO::bind_method(METH("get_current_animation_on_layer"), &GDDragonBones::get_current_animation_on_layer);
+	CLASS_BIND_GODO::bind_method(METH("set_speed", "speed"), &GDDragonBones::set_speed);
+	CLASS_BIND_GODO::bind_method(METH("get_speed"), &GDDragonBones::get_speed);
 
+	
     CLASS_BIND_GODO::bind_method(METH("seek", "pos"), &GDDragonBones::seek);
-    CLASS_BIND_GODO::bind_method(METH("tell"), &GDDragonBones::tell);
-    CLASS_BIND_GODO::bind_method(METH("get_progress"), &GDDragonBones::get_progress);
+	CLASS_BIND_GODO::bind_method(METH("tell"), &GDDragonBones::tell);
+	CLASS_BIND_GODO::bind_method(METH("get_progress"), &GDDragonBones::get_progress);
+
+	CLASS_BIND_GODO::bind_method(METH("has", "name"), &GDDragonBones::has_anim);
+	CLASS_BIND_GODO::bind_method(METH("is_playing"), &GDDragonBones::is_playing);
+
+	CLASS_BIND_GODO::bind_method(METH("get_current_animation"), &GDDragonBones::get_current_animation);
+	CLASS_BIND_GODO::bind_method(METH("get_current_animation_on_layer"), &GDDragonBones::get_current_animation_on_layer);
+	/*
+		END OF BASE ARMATURE FUNCTIONS
+	*/
+
+
+	/*
+		Let's get into the business of playing with child armatures.
+	*/
 
 
     CLASS_BIND_GODO::bind_method(METH("set_active", "active"), &GDDragonBones::set_active);
@@ -952,14 +983,6 @@ void GDDragonBones::_bind_methods()
 
     CLASS_BIND_GODO::bind_method(METH("set_debug", "debug"), &GDDragonBones::set_debug);
     CLASS_BIND_GODO::bind_method(METH("is_debug"), &GDDragonBones::is_debug);
-
-    CLASS_BIND_GODO::bind_method(METH("flip_x", "enable_flip"), &GDDragonBones::flip_x);
-    CLASS_BIND_GODO::bind_method(METH("is_fliped_x"), &GDDragonBones::is_fliped_x);
-    CLASS_BIND_GODO::bind_method(METH("flip_y", "enable_flip"), &GDDragonBones::flip_y);
-    CLASS_BIND_GODO::bind_method(METH("is_fliped_y"), &GDDragonBones::is_fliped_y);
-
-    CLASS_BIND_GODO::bind_method(METH("set_speed", "speed"), &GDDragonBones::set_speed);
-    CLASS_BIND_GODO::bind_method(METH("get_speed"), &GDDragonBones::get_speed);
 
     CLASS_BIND_GODO::bind_method(METH("set_animation_process_mode","mode"),&GDDragonBones::set_animation_process_mode);
     CLASS_BIND_GODO::bind_method(METH("get_animation_process_mode"),&GDDragonBones::get_animation_process_mode);
@@ -986,10 +1009,7 @@ void GDDragonBones::_bind_methods()
 
     ADD_SIGNAL(MethodInfo("dragon_anim_start", PropertyInfo(Variant::STRING, "anim")));
     ADD_SIGNAL(MethodInfo("dragon_anim_complete", PropertyInfo(Variant::STRING, "anim")));
-    ADD_SIGNAL(MethodInfo("dragon_anim_event", PropertyInfo(Variant::STRING, "anim"), PropertyInfo(Variant::STRING, "ev"),
-			PropertyInfo(Variant::INT, "int"),
-			PropertyInfo(Variant::REAL_VARIANT, "float"),
-			PropertyInfo(Variant::STRING, "string")));
+	ADD_SIGNAL(MethodInfo("dragon_anim_event", PropertyInfo(Variant::DICTIONARY, "event")));
     ADD_SIGNAL(MethodInfo("dragon_anim_loop_complete", PropertyInfo(Variant::STRING, "anim")));
     ADD_SIGNAL(MethodInfo("dragon_anim_snd_event", PropertyInfo(Variant::STRING, "anim"), PropertyInfo(Variant::STRING, "ev")));
     ADD_SIGNAL(MethodInfo("dragon_fade_in", PropertyInfo(Variant::STRING, "anim")));
