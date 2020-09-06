@@ -131,6 +131,7 @@ Armature *GDFactory::_buildChildArmature(const BuildArmaturePackage *dataPackage
 	if (childArmature->get_parent() != proxy) {
 		childArmature->set_z_index(slot->_zOrder);
 		childArmature->getArmature()->setFlipY(true);
+		childArmature->hide();
 		proxy->add_child(childArmature);
 	}
 

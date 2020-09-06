@@ -126,6 +126,11 @@ void GDSlot::_addDisplay()
 
 void GDSlot::_replaceDisplay(void* value, bool isArmatureDisplay)
 {
+	static_cast<GDDisplay *>(_renderDisplay)->show();
+
+	if (value != nullptr) {
+		static_cast<GDDisplay *>(value)->hide();
+	}
 }
 
 void GDSlot::_removeDisplay()
