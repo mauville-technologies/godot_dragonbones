@@ -147,10 +147,10 @@ public:
 	// animation state
 	String get_current_animation() const;
 	String get_current_animation_on_layer(int _layer) const;
-    float tell() const;
+    float tell();
     void seek(float _f_p);
     float get_progress() const;
-    bool has_anim(const String &_str_anim) const;
+    bool has_anim(const String &_str_anim);
     void set_animation_process_mode(GDDragonBones::AnimMode _mode);
     AnimMode get_animation_process_mode() const;
 
@@ -179,8 +179,23 @@ public:
 	inline void stop_all() { stop(true); }
 
 
+	/* Child amratures*/
 
+	Array get_armature_list();
+	Array get_animations_on_armature(const String &_armature_name);
+	bool has_anim_on_armature(const String &_armature_name, const String &_str_anim);
+	void play_on_armature(const String &_armature_name, const String &_animation_name, bool _b_play = true);
+	void play_from_time_on_armature(const String &_armature_name, const String &_animation_name, float _f_time);
+	void play_from_progress_on_armature(const String &_armature_name, const String &_animation_name, float _f_progress);
+	void stop_animation_on_armature(const String &_armature_name, const String &_animation_name);
+	void stop_all_animations_on_armature(const String &_armature_name);
+	void fade_in_on_armature(const String &_armature_name, const String &_animation_name, float _time,
+		int _loop, int _layer, const String &_group, GDDragonBones::AnimFadeOutMode _fade_out_mode);
 
+private:
+	const DragonBonesData *get_dragonbones_data() const;
+	ArmatureData *get_armature_data(const String &_armature_name);
+	GDArmatureDisplay *get_armature_display(const String &_armature_name);
 };
 
 VARIANT_ENUM_CAST(GDDragonBones::AnimMode);
