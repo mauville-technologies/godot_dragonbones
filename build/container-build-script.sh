@@ -1,6 +1,4 @@
 #!/bin/bash
-echo "NEW SCRIPTY!"
-
 # install clang 
 cd $OSXCROSS_ROOT/build/llvm-9.0.0.src/build_stage2 && make install
 cd $OSXCROSS_ROOT
@@ -25,12 +23,12 @@ cd $GODOT_SOURCE_LOCATION
 mkdir -p /build/engine
 
 # Package .app
-cp -r misc/dist/osx_tools.app ./Godot-dragonbones-3.2.50.app
-mkdir -p Godot-dragonbones-3.2.50.app/Contents/MacOS
-mv bin/*osx.opt.tools* Godot-dragonbones-3.2.50.app/Contents/MacOS/Godot
-chmod +x Godot-dragonbones-3.2.50.app/Contents/MacOS/Godot
+cp -r misc/dist/osx_tools.app ./Godot-dragonbones-$GODOT_DRAGONBONES_BRANCH.app
+mkdir -p Godot-dragonbones-$GODOT_DRAGONBONES_BRANCH.app/Contents/MacOS
+mv bin/*osx.opt.tools* Godot-dragonbones-$GODOT_DRAGONBONES_BRANCH.app/Contents/MacOS/Godot
+chmod +x Godot-dragonbones-$GODOT_DRAGONBONES_BRANCH.app/Contents/MacOS/Godot
 rm -f /build/engine/Godot-dragonbones.osx.64.zip
-zip -r -y /build/engine/Godot-dragonbones.osx.64.zip Godot-dragonbones-3.2.50.app
+zip -r -y /build/engine/Godot-dragonbones.osx.64.zip Godot-dragonbones-$GODOT_DRAGONBONES_BRANCH.app
 
 cp -av bin/. /build/engine
 
@@ -93,7 +91,7 @@ cd ..
 rm -rf bin/osx_template.app
 
 # Add version.txt
-echo "3.2.50.stable" > bin/version.txt
+echo "3.2.52.stable" > bin/version.txt
 
 # zip file
 mv ./bin ./templates

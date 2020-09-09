@@ -162,7 +162,6 @@ public:
 private:
 	const DragonBonesData *get_dragonbones_data() const;
 	ArmatureData *get_armature_data(const String &_armature_name);
-	
 };
 
 #endif // GDDRAGONBONES_H
