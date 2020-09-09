@@ -96,6 +96,18 @@ public:
     void set_inherit_material(bool _b_enable);
     bool is_material_inherited() const;
 
+	void set_active(bool _b_active);
+	bool is_active() const;
+
+	void set_speed(float _f_speed);
+	float get_speed() const;
+
+	void set_texture(const Ref<TEXTURE_CLASS> &_p_texture);
+	Ref<Texture> get_texture() const;
+
+	void set_animation_process_mode(GDArmatureDisplay::AnimMode _mode);
+	GDArmatureDisplay::AnimMode get_animation_process_mode() const;
+
 #if (VERSION_MAJOR >= 3)
 #else
     void set_opacity(float _f_opacity);
@@ -108,61 +120,42 @@ public:
      Color get_modulate() const;
 #endif
 
-    /* migrated */ void fade_in(const String &_name_anim, float _time, int _loop, int _layer, const String &_group, GDArmatureDisplay::AnimFadeOutMode _fade_out_mode);
-	/* migrated */ void fade_out(const String &_name_anim);
-
-    void set_active(bool _b_active);
-    bool is_active() const;
-
-    /* migrated */ void set_debug(bool _b_debug);
-	/* migrated */ bool is_debug() const;
-
-    void set_speed(float _f_speed);
-    float get_speed() const;
-
-    void set_texture(const Ref<TEXTURE_CLASS> &_p_texture);
-    Ref<Texture> get_texture() const;
-
-	// Top level display
-	/* migrated */ void flip_x(bool _b_flip);
-	/* migrated */ bool is_fliped_x() const;
-	/* migrated */ void flip_y(bool _b_flip);
-	/* migrated */ bool is_fliped_y() const;
-
-	// animation state
-	/* migrated */ String get_current_animation() const;
-	/* migrated */ String get_current_animation_on_layer(int _layer) const;
-	/* migrated */ float tell();
-	/* migrated */ void seek(float _f_p);
-	/* migrated */ float get_progress() const;
-	/* migrated */ bool has_anim(const String &_str_anim);
-	void set_animation_process_mode(GDArmatureDisplay::AnimMode _mode);
-	GDArmatureDisplay::AnimMode get_animation_process_mode() const;
-
-	// Slots
-	/* migrated */ bool has_slot(const String &_slot_name) const; 
-	/* migrated */ Color get_slot_display_color_multiplier(const String &_slot_name);
-	/* migrated */ void set_slot_display_color_multiplier(const String &_slot_name, const Color &_color);
-	/* migrated */ void set_slot_display_index(const String &_slot_name, int _index = 0);
-	/* migrated */ void set_slot_by_item_name(const String &_slot_name, const String &_item_name);
-
-	/* migrated */ void set_all_slots_by_item_name(const String &_item_name);
-	/* migrated */ int get_slot_display_index(const String &_slot_name);
-	/* migrated */ int get_total_items_in_slot(const String &_slot_name);
-	/* migrated */ void cycle_next_item_in_slot(const String &_slot_name);
-	/* migrated */ void cycle_previous_item_in_slot(const String &_slot_name);
-
-	// Playback
-	/* migrated */ bool is_playing() const;
-
-	/* migrated */ void play(bool _b_play = true);
-	/* migrated */ void play_from_time(float _f_time);
-	/* migrated */ void play_from_progress(float _f_progress);
-	/* migrated */ void play_new_animation(const String &_str_anim, int _num_times);
-	/* migrated */ void play_new_animation_from_progress(const String &_str_anim, int _num_times, float _f_progress);
-	/* migrated */ void play_new_animation_from_time(const String &_str_anim, int _num_times, float _f_time);
-	/* migrated */ void stop(bool _b_all = false);
-	/* migrated */ inline void stop_all() { stop(true); }
+	/**
+		THESE DEPRECATED FUNCTIONS WILL BE REMOVED IN VERSION 3.2.53
+	*/
+    /* deprecated */ void fade_in(const String &_name_anim, float _time, int _loop, int _layer, const String &_group, GDArmatureDisplay::AnimFadeOutMode _fade_out_mode);
+	/* deprecated */ void fade_out(const String &_name_anim);
+    /* deprecated */ void set_debug(bool _b_debug);
+	/* deprecated */ bool is_debug() const;
+	/* deprecated */ void flip_x(bool _b_flip);
+	/* deprecated */ bool is_fliped_x() const;
+	/* deprecated */ void flip_y(bool _b_flip);
+	/* deprecated */ bool is_fliped_y() const;
+	/* deprecated */ String get_current_animation() const;
+	/* deprecated */ String get_current_animation_on_layer(int _layer) const;
+	/* deprecated */ float tell();
+	/* deprecated */ void seek(float _f_p);
+	/* deprecated */ float get_progress() const;
+	/* deprecated */ bool has_anim(const String &_str_anim);
+	/* deprecated */ bool has_slot(const String &_slot_name) const; 
+	/* deprecated */ Color get_slot_display_color_multiplier(const String &_slot_name);
+	/* deprecated */ void set_slot_display_color_multiplier(const String &_slot_name, const Color &_color);
+	/* deprecated */ void set_slot_display_index(const String &_slot_name, int _index = 0);
+	/* deprecated */ void set_slot_by_item_name(const String &_slot_name, const String &_item_name);
+	/* deprecated */ void set_all_slots_by_item_name(const String &_item_name);
+	/* deprecated */ int get_slot_display_index(const String &_slot_name);
+	/* deprecated */ int get_total_items_in_slot(const String &_slot_name);
+	/* deprecated */ void cycle_next_item_in_slot(const String &_slot_name);
+	/* deprecated */ void cycle_previous_item_in_slot(const String &_slot_name);
+	/* deprecated */ bool is_playing() const;
+	/* deprecated */ void play(bool _b_play = true);
+	/* deprecated */ void play_from_time(float _f_time);
+	/* deprecated */ void play_from_progress(float _f_progress);
+	/* deprecated */ void play_new_animation(const String &_str_anim, int _num_times);
+	/* deprecated */ void play_new_animation_from_progress(const String &_str_anim, int _num_times, float _f_progress);
+	/* deprecated */ void play_new_animation_from_time(const String &_str_anim, int _num_times, float _f_time);
+	/* deprecated */ void stop(bool _b_all = false);
+	/* deprecated */ inline void stop_all() { stop(true); }
 
 	GDArmatureDisplay *get_armature();
 
