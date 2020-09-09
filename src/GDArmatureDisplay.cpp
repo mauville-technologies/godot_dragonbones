@@ -19,7 +19,6 @@ void GDArmatureDisplay::_bind_methods() {
 	CLASS_BIND_GODO::bind_method(METH("is_frozen"), &GDArmatureDisplay::is_frozen);
 	CLASS_BIND_GODO::bind_method(METH("freeze"), &GDArmatureDisplay::freeze);
 	CLASS_BIND_GODO::bind_method(METH("thaw"), &GDArmatureDisplay::thaw);
-	CLASS_BIND_GODO::bind_method(METH("get_child_armatures"), &GDArmatureDisplay::get_child_armatures);
 	CLASS_BIND_GODO::bind_method(METH("has_animation", "animation_name"), &GDArmatureDisplay::has_animation);
 	CLASS_BIND_GODO::bind_method(METH("get_animations"), &GDArmatureDisplay::get_animations);
 	CLASS_BIND_GODO::bind_method(METH("is_playing"), &GDArmatureDisplay::is_playing);
@@ -304,7 +303,6 @@ void GDArmatureDisplay::add_parent_class(bool _b_debug, const Ref<Texture>& _m_t
     auto arr = p_armature->getSlots();
 
 
-	child_armatures.clear();
 
     for (auto item : arr)
     {
@@ -321,13 +319,7 @@ void GDArmatureDisplay::add_parent_class(bool _b_debug, const Ref<Texture>& _m_t
 				GDArmatureDisplay *armatureDisplay = static_cast<GDArmatureDisplay*>(armature->getDisplay());
 				armatureDisplay->p_owner = p_owner;
 				armatureDisplay->add_parent_class(b_debug, _m_texture_atlas);
-
-				if (child_armatures[String(armatureDisplay->getArmature()->getName().c_str())].get_type() != Variant::ARRAY) {
-					child_armatures[String(armatureDisplay->getArmature()->getName().c_str())] = Array();
-				}
-
-				Array(child_armatures[String(armatureDisplay->getArmature()->getName().c_str())]).push_back(item->getName().c_str());
-	
+					
 				continue;
 			}
 		}

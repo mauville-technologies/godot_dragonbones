@@ -48,7 +48,6 @@ private:
 
 protected:
     Armature*           p_armature;
-	Dictionary child_armatures;
 
 public:
 	GDArmatureDisplay();
@@ -58,8 +57,6 @@ public:
     {
         return memnew(GDArmatureDisplay);
     }
-
-	Dictionary get_child_armatures() { return child_armatures; };
 
 	Slot *getSlot(const std::string &name) const;
 

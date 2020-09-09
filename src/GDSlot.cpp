@@ -462,6 +462,7 @@ void GDSlot_script::_bind_methods() {
 	CLASS_BIND_GODO::bind_method(METH("get_display_count"), &GDSlot_script::get_display_count);
 	CLASS_BIND_GODO::bind_method(METH("next_display"), &GDSlot_script::next_display);
 	CLASS_BIND_GODO::bind_method(METH("previous_display"), &GDSlot_script::previous_display);
+	CLASS_BIND_GODO::bind_method(METH("get_child_armature"), &GDSlot_script::get_child_armature);
 }
 
 Color GDSlot_script::get_display_color_multiplier() {
@@ -545,5 +546,13 @@ void GDSlot_script::previous_display() {
 	set_display_index(current_slot);
 }
 
+GDDisplay *GDSlot_script::get_child_armature() {
+	std::pair<void *, DisplayType> display = slot->getDisplayList()[slot->getDisplayIndex()];
+	if (display.second == DisplayType::Armature) {
+		Armature *armature = static_cast<Armature *>(display.first);
+		return static_cast<GDArmatureDisplay *>(armature->getDisplay());
+	}
+	return nullptr;
+}
 
 DRAGONBONES_NAMESPACE_END
