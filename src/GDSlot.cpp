@@ -45,19 +45,19 @@ void GDSlot::_updateBlendMode()
         {
             switch (_blendMode)
             {
-                case BlendMode::Normal:
+				case dragonBones::BlendMode::Normal:
 					__blend = BLENDMODE_CLASS::BLEND_MODE_MIX;
                     break;
 
-                case BlendMode::Add:
+                case dragonBones::BlendMode::Add:
 					__blend = BLENDMODE_CLASS::BLEND_MODE_ADD;
                     break;
 
-                case BlendMode::Multiply:
+                case dragonBones::BlendMode::Multiply:
 					__blend = BLENDMODE_CLASS::BLEND_MODE_MUL;
                     break;
 
-                case BlendMode::Subtract:
+                case dragonBones::BlendMode::Subtract:
 					__blend = BLENDMODE_CLASS::BLEND_MODE_SUB;
                     break;
 
@@ -447,5 +447,103 @@ void GDSlot::_onClear()
 		_textureData = nullptr;
 	}
 }
+
+void GDSlot_script::set_slot(GDSlot *_slot) {
+	this->slot = _slot;
+}
+
+/* GODOT CLASS WRAPPER FOR GIVING SCRIPT ACCESS */
+void GDSlot_script::_bind_methods() {
+	CLASS_BIND_GODO::bind_method(METH("get_display_color_multiplier"), &GDSlot_script::get_display_color_multiplier);
+	CLASS_BIND_GODO::bind_method(METH("set_display_color_multiplier", "color"), &GDSlot_script::set_display_color_multiplier);
+	CLASS_BIND_GODO::bind_method(METH("set_display_index", "index"), &GDSlot_script::set_display_index);
+	CLASS_BIND_GODO::bind_method(METH("set_display_by_name", "name"), &GDSlot_script::set_display_by_name);
+	CLASS_BIND_GODO::bind_method(METH("get_display_index"), &GDSlot_script::get_display_index);
+	CLASS_BIND_GODO::bind_method(METH("get_display_count"), &GDSlot_script::get_display_count);
+	CLASS_BIND_GODO::bind_method(METH("next_display"), &GDSlot_script::next_display);
+	CLASS_BIND_GODO::bind_method(METH("previous_display"), &GDSlot_script::previous_display);
+}
+
+Color GDSlot_script::get_display_color_multiplier() {
+
+	ColorTransform transform(slot->_colorTransform);
+
+	Color return_color;
+	return_color.r = transform.redMultiplier;
+	return_color.g = transform.greenMultiplier;
+	return_color.b = transform.blueMultiplier;
+	return_color.a = transform.alphaMultiplier;
+
+	return return_color;
+}
+
+void GDSlot_script::set_display_color_multiplier(const Color &_color) {
+	ColorTransform _new_color;
+	_new_color.redMultiplier = _color.r;
+	_new_color.greenMultiplier = _color.g;
+	_new_color.blueMultiplier = _color.b;
+	_new_color.alphaMultiplier = _color.a;
+
+	slot->_setColor(_new_color);
+}
+
+void GDSlot_script::set_display_index(int index) {
+	slot->setDisplayIndex(index);
+}
+
+void GDSlot_script::set_display_by_name(const String &_name) {
+	const std::vector<DisplayData *> *rawData = slot->getRawDisplayDatas();
+
+	// we only want to update the slot if there's a choice
+	if (rawData->size() > 1) {
+		const char *desired_item = _name.ascii().get_data();
+		std::string NONE_STRING("none");
+
+		if (NONE_STRING.compare(desired_item) == 0) {
+			slot->setDisplayIndex(-1);
+		}
+
+		for (int i = 0; i < rawData->size(); i++) {
+			DisplayData *display_data = rawData->at(i);
+
+			if (display_data->name.compare(desired_item) == 0) {
+				slot->setDisplayIndex(i);
+				return;
+			}
+		}
+	} else {
+		WARN_PRINT("Slot has only 1 item; refusing to set slot");
+		return;
+	}
+
+	WARN_PRINT("Slot has no item called \"" + _name);
+}
+
+int GDSlot_script::get_display_index() {
+	return slot->getDisplayIndex();
+}
+
+int GDSlot_script::get_display_count() {
+	return slot->getDisplayList().size();
+}
+
+void GDSlot_script::next_display() {
+	int current_slot = slot->getDisplayIndex();
+	current_slot++;
+
+	current_slot = current_slot < get_display_count() ? current_slot : -1;
+
+	set_display_index(current_slot);
+}
+
+void GDSlot_script::previous_display() {
+	int current_slot = slot->getDisplayIndex();
+	current_slot--;
+
+	current_slot = current_slot >= -1 ? current_slot : get_display_count() - 1;
+
+	set_display_index(current_slot);
+}
+
 
 DRAGONBONES_NAMESPACE_END

@@ -26,21 +26,6 @@ class GDDragonBones : public GDOwnerNode
 #endif
 
 public:
-    enum AnimMode {
-        ANIMATION_PROCESS_FIXED,
-        ANIMATION_PROCESS_IDLE,
-    };
-
-    enum AnimFadeOutMode {
-    	FadeOut_None,
-        FadeOut_SameLayer,
-        FadeOut_SameGroup,
-        FadeOut_SameLayerAndGroup,
-        FadeOut_All,
-        FadeOut_Single
-    };
-
-
 	// Resource class
     class GDDragonBonesResource : public Resource
     {
@@ -69,7 +54,7 @@ private:
     Ref<GDDragonBonesResource>  m_res;
     String                      str_curr_anim;
     GDArmatureDisplay*          p_armature;
-    AnimMode                    m_anim_mode;
+	GDArmatureDisplay::AnimMode m_anim_mode;
     float                       f_speed;
     float                       f_progress;
     int                         c_loop;
@@ -123,14 +108,14 @@ public:
      Color get_modulate() const;
 #endif
 
-    void fade_in(const String& _name_anim, float _time, int _loop, int _layer, const String& _group, GDDragonBones::AnimFadeOutMode _fade_out_mode);
-    void fade_out(const String& _name_anim);
+    /* migrated */ void fade_in(const String &_name_anim, float _time, int _loop, int _layer, const String &_group, GDArmatureDisplay::AnimFadeOutMode _fade_out_mode);
+	/* migrated */ void fade_out(const String &_name_anim);
 
     void set_active(bool _b_active);
     bool is_active() const;
 
-    void set_debug(bool _b_debug);
-    bool is_debug() const;
+    /* migrated */ void set_debug(bool _b_debug);
+	/* migrated */ bool is_debug() const;
 
     void set_speed(float _f_speed);
     float get_speed() const;
@@ -139,68 +124,53 @@ public:
     Ref<Texture> get_texture() const;
 
 	// Top level display
-	void flip_x(bool _b_flip);
-	bool is_fliped_x() const;
-	void flip_y(bool _b_flip);
-	bool is_fliped_y() const;
+	/* migrated */ void flip_x(bool _b_flip);
+	/* migrated */ bool is_fliped_x() const;
+	/* migrated */ void flip_y(bool _b_flip);
+	/* migrated */ bool is_fliped_y() const;
 
 	// animation state
-	String get_current_animation() const;
-	String get_current_animation_on_layer(int _layer) const;
-    float tell();
-    void seek(float _f_p);
-    float get_progress() const;
-    bool has_anim(const String &_str_anim);
-    void set_animation_process_mode(GDDragonBones::AnimMode _mode);
-    AnimMode get_animation_process_mode() const;
+	/* migrated */ String get_current_animation() const;
+	/* migrated */ String get_current_animation_on_layer(int _layer) const;
+	/* migrated */ float tell();
+	/* migrated */ void seek(float _f_p);
+	/* migrated */ float get_progress() const;
+	/* migrated */ bool has_anim(const String &_str_anim);
+	void set_animation_process_mode(GDArmatureDisplay::AnimMode _mode);
+	GDArmatureDisplay::AnimMode get_animation_process_mode() const;
 
 	// Slots
-	bool has_slot(const String &_slot_name) const;
-	Color get_slot_display_color_multiplier(const String &_slot_name);
-	void set_slot_display_color_multiplier(const String &_slot_name, const Color &_color);
-	void set_slot_display_index(const String &_slot_name, int _index = 0);
-	void set_slot_by_item_name(const String &_slot_name, const String &_item_name);
-	void set_all_slots_by_item_name(const String &_item_name);
-	int get_slot_display_index(const String &_slot_name);
-	int get_total_items_in_slot(const String &_slot_name);
-	void cycle_next_item_in_slot(const String &_slot_name);
-	void cycle_previous_item_in_slot(const String &_slot_name);
+	/* migrated */ bool has_slot(const String &_slot_name) const; 
+	/* migrated */ Color get_slot_display_color_multiplier(const String &_slot_name);
+	/* migrated */ void set_slot_display_color_multiplier(const String &_slot_name, const Color &_color);
+	/* migrated */ void set_slot_display_index(const String &_slot_name, int _index = 0);
+	/* migrated */ void set_slot_by_item_name(const String &_slot_name, const String &_item_name);
+
+	/* migrated */ void set_all_slots_by_item_name(const String &_item_name);
+	/* migrated */ int get_slot_display_index(const String &_slot_name);
+	/* migrated */ int get_total_items_in_slot(const String &_slot_name);
+	/* migrated */ void cycle_next_item_in_slot(const String &_slot_name);
+	/* migrated */ void cycle_previous_item_in_slot(const String &_slot_name);
 
 	// Playback
-	bool is_playing() const;
+	/* migrated */ bool is_playing() const;
 
-	void play(bool _b_play = true);
-    void play_from_time(float _f_time);
-    void play_from_progress(float _f_progress);
-	void play_new_animation(const String &_str_anim, int _num_times);
-	void play_new_animation_from_progress(const String &_str_anim, int _num_times, float _f_progress);
-	void play_new_animation_from_time(const String &_str_anim, int _num_times, float _f_time);
-	void stop(bool _b_all = false);
-	inline void stop_all() { stop(true); }
+	/* migrated */ void play(bool _b_play = true);
+	/* migrated */ void play_from_time(float _f_time);
+	/* migrated */ void play_from_progress(float _f_progress);
+	/* migrated */ void play_new_animation(const String &_str_anim, int _num_times);
+	/* migrated */ void play_new_animation_from_progress(const String &_str_anim, int _num_times, float _f_progress);
+	/* migrated */ void play_new_animation_from_time(const String &_str_anim, int _num_times, float _f_time);
+	/* migrated */ void stop(bool _b_all = false);
+	/* migrated */ inline void stop_all() { stop(true); }
 
-
-	/* Child amratures*/
-
-	Array get_armature_list();
-	Array get_animations_on_armature(const String &_armature_name);
-	bool has_anim_on_armature(const String &_armature_name, const String &_str_anim);
-	void play_on_armature(const String &_armature_name, const String &_animation_name, bool _b_play = true);
-	void play_from_time_on_armature(const String &_armature_name, const String &_animation_name, float _f_time);
-	void play_from_progress_on_armature(const String &_armature_name, const String &_animation_name, float _f_progress);
-	void stop_animation_on_armature(const String &_armature_name, const String &_animation_name);
-	void stop_all_animations_on_armature(const String &_armature_name);
-	void fade_in_on_armature(const String &_armature_name, const String &_animation_name, float _time,
-		int _loop, int _layer, const String &_group, GDDragonBones::AnimFadeOutMode _fade_out_mode);
+	GDArmatureDisplay *get_armature();
 
 private:
 	const DragonBonesData *get_dragonbones_data() const;
 	ArmatureData *get_armature_data(const String &_armature_name);
-	GDArmatureDisplay *get_armature_display(const String &_armature_name);
+	
 };
-
-VARIANT_ENUM_CAST(GDDragonBones::AnimMode);
-VARIANT_ENUM_CAST(GDDragonBones::AnimFadeOutMode);
-
 
 #endif // GDDRAGONBONES_H
 

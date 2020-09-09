@@ -93,7 +93,7 @@ GDDragonBones::GDDragonBones()
     m_res = RES();
     str_curr_anim = "[none]";
     p_armature = nullptr;
-    m_anim_mode = ANIMATION_PROCESS_IDLE;
+	m_anim_mode = GDArmatureDisplay::AnimMode::ANIMATION_PROCESS_IDLE;
     f_progress = 0;
     f_speed = 1.f;
     b_processing = false;
@@ -272,6 +272,10 @@ void GDDragonBones::set_resource(Ref<GDDragonBones::GDDragonBonesResource> _p_da
 
     _change_notify();
     update();
+
+	if (!Engine::get_singleton()->is_editor_hint()) {
+		_set_process(true);
+	}
 }
 
 Ref<GDDragonBones::GDDragonBonesResource> GDDragonBones::get_resource()
@@ -338,7 +342,7 @@ Color GDDragonBones::get_modulate() const
 }
 #endif
 
-void GDDragonBones::fade_in(const String& _name_anim, float _time, int _loop, int _layer, const String& _group, GDDragonBones::AnimFadeOutMode _fade_out_mode)
+void GDDragonBones::fade_in(const String& _name_anim, float _time, int _loop, int _layer, const String& _group, GDArmatureDisplay::AnimFadeOutMode _fade_out_mode)
 {
     // setup speed
     p_factory->set_speed(f_speed);
@@ -436,7 +440,7 @@ float GDDragonBones::get_speed() const
 	return f_speed;
 }
 
-void GDDragonBones::set_animation_process_mode(GDDragonBones::AnimMode _mode)
+void GDDragonBones::set_animation_process_mode(GDArmatureDisplay::AnimMode _mode)
 {
 	if (m_anim_mode == _mode)
 		return;
@@ -448,7 +452,7 @@ void GDDragonBones::set_animation_process_mode(GDDragonBones::AnimMode _mode)
 		_set_process(true);
 }
 
-GDDragonBones::AnimMode GDDragonBones::get_animation_process_mode() const
+GDArmatureDisplay::AnimMode GDDragonBones::get_animation_process_mode() const
 {
 	return m_anim_mode;
 }
@@ -481,7 +485,7 @@ void GDDragonBones::_notification(int _what)
 
 	case NOTIFICATION_PROCESS:
 	{
-		if (m_anim_mode == ANIMATION_PROCESS_FIXED)
+		if (m_anim_mode == GDArmatureDisplay::AnimMode::ANIMATION_PROCESS_FIXED)
 			break;
 
 		if (b_processing)
@@ -493,7 +497,7 @@ void GDDragonBones::_notification(int _what)
 	case NOTIFICATION_PHYSICS_PROCESS:
 	{
 
-		if (m_anim_mode == ANIMATION_PROCESS_IDLE)
+		if (m_anim_mode == GDArmatureDisplay::AnimMode::ANIMATION_PROCESS_IDLE)
 			break;
 
 		if (b_processing)
@@ -715,7 +719,7 @@ void GDDragonBones::play_new_animation(const String &_str_anim, int _num_times) 
 
 bool GDDragonBones::has_anim(const String& _str_anim)
 {
-	return has_anim_on_armature(p_armature->getArmature()->getArmatureData()->name.c_str(), _str_anim);
+	return p_armature->has_animation(_str_anim);
 }
 
 void GDDragonBones::stop(bool _b_all)
@@ -746,122 +750,8 @@ ArmatureData* GDDragonBones::get_armature_data(const String &_armature_name) {
 	return data->second;
 }
 
-GDArmatureDisplay *GDDragonBones::get_armature_display(const String &_armature_name) {
-	auto *armature = get_armature_data(_armature_name);
-
-	if (armature != nullptr) {
-		// First we check if the armature is the root armature
-		if (armature->name == p_armature->getArmature()->getName()) {
-			return p_armature;
-		}
-
-		int child_count = p_armature->get_child_count();
-
-		for (int i = 0; i < child_count; i++) {
-			if (_armature_name.ascii().get_data() == p_armature->get_child(i)->get_name()) {
-				return static_cast<GDArmatureDisplay *>(p_armature->get_child(i));
-			}
-		}
-	}
-}
-
-Array GDDragonBones::get_armature_list() {
-	Array armature_list{};
-	for (std::string armature_name : get_dragonbones_data()->armatureNames) {
-		armature_list.push_back(String(armature_name.c_str()));
-	}
-	return armature_list;
-}
-
-bool GDDragonBones::has_anim_on_armature(const String &_armature_name, const String &_str_anim) {
-
-	ArmatureData *data = get_armature_data(_armature_name);
-
-	AnimationData* animation = data->getAnimation(_str_anim.ascii().get_data());
-
-	return animation != nullptr;
-}
-
-
-
-Array GDDragonBones::get_animations_on_armature(const String &_armature_name) {
-	Array animations{};
-
-	ArmatureData *data = get_armature_data(_armature_name);
-
-	for (std::string animation_name : data->getAnimationNames()) {
-		animations.push_back(String(animation_name.c_str()));
-	}
-
-	return animations;
-}
-
-void GDDragonBones::play_on_armature(const String &_armature_name, const String &_animation_name, bool _b_play) {
-	if (has_anim_on_armature(_armature_name, _animation_name)) {
-		_set_process(true);
-
-		p_factory->set_speed(f_speed);
-
-		GDArmatureDisplay *display = get_armature_display(_armature_name);
-
-		if (display != nullptr) {
-			display->getAnimation()->play(_animation_name.ascii().get_data());
-		}
-	}
-}
-
-void GDDragonBones::play_from_time_on_armature(const String &_armature_name, const String &_animation_name, float _f_time) {
-	if (has_anim_on_armature(_armature_name, _animation_name)) {
-		_set_process(true);
-
-		p_factory->set_speed(f_speed);
-
-		GDArmatureDisplay *display = get_armature_display(_armature_name);
-
-		if (display != nullptr) {
-			display->getAnimation()->play(_animation_name.ascii().get_data());
-			display->getAnimation()->gotoAndPlayByTime(_animation_name.ascii().get_data(), _f_time);
-		}
-	}
-
-}
-
-void GDDragonBones::play_from_progress_on_armature(const String &_armature_name, const String &_animation_name, float _f_progress) {
-	if (has_anim_on_armature(_armature_name, _animation_name)) {
-		_set_process(true);
-
-		p_factory->set_speed(f_speed);
-
-		GDArmatureDisplay *display = get_armature_display(_armature_name);
-
-		if (display != nullptr) {
-			display->getAnimation()->play(_animation_name.ascii().get_data());
-			display->getAnimation()->gotoAndPlayByProgress(_animation_name.ascii().get_data(), CLAMP(_f_progress, 0, 1.f));
-		}
-	}
-}
-
-void GDDragonBones::stop_animation_on_armature(const String &_armature_name, const String &_animation_name) {
-	GDArmatureDisplay *display = get_armature_display(_armature_name);
-
-	if (display->getAnimation()->isPlaying())
-		display->getAnimation()->stop(_animation_name.ascii().get_data());
-}
-
-void GDDragonBones::stop_all_animations_on_armature(const String &_armature_name) {
-	GDArmatureDisplay *display = get_armature_display(_armature_name);
-
-	if (display->getAnimation()->isPlaying())
-		display->getAnimation()->stop("");
-}
-
-void GDDragonBones::fade_in_on_armature(const String &_armature_name, const String &_animation_name, float _time, int _loop, int _layer, const String &_group, GDDragonBones::AnimFadeOutMode _fade_out_mode) {
-	if (has_anim_on_armature(_armature_name, _animation_name)) {
-		_set_process(true);
-
-		GDArmatureDisplay *display = get_armature_display(_armature_name);
-		display->getAnimation()->fadeIn(_animation_name.ascii().get_data(), _time, _loop, _layer, _group.ascii().get_data(), (AnimationFadeOutMode)_fade_out_mode);
-	}
+GDArmatureDisplay *GDDragonBones::get_armature() {
+	return p_armature;
 }
 
 float GDDragonBones::tell()
@@ -929,11 +819,11 @@ void GDDragonBones::_set_process(bool _b_process, bool _b_force)
     {
 
 #if (VERSION_MAJOR >= 3)
-        case ANIMATION_PROCESS_FIXED: set_physics_process(_b_process && b_active); break;
+		case GDArmatureDisplay::AnimMode::ANIMATION_PROCESS_FIXED: set_physics_process(_b_process && b_active); break;
 #else
-        case ANIMATION_PROCESS_FIXED: set_fixed_process(_b_process && b_active); break;
+		case GDArmatureDisplay::AnimMode::ANIMATION_PROCESS_FIXED: set_fixed_process(_b_process && b_active); break;
 #endif
-        case ANIMATION_PROCESS_IDLE: set_process(_b_process && b_active); break;
+		case GDArmatureDisplay::AnimMode::ANIMATION_PROCESS_IDLE: set_process(_b_process && b_active); break;
     }
     b_processing = _b_process;
 }
@@ -1101,6 +991,7 @@ void GDDragonBones::_bind_methods()
 
 	CLASS_BIND_GODO::bind_method(METH("get_current_animation"), &GDDragonBones::get_current_animation);
 	CLASS_BIND_GODO::bind_method(METH("get_current_animation_on_layer"), &GDDragonBones::get_current_animation_on_layer);
+	CLASS_BIND_GODO::bind_method(METH("get_armature"), &GDDragonBones::get_armature);
 	/*
 		END OF BASE ARMATURE FUNCTIONS
 	*/
@@ -1110,23 +1001,6 @@ void GDDragonBones::_bind_methods()
 		Let's get into the business of playing with child armatures.
 	*/
 
-	// GET
-	CLASS_BIND_GODO::bind_method(METH("get_armature_list"), &GDDragonBones::get_armature_list);
-	CLASS_BIND_GODO::bind_method(METH("get_animations_on_armature", "armature_name"), &GDDragonBones::get_animations_on_armature);
-
-	// ACTIONS
-	CLASS_BIND_GODO::bind_method(METH("has_anim_on_armature", "armature_name", "animation_name"), &GDDragonBones::has_anim_on_armature);
-
-	CLASS_BIND_GODO::bind_method(METH("play_on_armature", "armature_name", "animation_name"), &GDDragonBones::play_on_armature);
-	CLASS_BIND_GODO::bind_method(METH("play_from_time_on_armature", "armature_name", "animation_name", "time"), &GDDragonBones::play_from_time_on_armature);
-	CLASS_BIND_GODO::bind_method(METH("play_from_progress_on_armature", "armature_name", "animation_name", "progress"), &GDDragonBones::play_from_progress_on_armature);
-	CLASS_BIND_GODO::bind_method(METH("stop_animation_on_armature", "armature_name", "animation_name"), &GDDragonBones::stop_animation_on_armature);
-	CLASS_BIND_GODO::bind_method(METH("stop_all_animations_on_armature", "armature_name"), &GDDragonBones::stop_all_animations_on_armature);
-
-	CLASS_BIND_GODO::bind_method(METH("fade_in_on_armature", "armature_name", "animation_name", "time", "loop", "layer", "group", "fade_out_mode"), &GDDragonBones::fade_in_on_armature);
-	/*
-		END OF CHILD ARMATURES
-	*/
 
     CLASS_BIND_GODO::bind_method(METH("set_active", "active"), &GDDragonBones::set_active);
     CLASS_BIND_GODO::bind_method(METH("is_active"), &GDDragonBones::is_active);
@@ -1167,15 +1041,7 @@ void GDDragonBones::_bind_methods()
     ADD_SIGNAL(MethodInfo("dragon_fade_out", PropertyInfo(Variant::STRING, "anim")));
 	ADD_SIGNAL(MethodInfo("dragon_fade_out_complete", PropertyInfo(Variant::STRING, "anim")));
 
-    BIND_CONSTANT(ANIMATION_PROCESS_FIXED);
-    BIND_CONSTANT(ANIMATION_PROCESS_IDLE);
 
-    BIND_CONSTANT(FadeOut_None);
-    BIND_CONSTANT(FadeOut_SameLayer);
-    BIND_CONSTANT(FadeOut_SameGroup);
-    BIND_CONSTANT(FadeOut_SameLayerAndGroup);
-    BIND_CONSTANT(FadeOut_All);
-    BIND_CONSTANT(FadeOut_Single);
 }
 
 void GDDragonBones::_get_property_list(List<PropertyInfo>* _p_list) const

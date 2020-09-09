@@ -23,7 +23,6 @@ class GDOwnerNode : public Node2D
 #else
     OBJ_TYPE(GDOwnerNode, Node2D);
 #endif
-
 public:
     Color		    modulate;
 
@@ -90,3 +89,5 @@ public:
 };
 
 #endif // GDISPLAY_H
+
+

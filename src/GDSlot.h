@@ -2,14 +2,26 @@
 #define GDSLOT_H
 
 #include <memory>
-#include "scene/2d/node_2d.h"
 #include "dragonBones/DragonBonesHeaders.h"
 #include "GDDisplay.h"
 
+#if (VERSION_MAJOR >= 3)
+	#define CLASS_BIND_GODO ClassDB
+	#define METH D_METHOD
+	#define _SCS(val) val
+
+#else
+
+	#include "core/globals.h"
+
+	#define CLASS_BIND_GODO ObjectTypeDB
+	#define METH _MD
+
+#endif
+
 DRAGONBONES_NAMESPACE_BEGIN
 
-class GDSlot : public Slot
-{
+class GDSlot : public Slot {
 	BIND_CLASS_TYPE_A(GDSlot);
 
 private:
@@ -39,6 +51,30 @@ protected:
 
 
     static void __get_uv_pt(Point2& _pt, bool _is_rot, float _u, float _v, const Rectangle& _reg, const TextureAtlasData *_p_atlas);
+
+
+
+};
+
+class GDSlot_script : public Node {
+	GDCLASS(GDSlot_script, Node);
+
+	GDSlot *slot;
+
+	/* BIND METHODS */
+public:
+	void set_slot(GDSlot *_slot);
+
+	static void _bind_methods();
+
+	Color get_display_color_multiplier();
+	void set_display_color_multiplier(const Color &_color);
+	void set_display_index(int index = 0);
+	void set_display_by_name(const String &_name);
+	int get_display_index();
+	int get_display_count();
+	void next_display();
+	void previous_display();
 };
 
 DRAGONBONES_NAMESPACE_END
