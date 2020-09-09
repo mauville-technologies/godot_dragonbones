@@ -22,9 +22,9 @@ void GDArmatureDisplay::_bind_methods() {
 	CLASS_BIND_GODO::bind_method(METH("has_animation", "animation_name"), &GDArmatureDisplay::has_animation);
 	CLASS_BIND_GODO::bind_method(METH("get_animations"), &GDArmatureDisplay::get_animations);
 	CLASS_BIND_GODO::bind_method(METH("is_playing"), &GDArmatureDisplay::is_playing);
-	CLASS_BIND_GODO::bind_method(METH("play", "animation_name"), &GDArmatureDisplay::play);
-	CLASS_BIND_GODO::bind_method(METH("play_from_time", "animation_name", "f_time"), &GDArmatureDisplay::play_from_time);
-	CLASS_BIND_GODO::bind_method(METH("play_from_progress", "animation_name", "f_progress"), &GDArmatureDisplay::play_from_progress);
+	CLASS_BIND_GODO::bind_method(METH("play", "animation_name", "loop_count"), &GDArmatureDisplay::play);
+	CLASS_BIND_GODO::bind_method(METH("play_from_time", "animation_name", "f_time", "loop_count"), &GDArmatureDisplay::play_from_time);
+	CLASS_BIND_GODO::bind_method(METH("play_from_progress", "animation_name", "f_progress", "loop_count"), &GDArmatureDisplay::play_from_progress);
 	CLASS_BIND_GODO::bind_method(METH("stop", "animation_name"), &GDArmatureDisplay::stop);
 	CLASS_BIND_GODO::bind_method(METH("stop_all_animations"), &GDArmatureDisplay::stop_all_animations);
 	CLASS_BIND_GODO::bind_method(METH("fade_in"), &GDArmatureDisplay::fade_in);
@@ -158,23 +158,23 @@ bool GDArmatureDisplay::is_playing() const {
 	return getAnimation()->isPlaying();
 }
 
-void GDArmatureDisplay::play(const String &_animation_name) {
+void GDArmatureDisplay::play(const String &_animation_name, int loop) {
 	if (has_animation(_animation_name)) {
-		getAnimation()->play(_animation_name.ascii().get_data());
+		getAnimation()->play(_animation_name.ascii().get_data(), loop);
 	}
 }
 
-void GDArmatureDisplay::play_from_time(const String &_animation_name, float _f_time) {
+void GDArmatureDisplay::play_from_time(const String &_animation_name, float _f_time, int loop) {
 	if (has_animation(_animation_name)) {
-		getAnimation()->play(_animation_name.ascii().get_data());
+		play(_animation_name, loop);
 		getAnimation()->gotoAndPlayByTime(_animation_name.ascii().get_data(), _f_time);
 	}
 }
 
 
-void GDArmatureDisplay::play_from_progress(const String &_animation_name, float f_progress) {
+void GDArmatureDisplay::play_from_progress(const String &_animation_name, float f_progress, int loop) {
 	if (has_animation(_animation_name)) {
-		getAnimation()->play(_animation_name.ascii().get_data());
+		play(_animation_name, loop);
 		getAnimation()->gotoAndPlayByProgress(_animation_name.ascii().get_data(), f_progress);
 	}
 }

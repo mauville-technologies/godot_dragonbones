@@ -102,9 +102,9 @@ public:
 	void seek_animation(const String &_animation_name, float progress);
 
 	bool is_playing() const;
-	void play(const String &_animation_name);
-	void play_from_time(const String &_animation_name, float _f_time);
-	void play_from_progress(const String &_animation_name, float f_progress);
+	void play(const String &_animation_name, int loop = -1);
+	void play_from_time(const String &_animation_name, float _f_time, int loop = -1);
+	void play_from_progress(const String &_animation_name, float f_progress, int loop = -1);
 	void stop(const String &_animation_name, bool b_reset = false);
 	void stop_all_animations(bool b_children = false, bool b_reset = false);
 	void fade_in(const String &_animation_name, float _time,
