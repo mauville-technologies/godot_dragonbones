@@ -23,12 +23,12 @@ cd $GODOT_SOURCE_LOCATION
 mkdir -p /build/engine
 
 # Package .app
-cp -r misc/dist/osx_tools.app ./Godot-dragonbones-$GODOT_DRAGONBONES_BRANCH.app
-mkdir -p Godot-dragonbones-$GODOT_DRAGONBONES_BRANCH.app/Contents/MacOS
-mv bin/*osx.opt.tools* Godot-dragonbones-$GODOT_DRAGONBONES_BRANCH.app/Contents/MacOS/Godot
-chmod +x Godot-dragonbones-$GODOT_DRAGONBONES_BRANCH.app/Contents/MacOS/Godot
+cp -r misc/dist/osx_tools.app ./Godot-dragonbones-$GODOT_DRAGONBONES_VERSION.app
+mkdir -p Godot-dragonbones-$GODOT_DRAGONBONES_VERSION.app/Contents/MacOS
+mv bin/*osx.opt.tools* Godot-dragonbones-$GODOT_DRAGONBONES_VERSION.app/Contents/MacOS/Godot
+chmod +x Godot-dragonbones-$GODOT_DRAGONBONES_VERSION.app/Contents/MacOS/Godot
 rm -f /build/engine/Godot-dragonbones.osx.64.zip
-zip -r -y /build/engine/Godot-dragonbones.osx.64.zip Godot-dragonbones-$GODOT_DRAGONBONES_BRANCH.app
+zip -r -y /build/engine/Godot-dragonbones.osx.64.zip Godot-dragonbones-$GODOT_DRAGONBONES_VERSION.app
 
 cp -av bin/. /build/engine
 
