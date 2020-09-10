@@ -36,6 +36,9 @@ void GDArmatureDisplay::_bind_methods() {
 	CLASS_BIND_GODO::bind_method(METH("set_flip_y" , "is_flipped"), &GDArmatureDisplay::flip_y);
 	CLASS_BIND_GODO::bind_method(METH("is_flipped_y"), &GDArmatureDisplay::is_flipped_y);
 	CLASS_BIND_GODO::bind_method(METH("set_debug", "is_debug"), &GDArmatureDisplay::set_debug);
+	CLASS_BIND_GODO::bind_method(METH("get_ik_constraints"), &GDArmatureDisplay::get_ik_constraints);
+	CLASS_BIND_GODO::bind_method(METH("set_ik_constraint", "constraint_name", "new_position"), &GDArmatureDisplay::set_ik_constraint);
+	CLASS_BIND_GODO::bind_method(METH("set_ik_constraint_bend_positive", "constraint_name", "is_positive"), &GDArmatureDisplay::set_ik_constraint_bend_positive);
 
 
 	// Enum
@@ -261,6 +264,42 @@ void GDArmatureDisplay::flip_y(bool _b_flip) {
 
 bool GDArmatureDisplay::is_flipped_y() const {
 	return getArmature()->getFlipY();
+}
+
+Dictionary GDArmatureDisplay::get_ik_constraints() {
+	Dictionary dict;
+
+	for (auto &constraint : getArmature()->getArmatureData()->constraints) {
+		dict[String(constraint.first.c_str())] = Vector2(constraint.second->target->transform.x, constraint.second->target->transform.y);
+	}
+
+	return dict;
+}
+
+void GDArmatureDisplay::set_ik_constraint(const String &name, Vector2 position){
+	for (dragonBones::Constraint *constraint : getArmature()->_constraints) {
+		if (constraint->getName() == name.ascii().get_data()) {
+			dragonBones::BoneData *target = const_cast<BoneData *>(constraint->_constraintData->target);
+			target->transform.x = position.x;
+			target->transform.y = position.y;
+
+			constraint->_constraintData->setTarget(target);
+			constraint->update();
+			getArmature()->invalidUpdate(target->name, true);
+		}
+	}
+}
+
+void GDArmatureDisplay::set_ik_constraint_bend_positive(const String &name, bool bend_positive) {
+	for (dragonBones::Constraint *constraint : getArmature()->_constraints) {
+		if (constraint->getName() == name.ascii().get_data()) {
+			dragonBones::BoneData *target = const_cast<BoneData *>(constraint->_constraintData->target);
+
+			static_cast<IKConstraint *>(constraint)->_bendPositive = bend_positive;
+			constraint->update();
+			getArmature()->invalidUpdate(target->name, true);
+		}
+	}
 }
 
 Slot *GDArmatureDisplay::getSlot(const std::string &name) const {

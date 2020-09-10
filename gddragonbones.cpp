@@ -250,6 +250,12 @@ void GDDragonBones::set_resource(Ref<GDDragonBones::GDDragonBonesResource> _p_da
         __p_tad->height = m_texture_atlas->get_height();
         __p_tad->width = m_texture_atlas->get_width();
     }
+
+	/* This here is what you call a hack for the end-user. Fix should be made in COA Tools; but it's put here for a quick win user-side*/
+	if ("Generated with COA Tools" == get_dragonbones_data()->info) {
+		b_flip_y = !b_flip_y;
+	}
+
 	// update flip
 	p_armature->getArmature()->setFlipX(b_flip_x);
 	p_armature->getArmature()->setFlipY(b_flip_y);

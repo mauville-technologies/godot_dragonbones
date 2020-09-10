@@ -121,6 +121,9 @@ public:
 	void flip_y(bool _b_flip);
 	bool is_flipped_y() const;
 
+	Dictionary get_ik_constraints();
+	void set_ik_constraint(const String &name, Vector2 position);
+	void set_ik_constraint_bend_positive(const String &name, bool bend_positive);
 };
 
 
