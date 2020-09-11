@@ -9,6 +9,7 @@
 #include "GDArmatureDisplay.h"
 #include "GDSlot.h"
 #include "GDTextureData.h"
+#include "GDBone2D.h"
 
 DRAGONBONES_NAMESPACE_BEGIN
 
@@ -21,7 +22,7 @@ protected:
     DragonBones*					_dragonBonesInstance;
     GDOwnerNode*                    p_owner;
 
-	mutable std::vector<std::unique_ptr<GDSlot> >			_wrapperSlots;
+	mutable std::vector<std::unique_ptr<Slot_GD> >			_wrapperSlots;
     mutable std::vector<std::unique_ptr<GDTextureData> >	_wrapperTexturesData;
 
 public:

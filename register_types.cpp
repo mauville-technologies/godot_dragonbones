@@ -106,7 +106,8 @@ void register_godot_dragonbones_types()
 {
 	REG_CLASS_BIND_GODO<GDDragonBones>();
 	REG_VIRTUAL_CLASS_BIND_GODO<GDArmatureDisplay>();
-	REG_VIRTUAL_CLASS_BIND_GODO<GDSlot_script>();
+	REG_VIRTUAL_CLASS_BIND_GODO<GDSlot>();
+	REG_VIRTUAL_CLASS_BIND_GODO<GDBone2D>();
     REG_CLASS_BIND_GODO<GDDragonBones::GDDragonBonesResource>();
 	resource_loader_GDDragonBones = memnew( ResourceFormatLoaderGDDragonBones );
 	ResourceLoader::add_resource_format_loader(resource_loader_GDDragonBones);

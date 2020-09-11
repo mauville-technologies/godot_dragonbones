@@ -21,8 +21,8 @@
 
 DRAGONBONES_NAMESPACE_BEGIN
 
-class GDSlot : public Slot {
-	BIND_CLASS_TYPE_A(GDSlot);
+class Slot_GD : public Slot {
+	BIND_CLASS_TYPE_A(Slot_GD);
 
 private:
     float       _textureScale;
@@ -56,14 +56,15 @@ protected:
 
 };
 
-class GDSlot_script : public Node {
-	GDCLASS(GDSlot_script, Node);
+class GDSlot : public Node {
+	GDCLASS(GDSlot, Node);
 
-	GDSlot *slot;
+private:
+	Slot_GD *slot;
 
 	/* BIND METHODS */
 public:
-	void set_slot(GDSlot *_slot);
+	void set_slot(Slot_GD *_slot);
 
 	static void _bind_methods();
 

@@ -39,6 +39,8 @@ void GDArmatureDisplay::_bind_methods() {
 	CLASS_BIND_GODO::bind_method(METH("get_ik_constraints"), &GDArmatureDisplay::get_ik_constraints);
 	CLASS_BIND_GODO::bind_method(METH("set_ik_constraint", "constraint_name", "new_position"), &GDArmatureDisplay::set_ik_constraint);
 	CLASS_BIND_GODO::bind_method(METH("set_ik_constraint_bend_positive", "constraint_name", "is_positive"), &GDArmatureDisplay::set_ik_constraint_bend_positive);
+	CLASS_BIND_GODO::bind_method(METH("get_bone_names"), &GDArmatureDisplay::get_bone_names);
+	CLASS_BIND_GODO::bind_method(METH("get_bone", "bone_name"), &GDArmatureDisplay::get_bone);
 
 
 	// Enum
@@ -234,17 +236,17 @@ Array GDArmatureDisplay::get_slots() {
 	Array slots{};
 
 	for (Slot *slot : getArmature()->getSlots()) {
-		GDSlot_script *wrapper = memnew(GDSlot_script);
-		wrapper->set_slot(static_cast<GDSlot *>(slot));
+		GDSlot *wrapper = memnew(GDSlot);
+		wrapper->set_slot(static_cast<Slot_GD *>(slot));
 		slots.push_back(slot);
 	}
 
 	return slots;
 }
 
-GDSlot_script *GDArmatureDisplay::get_slot(const String &_slot_name) {
-	GDSlot_script *wrapper = memnew(GDSlot_script);
-	wrapper->set_slot(static_cast<GDSlot *>(getArmature()->getSlot(_slot_name.ascii().get_data())));
+GDSlot *GDArmatureDisplay::get_slot(const String &_slot_name) {
+	GDSlot *wrapper = memnew(GDSlot);
+	wrapper->set_slot(static_cast<Slot_GD *>(getArmature()->getSlot(_slot_name.ascii().get_data())));
 	return wrapper;
 }
 
@@ -300,6 +302,24 @@ void GDArmatureDisplay::set_ik_constraint_bend_positive(const String &name, bool
 			getArmature()->invalidUpdate(target->name, true);
 		}
 	}
+}
+
+Array GDArmatureDisplay::get_bone_names() {
+	Array bones{};
+
+	for (Bone *bone : getArmature()->getBones()) {
+		bones.push_back(String(bone->getName().c_str()));
+	}
+
+	return bones;
+}
+
+GDBone2D *GDArmatureDisplay::get_bone(const String &name) {
+	GDBone2D *bone = GDBone2D::create();
+	bone->set_data(getArmature()->getBone(name.ascii().get_data()));
+
+
+	return bone->has_data() ? bone : nullptr;
 }
 
 Slot *GDArmatureDisplay::getSlot(const std::string &name) const {

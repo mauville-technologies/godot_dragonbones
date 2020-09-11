@@ -91,15 +91,14 @@ Armature* GDFactory::_buildArmature(const BuildArmaturePackage& dataPackage) con
 
 Slot* GDFactory::_buildSlot(const BuildArmaturePackage& dataPackage, const SlotData* slotData, Armature* armature) const
 {
-	auto slot = BaseObject::borrowObject<GDSlot>();
+	auto slot = BaseObject::borrowObject<Slot_GD>();
 
     auto wrapperDisplay = GDMesh::create();
-	_wrapperSlots.push_back(std::unique_ptr<GDSlot>(slot));
+	_wrapperSlots.push_back(std::unique_ptr<Slot_GD>(slot));
 	slot->init(slotData, armature, wrapperDisplay, wrapperDisplay);
     wrapperDisplay->set_name(slot->getName().c_str());
 	return slot;
 }
-
 
 void GDFactory::addDBEventListener(const std::string& type, const Func_t& listener){}
 void GDFactory::removeDBEventListener(const std::string& type, const Func_t& listener){}

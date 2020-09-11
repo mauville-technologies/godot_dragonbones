@@ -5,6 +5,7 @@
 #include "dragonBones/DragonBonesHeaders.h"
 #include "GDDisplay.h"
 #include "GDSlot.h"
+#include "GDBone2D.h"
 
 #if (VERSION_MAJOR >= 3)
 	#define CLASS_BIND_GODO ClassDB
@@ -114,7 +115,7 @@ public:
 
 	bool has_slot(const String &_slot_name) const;
 	Array get_slots();
-	GDSlot_script *get_slot(const String &_slot_name);
+	GDSlot *get_slot(const String &_slot_name);
 
 	void flip_x(bool _b_flip);
 	bool is_flipped_x() const;
@@ -124,6 +125,9 @@ public:
 	Dictionary get_ik_constraints();
 	void set_ik_constraint(const String &name, Vector2 position);
 	void set_ik_constraint_bend_positive(const String &name, bool bend_positive);
+
+	Array get_bone_names();
+	GDBone2D *get_bone(const String &name);
 };
 
 
