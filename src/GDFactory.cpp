@@ -92,11 +92,18 @@ Armature* GDFactory::_buildArmature(const BuildArmaturePackage& dataPackage) con
 Slot* GDFactory::_buildSlot(const BuildArmaturePackage& dataPackage, const SlotData* slotData, Armature* armature) const
 {
 	auto slot = BaseObject::borrowObject<Slot_GD>();
-
-    auto wrapperDisplay = GDMesh::create();
+	auto wrapperDisplay = GDMesh::create();
 	_wrapperSlots.push_back(std::unique_ptr<Slot_GD>(slot));
 	slot->init(slotData, armature, wrapperDisplay, wrapperDisplay);
     wrapperDisplay->set_name(slot->getName().c_str());
+	slot->update(0);
+
+	GDSlot *tree_slot = memnew(GDSlot);
+	tree_slot->set_slot(slot);
+
+	const auto proxy = static_cast<GDArmatureDisplay *>(slot->getArmature()->getDisplay());
+	proxy->add_slot(slot->getName(), tree_slot);
+
 	return slot;
 }
 
@@ -126,15 +133,32 @@ Armature *GDFactory::_buildChildArmature(const BuildArmaturePackage *dataPackage
 		return nullptr;
 	}
 
-
-	if (childArmature->get_parent() != proxy) {
-		childArmature->set_z_index(slot->_zOrder);
-		childArmature->getArmature()->setFlipY(true);
-		childArmature->hide();
-		proxy->add_child(childArmature);
-	}
+	childArmature->set_z_index(slot->_zOrder);
+	childArmature->getArmature()->setFlipY(true);
+	childArmature->hide();
+	proxy->add_child(childArmature);
 
 	return childArmature->getArmature();
+}
+
+void GDFactory::_buildBones(const BuildArmaturePackage &dataPackage, Armature *armature) const {
+	for (const auto boneData : dataPackage.armature->sortedBones) {
+		const auto bone = BaseObject::borrowObject<Bone>();
+		bone->init(boneData, armature);
+
+		GDBone2D *new_bone = GDBone2D::create();
+		new_bone->set_data(bone);
+
+		GDArmatureDisplay *display = static_cast<GDArmatureDisplay *>(armature->getDisplay());
+		display->add_bone(bone->getName(), new_bone);
+	}
+
+	for (const auto &pair : dataPackage.armature->constraints) {
+		// TODO more constraint type.
+		const auto constraint = BaseObject::borrowObject<IKConstraint>();
+		constraint->init(pair.second, armature);
+		armature->_addConstraint(constraint);
+	}
 }
 
 bool GDFactory::hasDBEventListener(const std::string& type) const

@@ -48,7 +48,9 @@ private:
     GDArmatureDisplay(const GDArmatureDisplay&);
 
 protected:
-    Armature*           p_armature;
+    Armature*							p_armature;
+	std::map<std::string, GDBone2D *> _bones;
+	std::map<std::string, GDSlot *> _slots;
 
 public:
 	GDArmatureDisplay();
@@ -61,6 +63,8 @@ public:
 
 	Slot *getSlot(const std::string &name) const;
 
+	void add_bone(std::string name, GDBone2D *new_bone);
+	void add_slot(std::string name, GDSlot *new_slot);
     void addEvent(const std::string& _type, const std::function<void(EventObject*)>& _callback);
     void removeEvent(const std::string& _type);
 
@@ -114,7 +118,7 @@ public:
 	void reset();
 
 	bool has_slot(const String &_slot_name) const;
-	Array get_slots();
+	Dictionary get_slots();
 	GDSlot *get_slot(const String &_slot_name);
 
 	void flip_x(bool _b_flip);

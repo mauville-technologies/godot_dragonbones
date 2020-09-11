@@ -68,6 +68,7 @@ public:
                    b_debug = false;
 #if (VERSION_MAJOR >= 3)
                    p_canvas_mat = memnew(CanvasItemMaterial);
+				   set_material(p_canvas_mat);
 #endif
                  }
     virtual ~GDDisplay() {}

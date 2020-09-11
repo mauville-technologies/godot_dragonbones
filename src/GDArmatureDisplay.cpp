@@ -30,6 +30,7 @@ void GDArmatureDisplay::_bind_methods() {
 	CLASS_BIND_GODO::bind_method(METH("fade_in"), &GDArmatureDisplay::fade_in);
 	CLASS_BIND_GODO::bind_method(METH("has_slot", "slot_name"), &GDArmatureDisplay::has_slot);
 	CLASS_BIND_GODO::bind_method(METH("get_slot", "slot_name"), &GDArmatureDisplay::get_slot);
+	CLASS_BIND_GODO::bind_method(METH("get_slots"), &GDArmatureDisplay::get_slots);
 	CLASS_BIND_GODO::bind_method(METH("reset"), &GDArmatureDisplay::reset);
 	CLASS_BIND_GODO::bind_method(METH("set_flip_x", "is_flipped"), &GDArmatureDisplay::flip_x);
 	CLASS_BIND_GODO::bind_method(METH("is_flipped_x"), &GDArmatureDisplay::is_flipped_x);
@@ -187,11 +188,11 @@ void GDArmatureDisplay::play_from_progress(const String &_animation_name, float 
 void GDArmatureDisplay::stop(const String &_animation_name, bool b_reset) {
 	if (getAnimation()) {
 		getAnimation()->stop(_animation_name.ascii().get_data());
-	}
 
-	if (b_reset) {
-		reset();
-	}
+		if (b_reset) {
+			reset();
+		}
+	}	
 }
 
 void GDArmatureDisplay::stop_all_animations(bool b_children, bool b_reset) {
@@ -232,22 +233,18 @@ bool GDArmatureDisplay::has_slot(const String &_slot_name) const {
 	return getArmature()->getSlot(_slot_name.ascii().get_data()) != nullptr;
 }
 
-Array GDArmatureDisplay::get_slots() {
-	Array slots{};
+Dictionary GDArmatureDisplay::get_slots() {
+	Dictionary slots{};
 
-	for (Slot *slot : getArmature()->getSlots()) {
-		GDSlot *wrapper = memnew(GDSlot);
-		wrapper->set_slot(static_cast<Slot_GD *>(slot));
-		slots.push_back(slot);
+	for (auto &slot : _slots) {
+		slots[slot.first.c_str()] = slot.second;
 	}
 
 	return slots;
 }
 
 GDSlot *GDArmatureDisplay::get_slot(const String &_slot_name) {
-	GDSlot *wrapper = memnew(GDSlot);
-	wrapper->set_slot(static_cast<Slot_GD *>(getArmature()->getSlot(_slot_name.ascii().get_data())));
-	return wrapper;
+	return _slots.at(_slot_name.ascii().get_data());
 }
 
 void GDArmatureDisplay::flip_x(bool _b_flip) {
@@ -315,15 +312,21 @@ Array GDArmatureDisplay::get_bone_names() {
 }
 
 GDBone2D *GDArmatureDisplay::get_bone(const String &name) {
-	GDBone2D *bone = GDBone2D::create();
-	bone->set_data(getArmature()->getBone(name.ascii().get_data()));
-
-
-	return bone->has_data() ? bone : nullptr;
+	return _bones.at(name.ascii().get_data());
 }
 
 Slot *GDArmatureDisplay::getSlot(const std::string &name) const {
 	return p_armature->getSlot(name);
+}
+
+void GDArmatureDisplay::add_bone(std::string name, GDBone2D *new_bone) {
+	_bones.insert(std::make_pair(name, new_bone));
+	add_child(new_bone);
+}
+
+void GDArmatureDisplay::add_slot(std::string name, GDSlot *new_slot) {
+	_slots.insert(std::make_pair(name, new_slot));
+	add_child(new_slot);
 }
 
 void GDArmatureDisplay::dbInit(Armature* _p_armature)
@@ -378,7 +381,6 @@ void GDArmatureDisplay::add_parent_class(bool _b_debug, const Ref<Texture>& _m_t
 				GDArmatureDisplay *armatureDisplay = static_cast<GDArmatureDisplay*>(armature->getDisplay());
 				armatureDisplay->p_owner = p_owner;
 				armatureDisplay->add_parent_class(b_debug, _m_texture_atlas);
-					
 				continue;
 			}
 		}

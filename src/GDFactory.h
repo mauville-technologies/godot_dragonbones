@@ -49,6 +49,7 @@ protected:
 	Armature* _buildArmature(const BuildArmaturePackage& dataPackage) const override;
 	Slot* _buildSlot(const BuildArmaturePackage& dataPackage, const SlotData* slotData, Armature* armature) const override;
 	Armature *_buildChildArmature(const BuildArmaturePackage *dataPackage, Slot *slot, DisplayData *displayData) const override;
+	void _buildBones(const BuildArmaturePackage &dataPackage, Armature *armature) const override;
 };
 
 DRAGONBONES_NAMESPACE_END
