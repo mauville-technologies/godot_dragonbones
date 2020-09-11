@@ -130,7 +130,7 @@ public:
 	void set_ik_constraint(const String &name, Vector2 position);
 	void set_ik_constraint_bend_positive(const String &name, bool bend_positive);
 
-	Array get_bone_names();
+	Dictionary get_bones();
 	GDBone2D *get_bone(const String &name);
 };
 

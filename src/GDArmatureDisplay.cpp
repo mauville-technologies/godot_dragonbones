@@ -25,8 +25,8 @@ void GDArmatureDisplay::_bind_methods() {
 	CLASS_BIND_GODO::bind_method(METH("play", "animation_name", "loop_count"), &GDArmatureDisplay::play);
 	CLASS_BIND_GODO::bind_method(METH("play_from_time", "animation_name", "f_time", "loop_count"), &GDArmatureDisplay::play_from_time);
 	CLASS_BIND_GODO::bind_method(METH("play_from_progress", "animation_name", "f_progress", "loop_count"), &GDArmatureDisplay::play_from_progress);
-	CLASS_BIND_GODO::bind_method(METH("stop", "animation_name"), &GDArmatureDisplay::stop);
-	CLASS_BIND_GODO::bind_method(METH("stop_all_animations"), &GDArmatureDisplay::stop_all_animations);
+	CLASS_BIND_GODO::bind_method(METH("stop", "animation_name", "b_reset"), &GDArmatureDisplay::stop);
+	CLASS_BIND_GODO::bind_method(METH("stop_all_animations", "b_reset"), &GDArmatureDisplay::stop_all_animations);
 	CLASS_BIND_GODO::bind_method(METH("fade_in"), &GDArmatureDisplay::fade_in);
 	CLASS_BIND_GODO::bind_method(METH("has_slot", "slot_name"), &GDArmatureDisplay::has_slot);
 	CLASS_BIND_GODO::bind_method(METH("get_slot", "slot_name"), &GDArmatureDisplay::get_slot);
@@ -40,7 +40,7 @@ void GDArmatureDisplay::_bind_methods() {
 	CLASS_BIND_GODO::bind_method(METH("get_ik_constraints"), &GDArmatureDisplay::get_ik_constraints);
 	CLASS_BIND_GODO::bind_method(METH("set_ik_constraint", "constraint_name", "new_position"), &GDArmatureDisplay::set_ik_constraint);
 	CLASS_BIND_GODO::bind_method(METH("set_ik_constraint_bend_positive", "constraint_name", "is_positive"), &GDArmatureDisplay::set_ik_constraint_bend_positive);
-	CLASS_BIND_GODO::bind_method(METH("get_bone_names"), &GDArmatureDisplay::get_bone_names);
+	CLASS_BIND_GODO::bind_method(METH("get_bones"), &GDArmatureDisplay::get_bones);
 	CLASS_BIND_GODO::bind_method(METH("get_bone", "bone_name"), &GDArmatureDisplay::get_bone);
 
 
@@ -301,11 +301,11 @@ void GDArmatureDisplay::set_ik_constraint_bend_positive(const String &name, bool
 	}
 }
 
-Array GDArmatureDisplay::get_bone_names() {
-	Array bones{};
+Dictionary GDArmatureDisplay::get_bones() {
+	Dictionary bones{};
 
-	for (Bone *bone : getArmature()->getBones()) {
-		bones.push_back(String(bone->getName().c_str()));
+	for (auto &bone : _bones) {
+		bones[bone.first.c_str()] = bone.second;
 	}
 
 	return bones;
