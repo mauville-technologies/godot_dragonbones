@@ -9,15 +9,15 @@ cd $GODOT_SOURCE_LOCATION
 ###########################
 ##      ENGINE FILES     ##
 ###########################
-/usr/local/bin/scons -j8 platform=x11 target=release_debug bits=32 use_lto=yes
-/usr/local/bin/scons -j8 platform=x11 target=release_debug bits=64 use_lto=yes
+/usr/local/bin/scons -j8 platform=x11 target=release_debug bits=32 use_lto=yes optimize=size
+/usr/local/bin/scons -j8 platform=x11 target=release_debug bits=64 use_lto=yes optimize=size
 
 # windows
-/usr/local/bin/scons -j8 platform=windows target=release_debug bits=32 use_lto=yes
-/usr/local/bin/scons -j8 platform=windows target=release_debug bits=64 use_lto=yes
+/usr/local/bin/scons -j8 platform=windows target=release_debug bits=32 use_lto=yes use_mingw=yes optimize=size
+/usr/local/bin/scons -j8 platform=windows target=release_debug bits=64 use_lto=yes use_mingw=yes optimize=size
 
 #osx
-/usr/local/bin/scons -j8 platform=osx target=release_debug osxcross_sdk=darwin19
+/usr/local/bin/scons -j8 platform=osx target=release_debug osxcross_sdk=darwin19 optimize=size
 
 # Copy all builds to builds directory
 mkdir -p /build/engine
@@ -39,23 +39,27 @@ cp -av bin/. /build/engine
 rm -rf bin/
 
 # headless
-/usr/local/bin/scons -j8 debug_symbols=no use_static_cpp=yes use_lto=yes platform=server tools=no target=release
+/usr/local/bin/scons -j8 debug_symbols=no use_static_cpp=yes use_lto=yes platform=server tools=no target=release optimize=size
 
 #x11
-/usr/local/bin/scons -j8 platform=x11 target=release bits=32 use_lto=yes tools=no debug_symbols=no
-/usr/local/bin/scons -j8 platform=x11 target=release_debug bits=32 use_lto=yes tools=no debug_symbols=no
-/usr/local/bin/scons -j8 platform=x11 target=release bits=64 use_lto=yes tools=no debug_symbols=no
-/usr/local/bin/scons -j8 platform=x11 target=release_debug bits=64 use_lto=yes tools=no debug_symbols=no
+/usr/local/bin/scons -j8 platform=x11 target=release bits=32 use_lto=yes tools=no debug_symbols=no optimize=size
+/usr/local/bin/scons -j8 platform=x11 target=release_debug bits=32 use_lto=yes tools=no debug_symbols=no optimize=size
+/usr/local/bin/scons -j8 platform=x11 target=release bits=64 use_lto=yes tools=no debug_symbols=no optimize=size
+/usr/local/bin/scons -j8 platform=x11 target=release_debug bits=64 use_lto=yes tools=no debug_symbols=no optimize=size
 
 # windows
-/usr/local/bin/scons -j8 platform=windows target=release_debug bits=32 use_lto=yes tools=no debug_symbols=no
-/usr/local/bin/scons -j8 platform=windows target=release bits=32 use_lto=yes tools=no debug_symbols=no
-/usr/local/bin/scons -j8 platform=windows target=release_debug bits=64 use_lto=yes tools=no debug_symbols=no
-/usr/local/bin/scons -j8 platform=windows target=release bits=64 use_lto=yes tools=no debug_symbols=no
+/usr/local/bin/scons -j8 platform=windows target=release_debug bits=32 use_lto=yes tools=no debug_symbols=no use_mingw=yes optimize=size
+/usr/local/bin/scons -j8 platform=windows target=release bits=32 use_lto=yes tools=no debug_symbols=no use_mingw=yes optimize=size
+/usr/local/bin/scons -j8 platform=windows target=release_debug bits=64 use_lto=yes tools=no debug_symbols=no use_mingw=yes optimize=size
+/usr/local/bin/scons -j8 platform=windows target=release bits=64 use_lto=yes tools=no debug_symbols=no use_mingw=yes optimize=size
 
 # osx
-/usr/local/bin/scons -j8 platform=osx target=release_debug osxcross_sdk=darwin19 debug_symbols=no tools=no
-/usr/local/bin/scons -j8 platform=osx target=release osxcross_sdk=darwin19 debug_symbols=no tools=no
+/usr/local/bin/scons -j8 platform=osx target=release_debug osxcross_sdk=darwin19 debug_symbols=no tools=no optimize=size
+/usr/local/bin/scons -j8 platform=osx target=release osxcross_sdk=darwin19 debug_symbols=no tools=no optimize=size
+
+# HTML5
+/usr/local/bin/scons -j8 platform=javascript tools=no target=release javascript_eval=no debug_symbols=no
+/usr/local/bin/scons -j8 platform=javascript tools=no target=release_debug javascript_eval=no debug_symbols=no
 
 # Copy all builds to builds directory
 mkdir -p /build/templates
@@ -73,6 +77,9 @@ mv bin/*windows.opt.debug.32* bin/windows_32_debug.exe
 mv bin/*windows.opt.debug.64* bin/windows_64_debug.exe
 mv bin/*windows.opt.32* bin/windows_32_release.exe
 mv bin/*windows.opt.64* bin/windows_64_release.exe
+
+mv bin/godot.javascript.opt.zip bin/webassembly_release.zip
+mv bin/godot.javascript.opt.debug.zip bin/webassembly_debug.zip
 
 # Package .app
 
@@ -92,6 +99,8 @@ rm -rf bin/osx_template.app
 
 # Add version.txt
 echo "3.2.52.stable" > bin/version.txt
+
+rm bin/*.js bin/*.wasm
 
 # zip file
 mv ./bin ./templates

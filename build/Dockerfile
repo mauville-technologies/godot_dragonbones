@@ -11,6 +11,7 @@ ENV GODOT_DRAGONBONES_VERSION="3.2.52"
 ENV GODOT_DRAGONBONES_BRANCH="child_armatures"
 ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"
+ENV EMSCRIPTEN_LOCATION="/emscripten"
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV UNATTENDED=true
 
@@ -57,6 +58,14 @@ RUN python -m pip install scons && \
 
 # iphone deps ?
 
+# GET EMSCRIPTEN
+RUN git clone --progress https://github.com/emscripten-core/emsdk.git $EMSCRIPTEN_LOCATION
+WORKDIR ${EMSCRIPTEN_LOCATION}
+
+RUN ./emsdk install latest
+RUN ./emsdk activate latest
+RUN source ./emsdk_env.sh
+
 # GET GODOT 3.2 SOURCE
 RUN git clone --progress --verbose https://github.com/godotengine/godot.git $GODOT_SOURCE_LOCATION
 
@@ -72,6 +81,9 @@ WORKDIR ${GODOT_SOURCE_LOCATION}/modules/godot_dragonbones
 RUN git checkout ${GODOT_DRAGONBONES_BRANCH}
 
 WORKDIR ${GODOT_SOURCE_LOCATION}
+
+COPY ./js-no-rtti-patch.patch .
+RUN git apply js-no-rtti-patch.patch
 
 # COPY BUILD SCRIPT
 COPY ./container-build-script.sh .
