@@ -161,6 +161,12 @@ void GDFactory::_buildBones(const BuildArmaturePackage &dataPackage, Armature *a
 	}
 }
 
+void GDFactory::clear(bool disposeData) {
+	_wrapperSlots.clear();
+
+	BaseFactory::clear();
+}
+
 bool GDFactory::hasDBEventListener(const std::string& type) const
 {
     return true;

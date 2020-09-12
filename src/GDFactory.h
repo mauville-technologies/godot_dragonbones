@@ -34,6 +34,7 @@ public:
     TextureAtlasData* loadTextureAtlasData(const char *_p_data_loaded, Ref<Texture>* _p_atlasTexture, const std::string& name = "", float scale = 1.0f);
 	GDArmatureDisplay* buildArmatureDisplay(const std::string& armatureName, const std::string& dragonBonesName = "", const std::string& skinName = "", const std::string& textureAtlasName = "") const;
 
+	virtual void clear(bool disposeData = true) override;
 	void update(float lastUpdate);
     void set_speed(float _f_speed);
 

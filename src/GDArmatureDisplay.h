@@ -49,8 +49,8 @@ private:
 
 protected:
     Armature*							p_armature;
-	std::map<std::string, GDBone2D *> _bones;
-	std::map<std::string, GDSlot *> _slots;
+	std::map<std::string, GDBone2D *>	_bones;
+	std::map<std::string, GDSlot *>		_slots;
 
 public:
 	GDArmatureDisplay();

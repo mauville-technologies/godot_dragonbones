@@ -88,8 +88,8 @@ bool       GDDragonBones::GDDragonBonesResource::load_bones_data(const String& _
 //// Plugin module
 GDDragonBones::GDDragonBones()
 {
-    p_factory = memnew(GDFactory(this));
 
+	p_factory = nullptr;
     m_res = RES();
     str_curr_anim = "[none]";
     p_armature = nullptr;
@@ -111,25 +111,24 @@ GDDragonBones::GDDragonBones()
 GDDragonBones::~GDDragonBones()
 {
     _cleanup();
-
-    if(p_factory)
-    {
-      memdelete(p_factory);
-      p_factory = nullptr;
-    }
 }
 
 void GDDragonBones::_cleanup()
 {
     b_inited = false;
 
-	if (p_armature) {
+	if (p_armature != nullptr) {
 		p_armature->queue_delete();
+		if (p_armature->get_parent() == this) {
+			remove_child(p_armature);
+		}
 		p_armature = nullptr;
 	}
 
-    if(p_factory)
-        p_factory->clear();
+    if (p_factory != nullptr) {
+		memfree(p_factory);
+		p_factory = nullptr;
+	}
 
     m_res = RES();
 }
@@ -213,6 +212,8 @@ void GDDragonBones::set_resource(Ref<GDDragonBones::GDDragonBonesResource> _p_da
 
     stop();
     _cleanup();
+
+	p_factory = memnew(GDFactory(this));
 
     m_res = _p_data;
     if (m_res.is_null())

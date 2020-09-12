@@ -12,7 +12,7 @@ GDArmatureDisplay::GDArmatureDisplay()
 
 GDArmatureDisplay::~GDArmatureDisplay()
 {
-	p_armature = nullptr;
+	dispose(true);
 }
 
 void GDArmatureDisplay::_bind_methods() {
@@ -353,7 +353,8 @@ void GDArmatureDisplay::dispose(bool _disposeProxy)
 {
 	if (p_armature)
 	{
-		delete p_armature;
+		p_armature->dispose();
+
 		p_armature = nullptr;
 	}
 }
