@@ -199,12 +199,12 @@ void GDDragonBones::dispatch_event(const String& _str_type, const EventObject* _
 	
 }
 
-void GDDragonBones::set_resource(Ref<GDDragonBones::GDDragonBonesResource> _p_data)
+void GDDragonBones::set_resource(Ref<GDDragonBonesResource> _p_data)
 {
     String __old_texture_path = "";
     if(m_res.is_valid())
         __old_texture_path = m_res->str_default_tex_path;
-   else if(_p_data.is_valid())
+	else if(_p_data.is_valid())
         __old_texture_path = _p_data->str_default_tex_path;
 
     if (m_res == _p_data)

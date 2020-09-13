@@ -104,6 +104,7 @@ rm -rf bin/osx_template.app
 echo "3.2.52.stable" > bin/version.txt
 
 rm bin/*.js bin/*.wasm
+rm -r bin/.javascript_zip
 
 # zip file
 mv ./bin ./templates
