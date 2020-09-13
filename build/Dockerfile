@@ -49,6 +49,14 @@ RUN apt update \
     update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix && \
     update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
 
+# mono deps
+    RUN sudo apt install gnupg ca-certificates && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
+    echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list && \
+    apt update
+
+    RUN curl -LO https://curl.haxx.se/ca/cacert.pem && cert-sync --user cacert.pem
+
 # configure scons
 RUN python -m pip install scons && \
     # change first line of scons file to python 3
@@ -62,9 +70,7 @@ RUN python -m pip install scons && \
 RUN git clone --progress https://github.com/emscripten-core/emsdk.git $EMSCRIPTEN_LOCATION
 WORKDIR ${EMSCRIPTEN_LOCATION}
 
-RUN ./emsdk install latest
-RUN ./emsdk activate latest
-RUN source ./emsdk_env.sh
+RUN ./emsdk install latest && ./emsdk activate latest && source ./emsdk_env.sh
 
 # GET GODOT 3.2 SOURCE
 RUN git clone --progress --verbose https://github.com/godotengine/godot.git $GODOT_SOURCE_LOCATION

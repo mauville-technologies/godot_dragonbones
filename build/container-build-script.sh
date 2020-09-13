@@ -38,6 +38,9 @@ cp -av bin/. /build/engine
 
 rm -rf bin/
 
+# load emscripten
+source $EMSCRIPTEN_LOCATION/emsdk_env.sh
+
 # headless
 /usr/local/bin/scons -j8 debug_symbols=no use_static_cpp=yes use_lto=yes platform=server tools=no target=release optimize=size
 

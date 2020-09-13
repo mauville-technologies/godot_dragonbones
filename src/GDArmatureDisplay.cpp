@@ -84,7 +84,7 @@ void GDArmatureDisplay::set_debug(bool _b_debug) {
 
 }
 bool GDArmatureDisplay::has_animation(const String &_animation_name) {
-	if (!getAnimation()) {
+	if (p_armature == nullptr || !getAnimation()) {
 		return false;
 	}
 
