@@ -244,7 +244,8 @@ Dictionary GDArmatureDisplay::get_slots() {
 }
 
 GDSlot *GDArmatureDisplay::get_slot(const String &_slot_name) {
-	return _slots.at(_slot_name.ascii().get_data());
+	
+	return _slots[_slot_name.ascii().get_data()];
 }
 
 void GDArmatureDisplay::flip_x(bool _b_flip) {
@@ -312,7 +313,7 @@ Dictionary GDArmatureDisplay::get_bones() {
 }
 
 GDBone2D *GDArmatureDisplay::get_bone(const String &name) {
-	return _bones.at(name.ascii().get_data());
+	return _bones[name.ascii().get_data()];
 }
 
 Slot *GDArmatureDisplay::getSlot(const std::string &name) const {

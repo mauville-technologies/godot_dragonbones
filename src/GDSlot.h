@@ -76,6 +76,7 @@ public:
 	int get_display_count();
 	void next_display();
 	void previous_display();
+	String get_slot_name();
 
 	GDDisplay *get_child_armature();
 

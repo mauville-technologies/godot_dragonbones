@@ -95,7 +95,6 @@ Slot* GDFactory::_buildSlot(const BuildArmaturePackage& dataPackage, const SlotD
 	auto wrapperDisplay = GDMesh::create();
 	_wrapperSlots.push_back(std::unique_ptr<Slot_GD>(slot));
 	slot->init(slotData, armature, wrapperDisplay, wrapperDisplay);
-    wrapperDisplay->set_name(slot->getName().c_str());
 	slot->update(0);
 
 	GDSlot *tree_slot = memnew(GDSlot);
@@ -148,7 +147,7 @@ void GDFactory::_buildBones(const BuildArmaturePackage &dataPackage, Armature *a
 
 		GDBone2D *new_bone = GDBone2D::create();
 		new_bone->set_data(bone);
-
+		new_bone->set_name(bone->getName().c_str());
 		GDArmatureDisplay *display = static_cast<GDArmatureDisplay *>(armature->getDisplay());
 		display->add_bone(bone->getName(), new_bone);
 	}

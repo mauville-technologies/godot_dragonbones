@@ -463,6 +463,7 @@ void GDSlot::_bind_methods() {
 	CLASS_BIND_GODO::bind_method(METH("next_display"), &GDSlot::next_display);
 	CLASS_BIND_GODO::bind_method(METH("previous_display"), &GDSlot::previous_display);
 	CLASS_BIND_GODO::bind_method(METH("get_child_armature"), &GDSlot::get_child_armature);
+	CLASS_BIND_GODO::bind_method(METH("get_slot_name"), &GDSlot::get_slot_name);
 }
 
 Color GDSlot::get_display_color_multiplier() {
@@ -546,11 +547,19 @@ void GDSlot::previous_display() {
 	set_display_index(current_slot);
 }
 
+String GDSlot::get_slot_name() {
+	if (slot == nullptr) return String();
+	return slot->getName().c_str();
+}
+
 GDDisplay *GDSlot::get_child_armature() {
+	if (slot->getDisplayList().size() == 0) return nullptr;
+
 	std::pair<void *, DisplayType> display = slot->getDisplayList()[slot->getDisplayIndex()];
 	if (display.second == DisplayType::Armature) {
 		Armature *armature = static_cast<Armature *>(display.first);
-		return static_cast<GDArmatureDisplay *>(armature->getDisplay());
+		GDArmatureDisplay *converted = static_cast<GDArmatureDisplay *>(armature->getDisplay());
+		return converted;
 	}
 	return nullptr;
 }
