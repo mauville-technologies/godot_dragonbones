@@ -64,6 +64,7 @@ private:
 
 	/* BIND METHODS */
 public:
+
 	void set_slot(Slot_GD *_slot);
 
 	static void _bind_methods();

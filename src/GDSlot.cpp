@@ -486,7 +486,7 @@ void GDSlot::set_display_color_multiplier(const Color &_color) {
 	_new_color.blueMultiplier = _color.b;
 	_new_color.alphaMultiplier = _color.a;
 
-	slot->_setColor(_new_color);
+	slot->_setColor(_new_color);		
 }
 
 void GDSlot::set_display_index(int index) {

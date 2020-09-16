@@ -2,7 +2,7 @@
 
 #include "GDDisplay.h"
 #include "core/method_bind_ext.gen.inc"
-
+#include "GDMesh.h"
 
 GDArmatureDisplay::GDArmatureDisplay()
 {
@@ -316,6 +316,28 @@ GDBone2D *GDArmatureDisplay::get_bone(const String &name) {
 	return _bones[name.ascii().get_data()];
 }
 
+void GDArmatureDisplay::set_modulate(const Color &_p_color) {
+	modulate = _p_color;
+	update_childs(true);
+}
+
+Color GDArmatureDisplay::get_modulate() const {
+
+	return modulate;
+}
+
+void GDArmatureDisplay::dispatch_event(const String &_str_type, const EventObject *_p_value) {
+	if (p_owner != nullptr) {
+		p_owner->dispatch_event(_str_type, _p_value);
+	}
+}
+
+void GDArmatureDisplay::dispatch_snd_event(const String &_str_type, const EventObject *_p_value) {
+	if (p_owner != nullptr) {
+		p_owner->dispatch_snd_event(_str_type, _p_value);
+	}
+}
+
 Slot *GDArmatureDisplay::getSlot(const std::string &name) const {
 	return p_armature->getSlot(name);
 }
@@ -381,18 +403,16 @@ void GDArmatureDisplay::add_parent_class(bool _b_debug, const Ref<Texture>& _m_t
 				// recurse your way on down there, you scamp
 				Armature *armature = static_cast<Armature *>(displayItem.first);
 				GDArmatureDisplay *armatureDisplay = static_cast<GDArmatureDisplay*>(armature->getDisplay());
+
 				armatureDisplay->p_owner = p_owner;
 				armatureDisplay->add_parent_class(b_debug, _m_texture_atlas);
-				continue;
 			}
 		}
 
         add_child(static_cast<GDDisplay*>(display));
-        static_cast<GDDisplay*>(display)->p_owner = p_owner;
+		static_cast<GDDisplay *>(display)->p_owner = this;
         static_cast<GDDisplay*>(display)->b_debug = _b_debug;
         static_cast<GDDisplay*>(display)->texture = _m_texture_atlas;
-
-
     }
 }
 

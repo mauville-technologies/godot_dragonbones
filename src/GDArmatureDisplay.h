@@ -61,6 +61,13 @@ public:
         return memnew(GDArmatureDisplay);
     }
 
+	
+	void set_modulate(const Color &_p_color);
+	Color get_modulate() const;
+
+	void dispatch_event(const String &_str_type, const EventObject *_p_value);
+	void dispatch_snd_event(const String &_str_type, const EventObject *_p_value);
+	
 	Slot *getSlot(const std::string &name) const;
 
 	void add_bone(std::string name, GDBone2D *new_bone);

@@ -26,6 +26,18 @@ public:
     GDMesh(){ col_debug = Color( Math::random(0.5f, 1.f), Math::random(0.3f, 1.f), Math::random(0.3f, 1.f), 1);}
 	virtual ~GDMesh() {}
 
+	void dispatch_event(const String &_str_type, const EventObject *_p_value) {
+		if (p_owner != nullptr) {
+			p_owner->dispatch_event(_str_type, _p_value);
+		}
+	}
+
+	void dispatch_snd_event(const String &_str_type, const EventObject *_p_value) {
+		if (p_owner != nullptr) {
+			p_owner->dispatch_snd_event(_str_type, _p_value);
+		}
+	}
+
     static  GDMesh* create()
     {
         return memnew(GDMesh);

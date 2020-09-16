@@ -94,6 +94,7 @@ Slot* GDFactory::_buildSlot(const BuildArmaturePackage& dataPackage, const SlotD
 	auto slot = BaseObject::borrowObject<Slot_GD>();
 	auto wrapperDisplay = GDMesh::create();
 	_wrapperSlots.push_back(std::unique_ptr<Slot_GD>(slot));
+
 	slot->init(slotData, armature, wrapperDisplay, wrapperDisplay);
 	slot->update(0);
 

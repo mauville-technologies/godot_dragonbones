@@ -39,13 +39,13 @@ public:
     virtual void dispatch_snd_event(const String& _str_type, const EventObject* _p_value) = 0;
 };
 
-class GDDisplay : public Node2D
+class GDDisplay : public GDOwnerNode
 {
 
 #if (VERSION_MAJOR >= 3)
-    GDCLASS(GDDisplay, Node2D);
+	GDCLASS(GDDisplay, GDOwnerNode);
 #else
-    OBJ_TYPE(GDDisplay, Node2D);
+	OBJ_TYPE(GDDisplay, GDOwnerNode);
 #endif
 
 private:
@@ -57,13 +57,11 @@ public:
     CanvasItemMaterial* p_canvas_mat;
 #endif
 
-	Color		    modulate;
     GDOwnerNode*    p_owner;
     bool            b_debug;
 
 public:
     GDDisplay()  {
-                   modulate = Color(1,1,1,1);
                    p_owner = nullptr;
                    b_debug = false;
 #if (VERSION_MAJOR >= 3)
