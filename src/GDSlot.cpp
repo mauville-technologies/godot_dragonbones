@@ -13,7 +13,7 @@ DRAGONBONES_NAMESPACE_BEGIN
     #define MATRIX_TRANSFORM  Matrix32
 #endif
 
-void GDSlot::_updateZOrder()
+void Slot_GD::_updateZOrder()
 {
 #if (VERSION_MAJOR >= 3)
     _renderDisplay->set_z_index(_zOrder);
@@ -22,7 +22,7 @@ void GDSlot::_updateZOrder()
 #endif
 }
 
-void GDSlot::_updateVisible()
+void Slot_GD::_updateVisible()
 {
 	if(_parent->getVisible())
 		_renderDisplay->show();
@@ -30,7 +30,7 @@ void GDSlot::_updateVisible()
 		_renderDisplay->hide();
 }
 
-void GDSlot::_updateBlendMode()
+void Slot_GD::_updateBlendMode()
 {
 	if (_renderDisplay)
 	{
@@ -45,19 +45,19 @@ void GDSlot::_updateBlendMode()
         {
             switch (_blendMode)
             {
-                case BlendMode::Normal:
+				case dragonBones::BlendMode::Normal:
 					__blend = BLENDMODE_CLASS::BLEND_MODE_MIX;
                     break;
 
-                case BlendMode::Add:
+                case dragonBones::BlendMode::Add:
 					__blend = BLENDMODE_CLASS::BLEND_MODE_ADD;
                     break;
 
-                case BlendMode::Multiply:
+                case dragonBones::BlendMode::Multiply:
 					__blend = BLENDMODE_CLASS::BLEND_MODE_MUL;
                     break;
 
-                case BlendMode::Subtract:
+                case dragonBones::BlendMode::Subtract:
 					__blend = BLENDMODE_CLASS::BLEND_MODE_SUB;
                     break;
 
@@ -78,7 +78,7 @@ void GDSlot::_updateBlendMode()
 	}
 }
 
-void GDSlot::_updateColor()
+void Slot_GD::_updateColor()
 {
 	if (!_renderDisplay) return;
 
@@ -104,35 +104,41 @@ void GDSlot::_updateColor()
    _renderDisplay->update();
 }
 
-void GDSlot::_initDisplay(void* value, bool isRetain)
+void Slot_GD::_initDisplay(void* value, bool isRetain)
 {
 }
 
-void GDSlot::_disposeDisplay(void* value, bool isRelease)
+void Slot_GD::_disposeDisplay(void* value, bool isRelease)
 {
 
 }
 
-void GDSlot::_onUpdateDisplay()
+void Slot_GD::_onUpdateDisplay()
 {
+	
     _renderDisplay = static_cast<GDDisplay*>(_display != nullptr ? _display : _rawDisplay);
 }
 
-void GDSlot::_addDisplay()
+void Slot_GD::_addDisplay()
 {
 
 }
 
-void GDSlot::_replaceDisplay(void* value, bool isArmatureDisplay)
+void Slot_GD::_replaceDisplay(void* value, bool isArmatureDisplay)
 {
+	static_cast<GDDisplay *>(_renderDisplay)->show();
+
+	if (value != nullptr) {
+		static_cast<GDDisplay *>(value)->hide();
+	}
 }
 
-void GDSlot::_removeDisplay()
+void Slot_GD::_removeDisplay()
 {
 
 }
 
-void GDSlot::__get_uv_pt(Point2& _pt, bool _is_rot, float _u, float _v, const Rectangle& _reg, const TextureAtlasData *_p_atlas)
+void Slot_GD::__get_uv_pt(Point2& _pt, bool _is_rot, float _u, float _v, const Rectangle& _reg, const TextureAtlasData *_p_atlas)
 {
     if (_is_rot)
     {
@@ -146,7 +152,7 @@ void GDSlot::__get_uv_pt(Point2& _pt, bool _is_rot, float _u, float _v, const Re
     }
 }
 
-void GDSlot::_updateFrame()
+void Slot_GD::_updateFrame()
 {
         const auto currentVerticesData  = (_deformVertices != nullptr && _display == _meshDisplay) ? _deformVertices->verticesData : nullptr;
         auto currentTextureData = static_cast<GDTextureData*>(_textureData);
@@ -286,7 +292,7 @@ void GDSlot::_updateFrame()
     _renderDisplay->hide();
 }
 
-void GDSlot::_updateMesh()
+void Slot_GD::_updateMesh()
 {
     const auto scale = _armature->_armatureData->scale;
     const auto textureData = static_cast<GDTextureData*>(_textureData);
@@ -385,7 +391,7 @@ void GDSlot::_updateMesh()
     _renderDisplay->update();
 }
 
-void GDSlot::_identityTransform()
+void Slot_GD::_identityTransform()
 {
     auto matrix = MATRIX_TRANSFORM();
     matrix.scale(Size2(_textureScale, _textureScale));
@@ -393,7 +399,7 @@ void GDSlot::_identityTransform()
     _renderDisplay->update();
 }
 
-void GDSlot::_updateTransform()
+void Slot_GD::_updateTransform()
 {
    Vector2 pos = Vector2(0,0);
    if (((void*)_renderDisplay) == _rawDisplay || ((void*)_renderDisplay) == _meshDisplay)
@@ -429,7 +435,7 @@ void GDSlot::_updateTransform()
    _renderDisplay->update();
 }
 
-void GDSlot::_onClear()
+void Slot_GD::_onClear()
 {
 	Slot::_onClear();
 
@@ -440,6 +446,122 @@ void GDSlot::_onClear()
 		delete _textureData;
 		_textureData = nullptr;
 	}
+}
+
+void GDSlot::set_slot(Slot_GD *_slot) {
+	this->slot = _slot;
+}
+
+/* GODOT CLASS WRAPPER FOR GIVING SCRIPT ACCESS */
+void GDSlot::_bind_methods() {
+	CLASS_BIND_GODO::bind_method(METH("get_display_color_multiplier"), &GDSlot::get_display_color_multiplier);
+	CLASS_BIND_GODO::bind_method(METH("set_display_color_multiplier", "color"), &GDSlot::set_display_color_multiplier);
+	CLASS_BIND_GODO::bind_method(METH("set_display_index", "index"), &GDSlot::set_display_index);
+	CLASS_BIND_GODO::bind_method(METH("set_display_by_name", "name"), &GDSlot::set_display_by_name);
+	CLASS_BIND_GODO::bind_method(METH("get_display_index"), &GDSlot::get_display_index);
+	CLASS_BIND_GODO::bind_method(METH("get_display_count"), &GDSlot::get_display_count);
+	CLASS_BIND_GODO::bind_method(METH("next_display"), &GDSlot::next_display);
+	CLASS_BIND_GODO::bind_method(METH("previous_display"), &GDSlot::previous_display);
+	CLASS_BIND_GODO::bind_method(METH("get_child_armature"), &GDSlot::get_child_armature);
+	CLASS_BIND_GODO::bind_method(METH("get_slot_name"), &GDSlot::get_slot_name);
+}
+
+Color GDSlot::get_display_color_multiplier() {
+
+	ColorTransform transform(slot->_colorTransform);
+
+	Color return_color;
+	return_color.r = transform.redMultiplier;
+	return_color.g = transform.greenMultiplier;
+	return_color.b = transform.blueMultiplier;
+	return_color.a = transform.alphaMultiplier;
+
+	return return_color;
+}
+
+void GDSlot::set_display_color_multiplier(const Color &_color) {
+	ColorTransform _new_color;
+	_new_color.redMultiplier = _color.r;
+	_new_color.greenMultiplier = _color.g;
+	_new_color.blueMultiplier = _color.b;
+	_new_color.alphaMultiplier = _color.a;
+
+	slot->_setColor(_new_color);		
+}
+
+void GDSlot::set_display_index(int index) {
+	slot->setDisplayIndex(index);
+}
+
+void GDSlot::set_display_by_name(const String &_name) {
+	const std::vector<DisplayData *> *rawData = slot->getRawDisplayDatas();
+
+	// we only want to update the slot if there's a choice
+	if (rawData->size() > 1) {
+		const char *desired_item = _name.ascii().get_data();
+		std::string NONE_STRING("none");
+
+		if (NONE_STRING.compare(desired_item) == 0) {
+			slot->setDisplayIndex(-1);
+		}
+
+		for (int i = 0; i < rawData->size(); i++) {
+			DisplayData *display_data = rawData->at(i);
+
+			if (display_data->name.compare(desired_item) == 0) {
+				slot->setDisplayIndex(i);
+				return;
+			}
+		}
+	} else {
+		WARN_PRINT("Slot has only 1 item; refusing to set slot");
+		return;
+	}
+
+	WARN_PRINT("Slot has no item called \"" + _name);
+}
+
+int GDSlot::get_display_index() {
+	return slot->getDisplayIndex();
+}
+
+int GDSlot::get_display_count() {
+	return slot->getDisplayList().size();
+}
+
+void GDSlot::next_display() {
+	int current_slot = slot->getDisplayIndex();
+	current_slot++;
+
+	current_slot = current_slot < get_display_count() ? current_slot : -1;
+
+	set_display_index(current_slot);
+}
+
+void GDSlot::previous_display() {
+	int current_slot = slot->getDisplayIndex();
+	current_slot--;
+
+	current_slot = current_slot >= -1 ? current_slot : get_display_count() - 1;
+
+	set_display_index(current_slot);
+}
+
+String GDSlot::get_slot_name() {
+	if (slot == nullptr) return String();
+	return slot->getName().c_str();
+}
+
+GDDisplay *GDSlot::get_child_armature() {
+	if (slot->getDisplayList().size() == 0) return nullptr;
+
+	std::pair<void *, DisplayType> display = slot->getDisplayList()[slot->getDisplayIndex()];
+	if (display.second == DisplayType::Armature) {
+		Armature *armature = static_cast<Armature *>(display.first);
+		GDArmatureDisplay *converted = static_cast<GDArmatureDisplay *>(armature->getDisplay());
+		return converted;
+	}
+	return nullptr;
 }
 
 DRAGONBONES_NAMESPACE_END

@@ -7,9 +7,11 @@ RUN set +H
 
 # needed for mac builds
 ENV GODOT_VERSION="3.2"
-ENV GODOT_DRAGONBONES_BRANCH="3.2.51"
+ENV GODOT_DRAGONBONES_VERSION="3.2.52"
+ENV GODOT_DRAGONBONES_BRANCH="child_armatures"
 ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"
+ENV EMSCRIPTEN_LOCATION="/emscripten"
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV UNATTENDED=true
 
@@ -47,6 +49,14 @@ RUN apt update \
     update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix && \
     update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
 
+# mono deps
+    # RUN apt -y install gnupg ca-certificates && \
+    # apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
+    # echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
+    # apt update && apt -y install mono-devel
+
+    # RUN curl -LO https://curl.haxx.se/ca/cacert.pem && cert-sync --user cacert.pem
+
 # configure scons
 RUN python -m pip install scons && \
     # change first line of scons file to python 3
@@ -55,6 +65,12 @@ RUN python -m pip install scons && \
 # android deps ?
 
 # iphone deps ?
+
+# GET EMSCRIPTEN
+RUN git clone --progress https://github.com/emscripten-core/emsdk.git $EMSCRIPTEN_LOCATION
+WORKDIR ${EMSCRIPTEN_LOCATION}
+
+RUN ./emsdk install latest && ./emsdk activate latest && source ./emsdk_env.sh
 
 # GET GODOT 3.2 SOURCE
 RUN git clone --progress --verbose https://github.com/godotengine/godot.git $GODOT_SOURCE_LOCATION
@@ -71,6 +87,9 @@ WORKDIR ${GODOT_SOURCE_LOCATION}/modules/godot_dragonbones
 RUN git checkout ${GODOT_DRAGONBONES_BRANCH}
 
 WORKDIR ${GODOT_SOURCE_LOCATION}
+
+COPY ./js-no-rtti-patch.patch .
+RUN git apply js-no-rtti-patch.patch
 
 # COPY BUILD SCRIPT
 COPY ./container-build-script.sh .

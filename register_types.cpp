@@ -18,15 +18,15 @@
 #include "gddragonbones.h"
 
 #if (VERSION_MAJOR >= 3)
-    #define REG_CLASS_BIND_GODO  ClassDB::register_class
+#define REG_CLASS_BIND_GODO ClassDB::register_class
+#define REG_VIRTUAL_CLASS_BIND_GODO ClassDB::register_virtual_class
 #else
-    #define REG_CLASS_BIND_GODO  ObjectTypeDB::register_type
+#define REG_CLASS_BIND_GODO ObjectTypeDB::register_type
 
 #endif
 
 class ResourceFormatLoaderGDDragonBones : public ResourceFormatLoader
 {
-
 public:
 #if (VERSION_MAJOR >=4)
 	virtual RES load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads, float *r_progress, bool p_no_cache) {
@@ -104,7 +104,10 @@ static ResourceFormatLoaderGDDragonBones *resource_loader_GDDragonBones = NULL;
 
 void register_godot_dragonbones_types()
 {
-    REG_CLASS_BIND_GODO<GDDragonBones>();
+	REG_CLASS_BIND_GODO<GDDragonBones>();
+	REG_VIRTUAL_CLASS_BIND_GODO<GDArmatureDisplay>();
+	REG_VIRTUAL_CLASS_BIND_GODO<GDSlot>();
+	REG_VIRTUAL_CLASS_BIND_GODO<GDBone2D>();
     REG_CLASS_BIND_GODO<GDDragonBones::GDDragonBonesResource>();
 	resource_loader_GDDragonBones = memnew( ResourceFormatLoaderGDDragonBones );
 	ResourceLoader::add_resource_format_loader(resource_loader_GDDragonBones);
