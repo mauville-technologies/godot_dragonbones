@@ -77,7 +77,7 @@ RUN git clone --progress --verbose https://github.com/godotengine/godot.git $GOD
 
 # CHECKOUT CORRECT RELEASE BRANCH
 WORKDIR ${GODOT_SOURCE_LOCATION}
-RUN git checkout ${GODOT_VERSION}
+RUN git checkout tags/${GODOT_VERSION}
 
 WORKDIR ${GODOT_SOURCE_LOCATION}/modules
 
