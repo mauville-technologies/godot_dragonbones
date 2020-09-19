@@ -6,9 +6,9 @@ SHELL ["/bin/bash", "-c"]
 RUN set +H
 
 # needed for mac builds
-ENV GODOT_VERSION="3.2"
+ENV GODOT_VERSION="3.2.3-stable"
 ENV GODOT_DRAGONBONES_VERSION="3.2.52"
-ENV GODOT_DRAGONBONES_BRANCH="child_armatures"
+ENV GODOT_DRAGONBONES_BRANCH="android-html5-fix"
 ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"
 ENV EMSCRIPTEN_LOCATION="/emscripten"
@@ -84,6 +84,7 @@ WORKDIR ${GODOT_SOURCE_LOCATION}/modules
 # GET GODOT-DRAGONBONES SOURCE
 RUN git clone --progress --verbose https://github.com/mauville-technologies/godot_dragonbones.git
 WORKDIR ${GODOT_SOURCE_LOCATION}/modules/godot_dragonbones
+
 RUN git checkout ${GODOT_DRAGONBONES_BRANCH}
 
 WORKDIR ${GODOT_SOURCE_LOCATION}
