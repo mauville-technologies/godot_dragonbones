@@ -6,16 +6,16 @@ SHELL ["/bin/bash", "-c"]
 RUN set +H
 
 # needed for mac builds
-ENV GODOT_VERSION="3.2"
+ENV GODOT_VERSION="tags/3.2.3-stable"
 ENV GODOT_DRAGONBONES_VERSION="3.2.52"
-ENV GODOT_DRAGONBONES_BRANCH="child_armatures"
+ENV GODOT_DRAGONBONES_BRANCH="master"
 ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"
 ENV EMSCRIPTEN_LOCATION="/emscripten"
 ENV ANDROID_HOME="/AndroidSDK"
 ENV ANDROID_NDK="/AndroidNDK"
 ENV ANDROID_NDK_ROOT="${ANDROID_NDK}/ndk"
-ENV ANDROID_NDK_HOME="${ANDROID_NDK}/ndk"
+ENV ANDROID_NDK_HOME="${ANDROID_NDK_ROOT}"
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV UNATTENDED=true
 
@@ -76,7 +76,7 @@ RUN mkdir -p $ANDROID_HOME/cmdline-tools && \
 
 RUN mkdir -p ${ANDROID_NDK_ROOT} && \
     wget -O AndroidNDK.zip https://dl.google.com/android/repository/android-ndk-r21d-linux-x86_64.zip && \
-    unzip AndroidNDK.zip -d ${ANDROID_NDK} && mv ${ANDROID_NDK}/* ${ANDROID_NDK}/ndk
+    unzip AndroidNDK.zip -d ${ANDROID_NDK} && mv ${ANDROID_NDK}/* ${ANDROID_NDK_ROOT}
 
 # iphone deps ?
 
