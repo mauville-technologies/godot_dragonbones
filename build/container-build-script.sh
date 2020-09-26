@@ -1,5 +1,5 @@
 #!/bin/bash
-install clang 
+# install clang 
 cd $OSXCROSS_ROOT/build/llvm-9.0.0.src/build_stage2 && make install
 cd $OSXCROSS_ROOT
 ./build.sh
