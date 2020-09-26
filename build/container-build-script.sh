@@ -95,7 +95,7 @@ mkdir -p /build/templates
 # move headless first
 mv bin/*server.* /build/templates
 
-# # rename to expected format and move to expected folder
+# rename to expected format and move to expected folder
 mv bin/*x11.opt.debug.32* bin/linux_x11_32_debug
 mv bin/*x11.opt.debug.64* bin/linux_x11_64_debug
 mv bin/*x11.opt.32* bin/linux_x11_32_release
