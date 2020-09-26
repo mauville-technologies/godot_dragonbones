@@ -70,13 +70,13 @@ RUN python -m pip install scons && \
 RUN apt -y install default-jdk
 
 RUN mkdir -p $ANDROID_HOME/cmdline-tools && \
-    wget -q -O AndroidSDK.zip https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip && \
-    unzip -q AndroidSDK.zip -d ${ANDROID_HOME}/cmdline-tools && \
+    wget -O AndroidSDK.zip https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip && \
+    unzip AndroidSDK.zip -d ${ANDROID_HOME}/cmdline-tools && \
     yes | ${ANDROID_HOME}/cmdline-tools/tools/bin/sdkmanager --licenses
 
-RUN mkdir -p ${ANDROID_NDK_ROOT} && \
+RUN mkdir -p ${ANDROID_NDK} && \
     wget -q -O AndroidNDK.zip https://dl.google.com/android/repository/android-ndk-r21d-linux-x86_64.zip && \
-    unzip -q AndroidNDK.zip -d ${ANDROID_NDK} &&  cd ${ANDROID_NDK} && mv * ndk
+    unzip -q AndroidNDK.zip -d ${ANDROID_NDK} && mv ${ANDROID_NDK}/* ${ANDROID_NDK_ROOT}
 
 # iphone deps ?
 
