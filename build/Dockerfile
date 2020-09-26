@@ -67,7 +67,7 @@ RUN python -m pip install scons && \
     sed -i '1s/\#!\/usr\/local\/bin\/python/\#!\/usr\/bin\/python3/' /usr/local/bin/scons
 
 # android deps ?
-RUN apt install default-jdk
+RUN apt -y install default-jdk
 
 RUN mkdir -p $ANDROID_HOME/cmdline-tools && \
     wget -O AndroidSDK.zip https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip && \
