@@ -10,3 +10,4 @@ index ed0643e3b3..1b61a7ac54 100644
 +        env.Append(CXXFLAGS=["-fno-exceptions"])
          # Don't use dynamic_cast, necessary with no-rtti.
          env.Append(CPPDEFINES=["NO_SAFE_CAST"])
+

@@ -34,6 +34,16 @@ ___
 
 2. [See the official docs](http://docs.godotengine.org/en/latest/development/compiling/)
 for compilation instructions for every supported platform.
+
+#### Platform specific flags
+- By default, javascript and android templates have `no-rtti` build flag enabled in their builds. Provided in the `/build` folder are a javascript and android rtti patch to be applied over the main Godot repository. This will remove these build flags and enable export templates for those platforms.
+
+```
+cd $GODOT_SOURCE_DIR
+
+git apply build/android-no-rtti-patch.patch
+git apply build/js-no-rtti-patch.patch
+```
 ___
 ##
 [![Sample](./sample.gif)]()
