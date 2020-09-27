@@ -100,7 +100,7 @@ public:
 
 };
 
-static ResourceFormatLoaderGDDragonBones *resource_loader_GDDragonBones = NULL;
+static Ref<ResourceFormatLoaderGDDragonBones> resource_loader_GDDragonBones = NULL;
 
 void register_godot_dragonbones_types()
 {
@@ -109,14 +109,15 @@ void register_godot_dragonbones_types()
 	REG_VIRTUAL_CLASS_BIND_GODO<GDSlot>();
 	REG_VIRTUAL_CLASS_BIND_GODO<GDBone2D>();
     REG_CLASS_BIND_GODO<GDDragonBones::GDDragonBonesResource>();
-	resource_loader_GDDragonBones = memnew( ResourceFormatLoaderGDDragonBones );
+
+	resource_loader_GDDragonBones.instance();
 	ResourceLoader::add_resource_format_loader(resource_loader_GDDragonBones);
 }
 
 void unregister_godot_dragonbones_types()
 {
-	if (resource_loader_GDDragonBones)
-		memdelete(resource_loader_GDDragonBones);
+	ResourceLoader::remove_resource_format_loader(resource_loader_GDDragonBones);
+	resource_loader_GDDragonBones->unreference();
 }
 
 

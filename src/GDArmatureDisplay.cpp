@@ -12,6 +12,8 @@ GDArmatureDisplay::GDArmatureDisplay()
 
 GDArmatureDisplay::~GDArmatureDisplay()
 {
+	_bones.clear();
+	_slots.clear();
 	dispose(true);
 }
 

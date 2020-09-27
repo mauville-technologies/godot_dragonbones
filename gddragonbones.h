@@ -90,7 +90,7 @@ public:
     void dispatch_snd_event(const String& _str_type, const EventObject* _p_value);
 
     // setters/getters
-    void set_resource(Ref<GDDragonBonesResource> _p_data);
+	void set_resource(Ref<GDDragonBonesResource> _p_data);
     Ref<GDDragonBonesResource> get_resource();
 
     void set_inherit_material(bool _b_enable);
