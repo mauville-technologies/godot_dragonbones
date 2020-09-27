@@ -218,7 +218,7 @@ void GDDragonBones::set_resource(Ref<GDDragonBonesResource> _p_data)
     m_res = _p_data;
     if (m_res.is_null())
     {
-        m_texture_atlas = Ref<Texture>();
+        m_texture_atlas = Ref<TEXTURE_CLASS>();
         ERR_PRINT("Null resources");
         _change_notify();
 		return;

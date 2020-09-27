@@ -1,0 +1,13 @@
+diff --git a/platform/android/detect.py b/platform/android/detect.py
+index ed0643e3b3..1b61a7ac54 100644
+--- a/platform/android/detect.py
++++ b/platform/android/detect.py
+@@ -216,7 +216,7 @@ def configure(env):
+     if env["tools"]:
+         env.Append(CXXFLAGS=["-frtti"])
+     else:
+-        env.Append(CXXFLAGS=["-fno-rtti", "-fno-exceptions"])
++        env.Append(CXXFLAGS=["-fno-exceptions"])
+         # Don't use dynamic_cast, necessary with no-rtti.
+         env.Append(CPPDEFINES=["NO_SAFE_CAST"])
+

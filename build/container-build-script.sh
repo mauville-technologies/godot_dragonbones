@@ -64,6 +64,31 @@ source $EMSCRIPTEN_LOCATION/emsdk_env.sh
 /usr/local/bin/scons -j8 platform=javascript tools=no target=release javascript_eval=no debug_symbols=no
 /usr/local/bin/scons -j8 platform=javascript tools=no target=release_debug javascript_eval=no debug_symbols=no
 
+# Android
+# Build all 4 architectures
+# release
+
+/usr/local/bin/scons -j8 platform=android tools=no target=release debug_symbols=no android_arch=armv7
+/usr/local/bin/scons -j8 platform=android tools=no target=release debug_symbols=no android_arch=arm64v8
+/usr/local/bin/scons -j8 platform=android tools=no target=release debug_symbols=no android_arch=x86
+/usr/local/bin/scons -j8 platform=android tools=no target=release debug_symbols=no android_arch=x86_64
+
+#debug
+/usr/local/bin/scons -j8 platform=android  tools=no target=release_debug debug_symbols=no android_arch=armv7
+/usr/local/bin/scons -j8 platform=android  tools=no target=release_debug debug_symbols=no android_arch=arm64v8
+/usr/local/bin/scons -j8 platform=android  tools=no target=release_debug debug_symbols=no android_arch=x86
+/usr/local/bin/scons -j8 platform=android  tools=no target=release_debug debug_symbols=no android_arch=x86_64
+
+cd platform/android/java
+./gradlew generateGodotTemplates
+
+cd $GODOT_SOURCE_LOCATION
+
+# move the AAR files to engine folder
+mv bin/*.aar /build/engine
+# remove android_source
+rm bin/android_source.zip
+
 # Copy all builds to builds directory
 mkdir -p /build/templates
 

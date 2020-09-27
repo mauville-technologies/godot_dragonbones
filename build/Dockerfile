@@ -6,12 +6,16 @@ SHELL ["/bin/bash", "-c"]
 RUN set +H
 
 # needed for mac builds
-ENV GODOT_VERSION="3.2"
+ENV GODOT_VERSION="tags/3.2.3-stable"
 ENV GODOT_DRAGONBONES_VERSION="3.2.52"
-ENV GODOT_DRAGONBONES_BRANCH="child_armatures"
+ENV GODOT_DRAGONBONES_BRANCH="master"
 ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"
 ENV EMSCRIPTEN_LOCATION="/emscripten"
+ENV ANDROID_HOME="/AndroidSDK"
+ENV ANDROID_NDK="/AndroidNDK"
+ENV ANDROID_NDK_ROOT="${ANDROID_NDK}/ndk"
+ENV ANDROID_NDK_HOME="${ANDROID_NDK_ROOT}"
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV UNATTENDED=true
 
@@ -63,6 +67,16 @@ RUN python -m pip install scons && \
     sed -i '1s/\#!\/usr\/local\/bin\/python/\#!\/usr\/bin\/python3/' /usr/local/bin/scons
 
 # android deps ?
+RUN apt -y install default-jdk
+
+RUN mkdir -p $ANDROID_HOME/cmdline-tools && \
+    wget -O AndroidSDK.zip https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip && \
+    unzip AndroidSDK.zip -d ${ANDROID_HOME}/cmdline-tools && \
+    yes | ${ANDROID_HOME}/cmdline-tools/tools/bin/sdkmanager --licenses
+
+RUN mkdir -p ${ANDROID_NDK} && \
+    wget -q -O AndroidNDK.zip https://dl.google.com/android/repository/android-ndk-r21d-linux-x86_64.zip && \
+    unzip -q AndroidNDK.zip -d ${ANDROID_NDK} && mv ${ANDROID_NDK}/* ${ANDROID_NDK_ROOT}
 
 # iphone deps ?
 
@@ -90,6 +104,9 @@ WORKDIR ${GODOT_SOURCE_LOCATION}
 
 COPY ./js-no-rtti-patch.patch .
 RUN git apply js-no-rtti-patch.patch
+
+COPY ./android-no-rtti-patch.patch .
+RUN git apply android-no-rtti-patch.patch
 
 # COPY BUILD SCRIPT
 COPY ./container-build-script.sh .
