@@ -23,14 +23,12 @@ void GDBone2D::_bind_methods() {
 Vector2 GDBone2D::get_bone_global_position(){
 	float _x = boneData->global.x;
 	float _y = boneData->global.y;
-	
 	return Vector2(_x, _y);
 }
 
 Vector2 GDBone2D::get_bone_global_scale(){
-	float _x = boneData->global.scaleX
+	float _x = boneData->global.scaleX;
 	float _y = boneData->global.scaleY;
-	
 	return Vector2(_x, _y);
 }
 
