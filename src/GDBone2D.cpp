@@ -21,28 +21,23 @@ void GDBone2D::_bind_methods() {
 }
 
 Vector2 GDBone2D::get_bone_global_position(){
-	float _x = boneData->global.x;
-	float _y = boneData->global.y;
-	return Vector2(_x, _y);
+	return get_global_transform().get_origin();
 }
 
 Vector2 GDBone2D::get_bone_global_scale(){
-	float _x = boneData->global.scaleX;
-	float _y = boneData->global.scaleY;
-	return Vector2(_x, _y);
+	return get_global_transform().get_scale();
 }
 
 float GDBone2D::get_bone_global_rotation() {
-
 	return boneData->global.rotation;
 }
 
 void GDBone2D::set_bone_global_position(Vector2 new_pos) {
-
-	boneData->global.x = new_pos.x;
-	boneData->global.y = new_pos.y;
-
-	boneData->invalidUpdate();
+	set_bone_position(
+		new_pos -
+		static_cast<Node2D*>(get_parent())->get_global_transform().get_origin() -
+		get_bone_origin_position()
+	);
 }
 
 void GDBone2D::set_bone_global_scale(Vector2 scale) {
@@ -61,8 +56,8 @@ void GDBone2D::set_bone_global_rotation(float rotation) {
 }
 
 Vector2 GDBone2D::get_bone_origin_position(){
-	float _x = boneData->origin->x;
-	float _y = boneData->origin->y;
+	float _x = boneData->origin->x * get_global_transform().get_scale().x;
+	float _y = boneData->origin->y * get_global_transform().get_scale().y;
 	
 	return Vector2(_x, _y);
 }
@@ -100,8 +95,8 @@ Vector2 GDBone2D::get_bone_position() {
 void GDBone2D::set_bone_position(Vector2 new_pos) {
 	if (boneData == nullptr) return;
 
-	boneData->animationPose.x = new_pos.x;
-	boneData->animationPose.y = new_pos.y;
+	boneData->animationPose.x = new_pos.x / get_global_transform().get_scale().x;
+	boneData->animationPose.y = new_pos.y / get_global_transform().get_scale().y;
 
 	boneData->invalidUpdate();
 }
