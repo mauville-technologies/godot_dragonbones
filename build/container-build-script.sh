@@ -9,8 +9,8 @@ cd $GODOT_SOURCE_LOCATION
 ###########################
 ##      ENGINE FILES     ##
 ###########################
-/usr/local/bin/scons -j8 platform=x11 target=release_debug bits=32 use_lto=yes optimize=size
-/usr/local/bin/scons -j8 platform=x11 target=release_debug bits=64 use_lto=yes optimize=size
+/usr/local/bin/scons -j8 platform=x11 target=release_debug bits=32 use_lto=yes optimize=size use_llvm=true
+/usr/local/bin/scons -j8 platform=x11 target=release_debug bits=64 use_lto=yes optimize=size use_llvm=true
 
 # windows
 /usr/local/bin/scons -j8 platform=windows target=release_debug bits=32 use_lto=yes use_mingw=yes optimize=size
