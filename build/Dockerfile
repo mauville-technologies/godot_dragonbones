@@ -12,6 +12,7 @@ ENV GODOT_DRAGONBONES_BRANCH="master"
 ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"
 ENV EMSCRIPTEN_LOCATION="/emscripten"
+ENV EMSCRIPTEN_VERSION=1.39.20
 ENV ANDROID_HOME="/AndroidSDK"
 ENV ANDROID_NDK="/AndroidNDK"
 ENV ANDROID_NDK_ROOT="${ANDROID_NDK}/ndk"
@@ -84,7 +85,7 @@ RUN mkdir -p ${ANDROID_NDK} && \
 RUN git clone --progress https://github.com/emscripten-core/emsdk.git $EMSCRIPTEN_LOCATION
 WORKDIR ${EMSCRIPTEN_LOCATION}
 
-RUN ./emsdk install latest && ./emsdk activate latest && source ./emsdk_env.sh
+RUN ./emsdk install $EMSCRIPTEN_VERSION && ./emsdk activate $EMSCRIPTEN_VERSION && source ./emsdk_env.sh
 
 # GET GODOT 3.2 SOURCE
 RUN git clone --progress --verbose https://github.com/godotengine/godot.git $GODOT_SOURCE_LOCATION
