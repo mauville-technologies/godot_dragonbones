@@ -17,9 +17,6 @@ env_modules.Append(CPPFLAGS=["-Imodules/godot_dragonbones/src",
 	"-Imodules/godot_dragonbones/src/dragonBones",
 ])
 
-if (env['platform'] != 'windows'):
-	env_modules.Append(CXXFLAGS=['-std=c++11'])
-
 Export('env_modules')
 Export('env')
 
