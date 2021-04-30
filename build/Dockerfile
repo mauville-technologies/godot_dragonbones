@@ -14,9 +14,7 @@ ENV GODOT_SOURCE_LOCATION="/godot"
 ENV EMSCRIPTEN_LOCATION="/emscripten"
 ENV EMSCRIPTEN_VERSION=1.39.20
 ENV ANDROID_HOME="/AndroidSDK"
-ENV ANDROID_NDK="/AndroidNDK"
-ENV ANDROID_NDK_ROOT="${ANDROID_NDK}/ndk"
-ENV ANDROID_NDK_HOME="${ANDROID_NDK_ROOT}"
+ENV ANDROID_SDK_ROOT="/AndroidSDK"
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV UNATTENDED=true
 
@@ -73,11 +71,9 @@ RUN apt -y install default-jdk
 RUN mkdir -p $ANDROID_HOME/cmdline-tools && \
     wget -O AndroidSDK.zip https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip && \
     unzip AndroidSDK.zip -d ${ANDROID_HOME}/cmdline-tools && \
-    yes | ${ANDROID_HOME}/cmdline-tools/tools/bin/sdkmanager --licenses
-
-RUN mkdir -p ${ANDROID_NDK} && \
-    wget -q -O AndroidNDK.zip https://dl.google.com/android/repository/android-ndk-r21d-linux-x86_64.zip && \
-    unzip -q AndroidNDK.zip -d ${ANDROID_NDK} && mv ${ANDROID_NDK}/* ${ANDROID_NDK_ROOT}
+    yes | ${ANDROID_HOME}/cmdline-tools/tools/bin/sdkmanager --licenses && \
+    ${ANDROID_HOME}/cmdline-tools/tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" "build-tools;30.0.1" "platforms;android-29" "cm
+dline-tools;latest" "cmake;3.10.2.4988404"
 
 # iphone deps ?
 
