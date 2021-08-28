@@ -6,8 +6,8 @@ SHELL ["/bin/bash", "-c"]
 RUN set +H
 
 # needed for mac builds
-ENV GODOT_VERSION="tags/3.3-stable"
-ENV GODOT_DRAGONBONES_VERSION="3.3.50"
+ENV GODOT_VERSION="tags/3.3.3-stable"
+ENV GODOT_DRAGONBONES_VERSION="3.3.51"
 ENV GODOT_DRAGONBONES_BRANCH="master"
 ENV OSXCROSS_ROOT="/osxcross"
 ENV GODOT_SOURCE_LOCATION="/godot"

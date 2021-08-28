@@ -5,3 +5,4 @@
 gddragonbones/bin-build/osxcross/
 !gddragonbones/bin-build/osxcross/.build-osxcross-to-this-dir
 *.obj
+*.opt.tools.64.o

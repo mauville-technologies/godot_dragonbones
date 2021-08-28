@@ -126,7 +126,7 @@ cd ..
 rm -rf bin/osx_template.app
 
 # Add version.txt
-echo "3.3.50.stable" > bin/version.txt
+echo "3.3.51.stable" > bin/version.txt
 
 rm bin/*.js bin/*.wasm
 rm -r bin/.javascript_zip
