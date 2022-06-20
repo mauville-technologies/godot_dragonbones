@@ -47,15 +47,15 @@ void GDArmatureDisplay::_bind_methods() {
 
 
 	// Enum
-	BIND_CONSTANT(ANIMATION_PROCESS_FIXED);
-	BIND_CONSTANT(ANIMATION_PROCESS_IDLE);
+	BIND_ENUM_CONSTANT(ANIMATION_PROCESS_FIXED);
+	BIND_ENUM_CONSTANT(ANIMATION_PROCESS_IDLE);
 
-	BIND_CONSTANT(FadeOut_None);
-	BIND_CONSTANT(FadeOut_SameLayer);
-	BIND_CONSTANT(FadeOut_SameGroup);
-	BIND_CONSTANT(FadeOut_SameLayerAndGroup);
-	BIND_CONSTANT(FadeOut_All);
-	BIND_CONSTANT(FadeOut_Single);
+	BIND_ENUM_CONSTANT(FadeOut_None);
+	BIND_ENUM_CONSTANT(FadeOut_SameLayer);
+	BIND_ENUM_CONSTANT(FadeOut_SameGroup);
+	BIND_ENUM_CONSTANT(FadeOut_SameLayerAndGroup);
+	BIND_ENUM_CONSTANT(FadeOut_All);
+	BIND_ENUM_CONSTANT(FadeOut_Single);
 }
 
 bool GDArmatureDisplay::is_frozen() {
