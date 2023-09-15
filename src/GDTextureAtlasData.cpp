@@ -1,7 +1,6 @@
 #include "GDTextureAtlasData.h"
 #include "GDTextureData.h"
-
-DRAGONBONES_NAMESPACE_BEGIN
+#include "core/math/rect2i.h"
 
 GDTextureAtlasData::GDTextureAtlasData()
 {
@@ -30,5 +29,3 @@ TextureData* GDTextureAtlasData::createTexture() const
 {
 	return BaseObject::borrowObject<GDTextureData>();
 }
-
-DRAGONBONES_NAMESPACE_END

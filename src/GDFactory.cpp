@@ -6,11 +6,6 @@
 #include "GDArmatureDisplay.h"
 #include "GDMesh.h"
 
-#include "core/os/file_access.h"
-#include "core/os/os.h"
-
-DRAGONBONES_NAMESPACE_BEGIN
-
 GDFactory::GDFactory(GDOwnerNode *_p_owner)
 {
     p_owner = _p_owner;
@@ -41,7 +36,7 @@ DragonBonesData* GDFactory::loadDragonBonesData(const char* _p_data_loaded, cons
     return parseDragonBonesData(_p_data_loaded, name, 1.0f);
 }
 
-TextureAtlasData* GDFactory::loadTextureAtlasData(const char *_p_data_loaded, Ref<Texture>* _p_atlasTexture, const std::string& name, float scale)
+TextureAtlasData* GDFactory::loadTextureAtlasData(const char *_p_data_loaded, Ref<Texture2D>* _p_atlasTexture, const std::string& name, float scale)
 {
     return static_cast<GDTextureAtlasData*>(BaseFactory::parseTextureAtlasData(_p_data_loaded, _p_atlasTexture, name, scale));
 }
@@ -129,7 +124,6 @@ Armature *GDFactory::_buildChildArmature(const BuildArmaturePackage *dataPackage
 	}
 
 	if (childArmature == nullptr) {
-		print_error("Child armature is null");
 		return nullptr;
 	}
 
@@ -171,5 +165,3 @@ bool GDFactory::hasDBEventListener(const std::string& type) const
 {
     return true;
 }
-
-DRAGONBONES_NAMESPACE_END

@@ -1,28 +1,21 @@
 #ifndef 	GDISPLAY_H
 #define     GDISPLAY_H
 
-#include "scene/resources/texture.h"
+#include "dragonBones/DragonBonesHeaders.h"
 #include "scene/2d/node_2d.h"
-#include "core/version_generated.gen.h"
 
 DRAGONBONES_USING_NAME_SPACE;
 
 class GDOwnerNode : public Node2D
 {
-
-#if (VERSION_MAJOR) >= 4
 	#define BLENDMODE_CLASS CanvasItemMaterial
-	#define VISUAL_SERVER_NAMESPACE RS
-#else
-	#define VISUAL_SERVER_NAMESPACE VS
-	#define BLENDMODE_CLASS CanvasItem
-#endif
+	#define VISUAL_SERVER_NAMESPACE RenderingServer
 
-#if (VERSION_MAJOR >= 3)
     GDCLASS(GDOwnerNode, Node2D);
-#else
-    OBJ_TYPE(GDOwnerNode, Node2D);
-#endif
+
+protected:
+    static void _bind_methods() {}
+
 public:
     Color		    modulate;
 
@@ -35,27 +28,28 @@ public:
         modulate = _col;
     }
 
-    virtual void dispatch_event(const String& _str_type, const EventObject* _p_value) = 0;
-    virtual void dispatch_snd_event(const String& _str_type, const EventObject* _p_value) = 0;
+    virtual void dispatch_event(const String &_str_type, const EventObject* _p_value) {}
+    virtual void dispatch_snd_event(const String &_str_type, const EventObject* _p_value) {}
+
+    CanvasItemMaterial::BlendMode get_blend_mode()
+    {
+        return BLENDMODE_CLASS::BlendMode::BLEND_MODE_ADD;
+    }
 };
 
 class GDDisplay : public GDOwnerNode
 {
-
-#if (VERSION_MAJOR >= 3)
 	GDCLASS(GDDisplay, GDOwnerNode);
-#else
-	OBJ_TYPE(GDDisplay, GDOwnerNode);
-#endif
+
+protected:
+    static void _bind_methods() {}
 
 private:
     GDDisplay(const GDDisplay&);
 
 public:
-    Ref<Texture>    texture;
-#if (VERSION_MAJOR >= 3)
+    Ref<Texture2D>    texture;
     CanvasItemMaterial* p_canvas_mat;
-#endif
 
     GDOwnerNode*    p_owner;
     bool            b_debug;
@@ -64,10 +58,8 @@ public:
     GDDisplay()  {
                    p_owner = nullptr;
                    b_debug = false;
-#if (VERSION_MAJOR >= 3)
                    p_canvas_mat = memnew(CanvasItemMaterial);
 				   set_material(p_canvas_mat);
-#endif
                  }
     virtual ~GDDisplay() {}
 
@@ -76,17 +68,12 @@ public:
 		modulate = _col;
 	}
 
-
-#if (VERSION_MAJOR >= 3)
 	void set_blend_mode(BLENDMODE_CLASS ::BlendMode _blend)
     {
         p_canvas_mat->set_blend_mode((CanvasItemMaterial::BlendMode)_blend);
         Ref<CanvasItemMaterial> __mat = Ref<CanvasItemMaterial>(p_canvas_mat);
         set_material(__mat);
     }
-#endif
 };
 
 #endif // GDISPLAY_H
-
-

@@ -3,28 +3,16 @@
 
 #include <memory>
 #include "dragonBones/DragonBonesHeaders.h"
-#include "scene/resources/texture.h"
-#include "core/version.h"
+#include "core/math/rect2i.h"
 
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
-#include <core/math/transform_2d.h>
-#include <core/math/vector2.h>
-#include <core/math/rect2.h>
-
-#else
-#include "core/math/math_2d.h"
-
-#endif
-
-DRAGONBONES_NAMESPACE_BEGIN
-
+DRAGONBONES_USING_NAME_SPACE;
 
 class GDTextureData : public TextureData
 {
 	BIND_CLASS_TYPE_B(GDTextureData);
 
 public:	
-    Rect2i				textureRect;
+    Rect2i textureRect;
 
 public:
 	GDTextureData()
@@ -42,8 +30,6 @@ public:
 		TextureData::_onClear();
 	}
 };
-
-DRAGONBONES_NAMESPACE_END
 
 #endif // GDTEXTUREDATA_H
                                 
