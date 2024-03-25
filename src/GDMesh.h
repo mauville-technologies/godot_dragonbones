@@ -3,27 +3,27 @@
 
 #include "GDDisplay.h"
 
+#include "core/templates/vector.h"
+
+DRAGONBONES_USING_NAME_SPACE;
+
 class GDMesh : public GDDisplay
 { 
-#if (VERSION_MAJOR >= 3)
     GDCLASS(GDMesh, GDDisplay);
-#else
-    OBJ_TYPE(GDMesh, GDDisplay);
-#endif
 
 private:
     GDMesh(const GDMesh&);
 
 public:
-    Vector<int>							indices;
-    Vector<Color>						verticesColor;
-    Vector<Point2>						verticesUV;
-    Vector<Point2>						verticesPos;
+    PackedInt32Array					indices;
+    PackedColorArray						verticesColor;
+    PackedVector2Array						verticesUV;
+    PackedVector2Array						verticesPos;
 
     Color                               col_debug;
 
 public:
-    GDMesh(){ col_debug = Color( Math::random(0.5f, 1.f), Math::random(0.3f, 1.f), Math::random(0.3f, 1.f), 1);}
+    GDMesh(){ col_debug = Color( 0.6f, 0.6f, 0.6f, 1);}
 	virtual ~GDMesh() {}
 
 	void dispatch_event(const String &_str_type, const EventObject *_p_value) {
@@ -45,7 +45,7 @@ public:
 
     void _render()
 	{
-        if (indices.empty())
+        if (indices.is_empty())
 			return;
 
         if(texture.is_valid())
@@ -56,10 +56,10 @@ public:
                 verticesPos,
                 verticesColor,
                 verticesUV,
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
-		Vector<int>(),
-		Vector<float>(),
-#endif
+
+                PackedInt32Array(),
+                PackedFloat32Array(),
+
                 texture.is_valid() ? texture->get_rid() : RID(),
                 -1
             );
@@ -80,13 +80,9 @@ public:
     {
         GDDisplay::set_modulate(_col);
         col_debug.a = modulate.a;
-        for(unsigned long i = 0; i < verticesColor.size(); ++i)
+        for(int i = 0; i < verticesColor.size(); ++i)
         {
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
             verticesColor.write[i] = modulate;
-#else
-			verticesColor[i] = modulate;
-#endif
         }
     }
 

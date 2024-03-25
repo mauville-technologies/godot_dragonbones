@@ -2,10 +2,8 @@
 #define GDTEXTUREATLAS_H
 
 #include "dragonBones/DragonBonesHeaders.h"
-#include "scene/resources/texture.h"
 
-DRAGONBONES_NAMESPACE_BEGIN
-
+DRAGONBONES_USING_NAME_SPACE;
 class GDTextureAtlasData : public TextureAtlasData
 {
 	BIND_CLASS_TYPE_B(GDTextureAtlasData);
@@ -18,7 +16,5 @@ public:
 
     void setRenderTexture();
 };
-
-DRAGONBONES_NAMESPACE_END
 
 #endif // GDTEXTUREATLAS_H

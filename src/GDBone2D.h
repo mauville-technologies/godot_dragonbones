@@ -4,28 +4,14 @@
 #include "dragonBones/DragonBonesHeaders.h"
 #include <memory>
 #include "scene/2d/skeleton_2d.h"
-#include "core/version_generated.gen.h"
 
-#if (VERSION_MAJOR >= 3)
-	#define CLASS_BIND_GODO ClassDB
-	#define METH D_METHOD
-	#define _SCS(val) val
-
-#else
-
-	#include "core/globals.h"
-
-	#define CLASS_BIND_GODO ObjectTypeDB
-	#define METH _MD
-
-#endif
+DRAGONBONES_USING_NAME_SPACE;
 
 class GDBone2D : public Bone2D {
 	GDCLASS(GDBone2D, Bone2D);
 
 protected:
 	dragonBones::Bone *boneData;
-
 
 public:
 	static GDBone2D *create() {
@@ -53,6 +39,8 @@ public:
 	Vector2 get_bone_animation_position();
 	Vector2 get_bone_origin_position();
 	bool has_data();
+
+	GDBone2D() {set_autocalculate_length_and_angle(false);}
 };
 
 #endif

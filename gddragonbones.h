@@ -1,40 +1,20 @@
 #ifndef GDDRAGONBONES_H
 #define GDDRAGONBONES_H
 
-#include "scene/2d/node_2d.h"
-#include "src/GDFactory.h"
-#include "scene/resources/texture.h"
-
-#if (VERSION_MAJOR) >= 4
-	#include "servers/rendering_server.h"
-	#define TEXTURE_CLASS Texture2D
-	#define REAL_VARIANT Variant::FLOAT
-#else
-	#include "servers/visual_server.h"
-	#define TEXTURE_CLASS Texture
-	#define REAL_VARIANT Variant::REAL
-#endif
+#include "dragonBones/DragonBonesHeaders.h"
+#include "GDFactory.h"
+#include "GDDisplay.h"
+#include "core/io/resource.h"
 
 DRAGONBONES_USING_NAME_SPACE;
 
-class GDDragonBones : public GDOwnerNode
+class GDDragonBonesResource : public Resource
 {
-#if (VERSION_MAJOR >= 3)
-    GDCLASS(GDDragonBones, GDOwnerNode);
-#else
-    OBJ_TYPE(GDDragonBones, GDOwnerNode);
-#endif
-
-public:
-	// Resource class
-    class GDDragonBonesResource : public Resource
-    {
-#if (VERSION_MAJOR >= 3)
     GDCLASS(GDDragonBonesResource, Resource);
-#else
-    OBJ_TYPE(GDDragonBonesResource, Resource);
-#endif
-	
+
+	protected:
+		static void _bind_methods();
+
 	public:		
 		GDDragonBonesResource();
         ~GDDragonBonesResource();
@@ -46,11 +26,15 @@ public:
         String           str_default_tex_path;
         char*            p_data_texture_atlas;
         char*            p_data_bones;
-	};
+};
+
+class GDDragonBones : public GDOwnerNode
+{
+	GDCLASS(GDDragonBones, GDOwnerNode);
 
 private:
-    GDFactory*                  p_factory;
-	Ref<TEXTURE_CLASS> m_texture_atlas;
+	GDFactory*                  p_factory;
+	Ref<Texture2D> 				m_texture_atlas;
     Ref<GDDragonBonesResource>  m_res;
     String                      str_curr_anim;
     GDArmatureDisplay*          p_armature;
@@ -72,8 +56,9 @@ protected:
     void _notification(int _what);
 	static void _bind_methods();
 
-    bool _set(const StringName& _str_name, const Variant& _c_r_value);
+	bool _set(const StringName& _str_name, const Variant& _c_r_value);
     bool _get(const StringName& _str_name, Variant &_r_ret) const;
+
     void _get_property_list(List<PropertyInfo> *_p_list) const;
 
 public:
@@ -102,24 +87,12 @@ public:
 	void set_speed(float _f_speed);
 	float get_speed() const;
 
-	void set_texture(const Ref<TEXTURE_CLASS> &_p_texture);
-	Ref<Texture> get_texture() const;
+	void set_texture(const Ref<Texture2D> &_p_texture);
+	Ref<Texture2D> get_texture() const;
 
 	void set_animation_process_mode(GDArmatureDisplay::AnimMode _mode);
 	GDArmatureDisplay::AnimMode get_animation_process_mode() const;
-
-#if (VERSION_MAJOR >= 3)
-#else
-    void set_opacity(float _f_opacity);
-    float get_opacity() const;
-
-    void set_blend_mode(CanvasItem::BlendMode _blend_mode);
-     CanvasItem::BlendMode get_blend_mode() const;
-
-     void set_modulate(const Color& _p_color);
-     Color get_modulate() const;
-#endif
-
+	
 	/**
 		THESE DEPRECATED FUNCTIONS WILL BE REMOVED IN VERSION 3.2.53
 	*/
@@ -151,19 +124,28 @@ public:
 	/* deprecated */ void play(bool _b_play = true);
 	/* deprecated */ void play_from_time(float _f_time);
 	/* deprecated */ void play_from_progress(float _f_progress);
-	/* deprecated */ void play_new_animation(const String &_str_anim, int _num_times);
+	/* deprecated */ void play_new_animation(const String &_str_anim, int _num_times = -1);
 	/* deprecated */ void play_new_animation_from_progress(const String &_str_anim, int _num_times, float _f_progress);
 	/* deprecated */ void play_new_animation_from_time(const String &_str_anim, int _num_times, float _f_time);
 	/* deprecated */ void stop(bool _b_all = false);
 	/* deprecated */ inline void stop_all() { stop(true); }
 
-	GDArmatureDisplay *get_armature();
+	GDArmatureDisplay *get_armature();	
 
 private:
 	const DragonBonesData *get_dragonbones_data() const;
 	ArmatureData *get_armature_data(const String &_armature_name);
 };
 
-#endif // GDDRAGONBONES_H
+class ResourceFormatLoaderGDDragonBones : public ResourceFormatLoader {
+
+public:
+	virtual Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE);
+	virtual void get_recognized_extensions(List<String> *p_extensions) const;
+	virtual bool handles_type(const String &p_type) const;
+	virtual String get_resource_type(const String &p_path) const;	
+};
+
+#endif // gddragonbones_H
 
 

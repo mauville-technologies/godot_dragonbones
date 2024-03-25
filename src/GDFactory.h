@@ -11,7 +11,7 @@
 #include "GDTextureData.h"
 #include "GDBone2D.h"
 
-DRAGONBONES_NAMESPACE_BEGIN
+DRAGONBONES_USING_NAME_SPACE;
 
 typedef std::function<void(EventObject*)> Func_t;
 class GDFactory : public BaseFactory, public IEventDispatcher
@@ -31,7 +31,7 @@ public:
 
 public:
     DragonBonesData* loadDragonBonesData(const char *_p_data_loaded, const std::string& name = "");
-    TextureAtlasData* loadTextureAtlasData(const char *_p_data_loaded, Ref<Texture>* _p_atlasTexture, const std::string& name = "", float scale = 1.0f);
+    TextureAtlasData* loadTextureAtlasData(const char *_p_data_loaded, Ref<Texture2D>* _p_atlasTexture, const std::string& name = "", float scale = 1.0f);
 	GDArmatureDisplay* buildArmatureDisplay(const std::string& armatureName, const std::string& dragonBonesName = "", const std::string& skinName = "", const std::string& textureAtlasName = "") const;
 
 	virtual void clear(bool disposeData = true) override;
@@ -52,7 +52,5 @@ protected:
 	Armature *_buildChildArmature(const BuildArmaturePackage *dataPackage, Slot *slot, DisplayData *displayData) const override;
 	void _buildBones(const BuildArmaturePackage &dataPackage, Armature *armature) const override;
 };
-
-DRAGONBONES_NAMESPACE_END
 
 #endif // GDFACTORY_H

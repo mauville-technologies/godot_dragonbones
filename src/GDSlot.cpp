@@ -3,23 +3,12 @@
 #include "GDArmatureDisplay.h"
 #include "GDTextureAtlasData.h"
 #include "GDTextureData.h"
-#include "scene/2d/node_2d.h"
 
-DRAGONBONES_NAMESPACE_BEGIN
-
-#if (VERSION_MAJOR >= 3)
-    #define MATRIX_TRANSFORM  Transform2D
-#else
-    #define MATRIX_TRANSFORM  Matrix32
-#endif
+#define MATRIX_TRANSFORM  Transform2D
 
 void Slot_GD::_updateZOrder()
 {
-#if (VERSION_MAJOR >= 3)
     _renderDisplay->set_z_index(_zOrder);
-#else
-    _renderDisplay->set_z(_zOrder);
-#endif
 }
 
 void Slot_GD::_updateVisible()
@@ -35,12 +24,11 @@ void Slot_GD::_updateBlendMode()
 	if (_renderDisplay)
 	{
 		BLENDMODE_CLASS::BlendMode __blend = BLENDMODE_CLASS::BLEND_MODE_MIX;
-#if (VERSION_MAJOR >= 3)
-#else
-         GDOwnerNode* __p_owner = _renderDisplay->p_owner;
+
+        GDOwnerNode* __p_owner = _renderDisplay->p_owner;
         if(__p_owner)
             __blend = __p_owner->get_blend_mode();
-#endif
+
         if(!__blend)
         {
             switch (_blendMode)
@@ -66,7 +54,7 @@ void Slot_GD::_updateBlendMode()
             }
         }
         _renderDisplay->set_blend_mode(__blend);
-        _renderDisplay->update();
+        _renderDisplay->queue_redraw();
 	}
 	else if (_childArmature)
 	{
@@ -90,18 +78,15 @@ void Slot_GD::_updateColor()
    GDOwnerNode* __p_owner = _renderDisplay->p_owner;
    if(__p_owner)
    {
-#if (VERSION_MAJOR >= 3)
-        __color.a *= __p_owner->modulate.a;
-#else
-       __color.a *= __p_owner->modulate.a * __p_owner->get_opacity();
-#endif
+       __color.a *= __p_owner->modulate.a;
+
        __color.r *= __p_owner->modulate.r;
        __color.g *= __p_owner->modulate.g;
        __color.b *= __p_owner->modulate.b;
    }
 
    _renderDisplay->set_modulate(__color);
-   _renderDisplay->update();
+   _renderDisplay->queue_redraw();
 }
 
 void Slot_GD::_initDisplay(void* value, bool isRetain)
@@ -138,7 +123,7 @@ void Slot_GD::_removeDisplay()
 
 }
 
-void Slot_GD::__get_uv_pt(Point2& _pt, bool _is_rot, float _u, float _v, const Rectangle& _reg, const TextureAtlasData *_p_atlas)
+void Slot_GD::__get_uv_pt(Point2& _pt, bool _is_rot, float _u, float _v, const dragonBones::Rectangle& _reg, const TextureAtlasData *_p_atlas)
 {
     if (_is_rot)
     {
@@ -196,27 +181,19 @@ void Slot_GD::_updateFrame()
                         u = floatArray[uvOffset + i];
                         v = floatArray[uvOffset + i + 1];
                         __get_uv_pt(__uv, currentTextureData->rotated, u, v, region, atlas);
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
+                        
                         frameDisplay->verticesColor.write[iH] = Color(1,1,1,1);
                         frameDisplay->verticesUV.write[iH] = __uv;
                         frameDisplay->verticesPos.write[iH] = Point2(floatArray[vertexOffset + i],
 						hasFFD * floatArray[vertexOffset + i + 1]);
-#else
-                        frameDisplay->verticesColor[iH] = Color(1,1,1,1);
-                        frameDisplay->verticesUV[iH] = __uv;
-                        frameDisplay->verticesPos[iH] = Point2(floatArray[vertexOffset + i],
-						hasFFD * floatArray[vertexOffset + i + 1]);
-#endif
+
                     }
 
                     // setup indicies
                     for (std::size_t i = 0; i < triangleCount * 3; ++i)
                     {
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
                         frameDisplay->indices.write[i] = intArray[currentVerticesData ->offset + (unsigned)BinaryOffset::MeshVertexIndices + i];
-#else
-                        frameDisplay->indices[i] = intArray[currentVerticesData ->offset + (unsigned)BinaryOffset::MeshVertexIndices + i];		
-#endif					
+			
                     }
 
                     _textureScale = 1.0f;
@@ -224,21 +201,14 @@ void Slot_GD::_updateFrame()
                 }  else // Normal texture
                 {
                     frameDisplay->indices.resize(6);
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
+
                     frameDisplay->indices.write[0] = 0;
                     frameDisplay->indices.write[1] = 1;
                     frameDisplay->indices.write[2] = 2;
                     frameDisplay->indices.write[3] = 2;
                     frameDisplay->indices.write[4] = 3;
                     frameDisplay->indices.write[5] = 0;
-#else
-					frameDisplay->indices[0] = 0;
-                    frameDisplay->indices[1] = 1;
-                    frameDisplay->indices[2] = 2;
-                    frameDisplay->indices[3] = 2;
-                    frameDisplay->indices[4] = 3;
-                    frameDisplay->indices[5] = 0;
-#endif
+
                     frameDisplay->verticesColor.resize(4);
                     frameDisplay->verticesUV.resize(4);
                     frameDisplay->verticesPos.resize(4);
@@ -246,7 +216,7 @@ void Slot_GD::_updateFrame()
                     const auto scale = currentTextureData->parent->scale * _armature->_armatureData->scale;
                     const auto height = (currentTextureData->rotated ? region.width : region.height) * scale/2.f;
                     const auto width = (currentTextureData->rotated ? region.height : region.width) * scale/2.f;
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
+
                     frameDisplay->verticesColor.write[0] = Color(1,1,1,1);
                     frameDisplay->verticesColor.write[1] = Color(1,1,1,1);
                     frameDisplay->verticesColor.write[2] = Color(1,1,1,1);
@@ -261,22 +231,7 @@ void Slot_GD::_updateFrame()
                     __get_uv_pt(frameDisplay->verticesUV.write[1], currentTextureData->rotated, 1.f, 0, region, atlas);
                     __get_uv_pt(frameDisplay->verticesUV.write[2], currentTextureData->rotated, 1.f, 1.f, region, atlas);
                     __get_uv_pt(frameDisplay->verticesUV.write[3], currentTextureData->rotated, 0, 1.f, region, atlas);
-#else
-					frameDisplay->verticesColor[0] = Color(1,1,1,1);
-                    frameDisplay->verticesColor[1] = Color(1,1,1,1);
-                    frameDisplay->verticesColor[2] = Color(1,1,1,1);
-                    frameDisplay->verticesColor[3] = Color(1,1,1,1);
 
-                    frameDisplay->verticesPos[3] = Vector2(-width, -height);
-                    frameDisplay->verticesPos[2] = Vector2(width, -height);
-                    frameDisplay->verticesPos[1] = Vector2(width, height);
-                    frameDisplay->verticesPos[0] = Vector2(-width, height);
-
-                    __get_uv_pt(frameDisplay->verticesUV[0], currentTextureData->rotated, 0, 0, region, atlas);
-                    __get_uv_pt(frameDisplay->verticesUV[1], currentTextureData->rotated, 1.f, 0, region, atlas);
-                    __get_uv_pt(frameDisplay->verticesUV[2], currentTextureData->rotated, 1.f, 1.f, region, atlas);
-                    __get_uv_pt(frameDisplay->verticesUV[3], currentTextureData->rotated, 0, 1.f, region, atlas);
-#endif
                     _pivotY = 0;
                     _pivotX = 0;
                     _textureScale = scale;
@@ -286,7 +241,7 @@ void Slot_GD::_updateFrame()
                 _visibleDirty = true;
                 _blendModeDirty = true;
                 _colorDirty = true;
-                _renderDisplay->update();
+                _renderDisplay->queue_redraw();
                 return;
 	}
     _renderDisplay->hide();
@@ -356,11 +311,9 @@ void Slot_GD::_updateMesh()
 					yG += (matrix.b * xL + matrix.d * yL + matrix.ty) * weight;
 				}
 			}
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
+
             meshDisplay->verticesPos.write[i] = Vector2(xG, yG);
-#else
-			meshDisplay->verticesPos[i] = Vector2(xG, yG);
-#endif
+
 		}
 	}
 	else if (hasFFD)
@@ -380,15 +333,13 @@ void Slot_GD::_updateMesh()
 			const auto iH = (i >> 1);
             const auto xG = floatArray[vertexOffset + i] * scale + deformVertices[i];
             const auto yG = floatArray[vertexOffset + i + 1] * scale + deformVertices[i + 1];
-#if (VERSION_MAJOR == 3 && VERSION_MINOR >= 1 || VERSION_MAJOR >= 4)
+
             meshDisplay->verticesPos.write[iH] = Vector2(xG, -yG);
-#else
-			meshDisplay->verticesPos[iH] = Vector2(xG, -yG);
-#endif
+
 		}
 	}
 
-    _renderDisplay->update();
+    _renderDisplay->queue_redraw();
 }
 
 void Slot_GD::_identityTransform()
@@ -396,7 +347,7 @@ void Slot_GD::_identityTransform()
     auto matrix = MATRIX_TRANSFORM();
     matrix.scale(Size2(_textureScale, _textureScale));
     _renderDisplay->set_transform(matrix);
-    _renderDisplay->update();
+    _renderDisplay->queue_redraw();
 }
 
 void Slot_GD::_updateTransform()
@@ -432,7 +383,7 @@ void Slot_GD::_updateTransform()
    matrix.scale(Size2(1, 1));
 
    _renderDisplay->set_transform(matrix);
-   _renderDisplay->update();
+   _renderDisplay->queue_redraw();
 }
 
 void Slot_GD::_onClear()
@@ -454,16 +405,16 @@ void GDSlot::set_slot(Slot_GD *_slot) {
 
 /* GODOT CLASS WRAPPER FOR GIVING SCRIPT ACCESS */
 void GDSlot::_bind_methods() {
-	CLASS_BIND_GODO::bind_method(METH("get_display_color_multiplier"), &GDSlot::get_display_color_multiplier);
-	CLASS_BIND_GODO::bind_method(METH("set_display_color_multiplier", "color"), &GDSlot::set_display_color_multiplier);
-	CLASS_BIND_GODO::bind_method(METH("set_display_index", "index"), &GDSlot::set_display_index);
-	CLASS_BIND_GODO::bind_method(METH("set_display_by_name", "name"), &GDSlot::set_display_by_name);
-	CLASS_BIND_GODO::bind_method(METH("get_display_index"), &GDSlot::get_display_index);
-	CLASS_BIND_GODO::bind_method(METH("get_display_count"), &GDSlot::get_display_count);
-	CLASS_BIND_GODO::bind_method(METH("next_display"), &GDSlot::next_display);
-	CLASS_BIND_GODO::bind_method(METH("previous_display"), &GDSlot::previous_display);
-	CLASS_BIND_GODO::bind_method(METH("get_child_armature"), &GDSlot::get_child_armature);
-	CLASS_BIND_GODO::bind_method(METH("get_slot_name"), &GDSlot::get_slot_name);
+	ClassDB::bind_method(D_METHOD("get_display_color_multiplier"), &GDSlot::get_display_color_multiplier);
+	ClassDB::bind_method(D_METHOD("set_display_color_multiplier", "color"), &GDSlot::set_display_color_multiplier);
+	ClassDB::bind_method(D_METHOD("set_display_index", "index"), &GDSlot::set_display_index);
+	ClassDB::bind_method(D_METHOD("set_display_by_name", "name"), &GDSlot::set_display_by_name);
+	ClassDB::bind_method(D_METHOD("get_display_index"), &GDSlot::get_display_index);
+	ClassDB::bind_method(D_METHOD("get_display_count"), &GDSlot::get_display_count);
+	ClassDB::bind_method(D_METHOD("next_display"), &GDSlot::next_display);
+	ClassDB::bind_method(D_METHOD("previous_display"), &GDSlot::previous_display);
+	ClassDB::bind_method(D_METHOD("get_child_armature"), &GDSlot::get_child_armature);
+	ClassDB::bind_method(D_METHOD("get_slot_name"), &GDSlot::get_slot_name);
 }
 
 Color GDSlot::get_display_color_multiplier() {
@@ -563,5 +514,3 @@ GDDisplay *GDSlot::get_child_armature() {
 	}
 	return nullptr;
 }
-
-DRAGONBONES_NAMESPACE_END

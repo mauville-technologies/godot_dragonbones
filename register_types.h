@@ -26,5 +26,7 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
-void register_godot_dragonbones_types();
-void unregister_godot_dragonbones_types();
+#include "modules/register_module_types.h"
+
+void initialize_godot_dragonbones_module(ModuleInitializationLevel p_level);
+void uninitialize_godot_dragonbones_module(ModuleInitializationLevel p_level);
